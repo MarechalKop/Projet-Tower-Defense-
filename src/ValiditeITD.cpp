@@ -32,7 +32,7 @@ std::string premierMotDeLaligne(std::string const& str){
 
 bool verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (std::ifstream& fichier) {
     // On définit l'odre attendu des lignes
-    std::vector<std::string> ordreAttendu = {"map","path","in","out","graph","node"};
+    std::vector<std::string> ordreAttendu = {"ITD","map","path","in","out","graph","node"};
     
     // On vérifie si le document est bien ouvert
     if (!fichier.is_open())
@@ -46,7 +46,18 @@ bool verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (std::ifstream
     
     // La boucle while permet de lire ligne par ligne le contenu du fichier et s'arrête à quand il n'y plus rien à lire
     while (std::getline(fichier,contenuLigne))
-    {
+    {   
+        
+        
+        // Afin d'éviter que le lecteur lise les lignes de commentaires 
+        if (contenuLigne[0] == '#') 
+        {
+        continue;
+        }
+
+        // utile pour moi, pour vérifier si la lecture se passe bien
+        std::cout << contenuLigne << '\n';
+
         // on regarde le premier mot de la ligne
         std::string PremierMotaComparer = premierMotDeLaligne(contenuLigne);
 

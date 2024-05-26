@@ -9,6 +9,6 @@
 
 
 int main () {
-    std::ifstream fichier ("level1.itd");
+    std::ifstream fichier ("../../level1.itd");
   verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (fichier);
 }
