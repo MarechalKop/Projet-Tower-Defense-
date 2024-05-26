@@ -5,18 +5,18 @@
 
 namespace Graph {
     struct WeightedGraphEdge {
-        std::pair<int,int> to {};
+        int to {};
         float weight {1.0f};
         bool operator==(WeightedGraphEdge const& other) const = default;
         bool operator!=(WeightedGraphEdge const& other) const = default;
     };
 
     struct WeightedGraph {
-        std::unordered_map<std::pair<int,int>, std::vector<WeightedGraphEdge>> adjacency_list {};
-        void add_vertex(std::pair<int,int> const id);
-        void add_directed_edge(std::pair<int,int> const from, std::pair<int,int> const to);
+        std::unordered_map<int, std::vector<WeightedGraphEdge>> adjacency_list {};
+        void add_vertex(int const id);
+        void add_directed_edge(int const from, int const to, int const poids);
         bool operator==(WeightedGraph const& other) const = default;
         bool operator!=(WeightedGraph const& other) const = default;
-        std::unordered_map<std::pair<int,int>, std::pair<float, std::pair<int,int>>> dijkstra(std::pair<int,int> const& start, std::pair<int,int> const& end);
+        std::unordered_map<int, std::pair<float, int>> dijkstra(Graph::WeightedGraph const& graph, int start, int end);
     };
 }

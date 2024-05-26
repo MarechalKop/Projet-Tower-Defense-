@@ -3,4 +3,4 @@ project(MyGraphProject)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(MyGraphProject main.cpp graphe.cpp)
+add_executable(MyGraphProject main.cpp graphe.cpp ValiditeITD.cpp)

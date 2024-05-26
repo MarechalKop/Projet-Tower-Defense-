@@ -7,56 +7,31 @@
 #include <queue>
 
 
-
-namespace Graph {
-    
-    struct WeightedGraphEdge {
-        std::pair<int,int> to {};
-        float weight {1.0f};
-
-        // default ici permet de définit les opérateurs de comparaison membres à membres automatiquement
-        // Cela ne fonction qu'en C++20, si vous n'avez pas accès à cette version je vous donne les implémentations des opérateurs plus bas
-        bool operator==(WeightedGraphEdge const& other) const = default;
-        bool operator!=(WeightedGraphEdge const& other) const = default;
-    };
-
-    struct WeightedGraph {
-        // L'utilisation d'un tableau associatif permet d'avoir une complexité en O(1) pour l'ajout et la recherche d'un sommet.
-        // Cela permet de stocker les sommets dans un ordre quelconque (et pas avoir la contrainte d'avoir des identifiants (entiers) de sommets consécutifs lors de l'ajout de sommets).
-        // Cela permet également de pouvoir utiliser des identifiants de sommets de n'importe quel type (string, char, int, ...) et pas seulement des entiers.
-        std::unordered_map<std::pair<int,int>, std::vector<WeightedGraphEdge>> adjacency_list {};
-        
-
-        // E1 Q1 ///////////
-        
-        void add_vertex(std::pair<int,int> const id)
+        void Graph::WeightedGraph::add_vertex(int const id)
         {
-            std::unordered_map<std::pair<int,int>, std::vector<WeightedGraphEdge>>::const_iterator got = adjacency_list.find (id);
+            std::unordered_map<int, std::vector<WeightedGraphEdge>>::const_iterator got = adjacency_list.find (id);
             if (got == adjacency_list.end() )
                 {
                     adjacency_list[id];
                 }
             
         }
-        ////////////////////////
+       
 
-         // E1 Q2 ///////////
-        void add_directed_edge(std::pair<int,int> const from, std::pair<int,int> const to)
-        {   std::unordered_map<std::pair<int,int>, std::vector<WeightedGraphEdge>>::const_iterator chercherto = adjacency_list.find (to);
+ 
+        void Graph::WeightedGraph::add_directed_edge(int const from, int const to, int const poids)
+        {   std::unordered_map<int, std::vector<WeightedGraphEdge>>::const_iterator chercherto = adjacency_list.find (to);
             add_vertex(to);
-            WeightedGraphEdge destinationetpoids = {to,(to.first - from.first) + (to.second - from.second) };
+            WeightedGraphEdge destinationetpoids = {to,poids};
             adjacency_list[from].push_back(destinationetpoids); 
-        }
-        ///////////////////////////
+        };
+ 
         
 
-        // Même fonctionnement que pour WeightedGraphEdge
-        bool operator==(WeightedGraph const& other) const = default;
-        bool operator!=(WeightedGraph const& other) const = default;
 
-        std::unordered_map<std::pair<int,int>, std::pair<float, std::pair<int,int>>> dijkstra(Graph::WeightedGraph const& graph, std::pair<int,int> const& start, std::pair<int,int> const& end) {
-    std::unordered_map<std::pair<int,int>, std::pair<float, std::pair<int,int>>> distances {};
-    std::priority_queue<std::pair<float, std::pair<int,int>>, std::vector<std::pair<float, std::pair<int,int>>>, std::greater<std::pair<float, std::pair<int,int>>>> aVisiter {};
+std::unordered_map<int, std::pair<float, int>> Graph::WeightedGraph::dijkstra(Graph::WeightedGraph const& graph, int start, int end) {
+    std::unordered_map<int, std::pair<float, int>> distances {};
+    std::priority_queue<std::pair<float, int>, std::vector<std::pair<float, int>>, std::greater<std::pair<float, int>>> aVisiter {};
 
     // 1. On ajoute le sommet de départ à la liste des sommets à visiter avec une distance de 0 (on est déjà sur le sommet de départ)
     aVisiter.push({0.0f, start});
@@ -101,11 +76,9 @@ namespace Graph {
     }
 
     return distances;
-}
+};
 
 
-    };
 
-    ////////////////////////////////
+    
 
-} 
