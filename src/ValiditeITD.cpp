@@ -73,6 +73,19 @@ bool valeursRGBValides (int R, int G, int B)
     }
 }
 
+bool verifierSiLeFichierImageEstBienPresent (std::ifstream& fichier)
+{
+   if (fichier.good())
+   {
+    return true;
+   }
+
+   else 
+   {
+    return false;
+   }
+}
+
 
 
 
@@ -126,6 +139,20 @@ bool verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (std::ifstream
             return false;
             }
         }
+
+
+    if (PremierMotaComparer == "map")
+    {
+        std::string nomFichier = DecoupageMot[1];
+        std::ifstream fichierImage("../../../images/" + nomFichier);
+        bool imageDeLaMapExisteElleBien = verifierSiLeFichierImageEstBienPresent(fichierImage);
+
+        if (imageDeLaMapExisteElleBien == false )
+        {
+            std::cout << "Erreur : La ligne " << ligneActuelle + 1 << " est incorrecte. L'image de la map n'est pas trouvable ou ne parvient pas a etre ouvrir " << std::endl;
+            return false;
+        }
+    }
 
 
         // on passe à la ligne d'après
