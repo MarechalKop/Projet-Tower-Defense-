@@ -13,6 +13,32 @@
 
 // On utilise pour ça une fonction que l'on a dû créer pour l'exercice 2 du TD 4 du S2 qui permet de découper du texte et on la modifie pour qu'elle ne garde que le premier mot, les autres mots étants inutile
 
+std::vector<std::string> split_string(std::string const& str){
+    auto const estCaractereEspace = [](char letter){ return letter == ' '; };
+    std::vector<std::string> vectorstring;
+    std::string::const_iterator premièreLettreDunMot =  str.begin();
+    std::string::const_iterator espaceEntreLesMots;
+    while (premièreLettreDunMot != str.end() )
+    {
+        std::string stringDeTravail;
+        premièreLettreDunMot = std::find_if_not (premièreLettreDunMot,str.end(), estCaractereEspace);
+        espaceEntreLesMots = std::find_if (premièreLettreDunMot,str.end(), estCaractereEspace);
+        
+       
+       for (premièreLettreDunMot; premièreLettreDunMot != espaceEntreLesMots; premièreLettreDunMot++)
+       {
+        stringDeTravail.push_back(*premièreLettreDunMot);
+       }
+
+       vectorstring.push_back(stringDeTravail);
+        premièreLettreDunMot = espaceEntreLesMots;
+        stringDeTravail.clear();
+    }
+   
+
+    return vectorstring;
+}
+
 
 
 std::string premierMotDeLaligne(std::string const& str){
@@ -29,6 +55,26 @@ std::string premierMotDeLaligne(std::string const& str){
     
     return premierMot;
 }
+
+
+
+
+bool valeursRGBValides (int R, int G, int B)
+{
+    bool validiteRGB = false;
+    if ((R >= 0 && R <= 255) && (G >= 0 && G <= 255) && (B >= 0 && B <= 255) )
+    {
+        validiteRGB = true;
+        return validiteRGB;
+    }
+    else 
+    {
+        return validiteRGB;
+    }
+}
+
+
+
 
 bool verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (std::ifstream& fichier) {
     // On définit l'odre attendu des lignes
@@ -60,6 +106,7 @@ bool verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (std::ifstream
 
         // on regarde le premier mot de la ligne
         std::string PremierMotaComparer = premierMotDeLaligne(contenuLigne);
+        std::vector DecoupageMot = split_string(contenuLigne);
 
         // on le compare avec le mot attendu, si ce n'est pas bon, on le dit
         if (PremierMotaComparer != ordreAttendu[ligneActuelle])
@@ -67,6 +114,20 @@ bool verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (std::ifstream
             std::cout << "Erreur : La ligne " << ligneActuelle + 1 << " est incorrecte. Le mot attendu est " << ordreAttendu[ligneActuelle] << " au lieu de " << PremierMotaComparer << std::endl;
             return false;
         }
+
+        // si nous sommes sur les lignes couleurs, on vérifié si les valeurs RGB sont justes
+        if (PremierMotaComparer == "path" || PremierMotaComparer == "in" || PremierMotaComparer == "out")
+        {
+            bool lesValeursRGBSontElleValide = valeursRGBValides(std::stoi(DecoupageMot[1]),std::stoi(DecoupageMot[2]),std::stoi(DecoupageMot[3]));
+
+            if (lesValeursRGBSontElleValide == false )
+            {
+                std::cout << "Erreur : La ligne " << ligneActuelle + 1 << " est incorrecte. Les valeurs RGB sont fausses " << std::endl;
+            return false;
+            }
+        }
+
+
         // on passe à la ligne d'après
         ligneActuelle += 1;
         // si on dépasse le cadre de la lecture, on arrête la boucle while
@@ -84,6 +145,11 @@ bool verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (std::ifstream
     std::cout << "Le fichier est valide." << std::endl;
     return true;
 }
+
+
+
+
+
 
 
 
