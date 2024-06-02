@@ -102,6 +102,52 @@ bool verifierSiLeFichierImageEstBienPresent (std::ifstream& fichier)
    }
 }
 
+bool verifierEntreeSortieExistent (sil::Image image)
+{
+    int compteEntree {};
+    int compteSortie {};
+
+    for (int x{0}; x < image.width(); x++)
+    {
+    for (int y{0}; y < image.height(); y++)
+        {
+            if (image.pixel(x, y).r == 0 && image.pixel(x,y).g == 0 && image.pixel(x, y).b == 1)
+            {
+                compteEntree +=1;
+            }
+
+             if (image.pixel(x, y).r == 1 && image.pixel(x,y).g == 0 && image.pixel(x, y).b == 0)
+            {
+                compteSortie +=1;
+            }
+            
+        }
+    }
+
+    if (compteEntree > 0 && compteSortie > 0)
+    {
+        return true;
+    }
+
+    else if (compteEntree == 0 && compteSortie > 0)
+    {
+        std::cout << "Erreur : il n'existe pas de zone d'entree sur la map " << std::endl;
+        return false;
+    }
+
+    else if (compteEntree > 0 && compteSortie == 0)
+    {
+        std::cout << "Erreur : il n'existe pas de zone de sortie sur la map " << std::endl;
+        return false;
+    }
+
+    else if (compteEntree == 0 && compteSortie == 0)
+    {
+        std::cout << "Erreur : il n'existe ni zone de sortie ni zone d'entree sur la map " << std::endl;
+        return false;
+    }
+}
+
 bool testValiditeITD (std::ifstream& fichier) {
     // On définit l'odre attendu des lignes
     std::vector<std::string> ordreAttendu = {"ITD","map","path","in","out","graph","node"};
@@ -119,6 +165,7 @@ bool testValiditeITD (std::ifstream& fichier) {
     // Variable pour suivre si une erreur a été trouvée
     bool estValide = true;
     std::string nomMap ="";
+    
    
     
     // La boucle while permet de lire ligne par ligne le contenu du fichier et s'arrête à quand il n'y plus rien à lire
@@ -184,9 +231,7 @@ bool testValiditeITD (std::ifstream& fichier) {
             estValide = false;
         }
     }
-
-
-
+    
         // on passe à la ligne d'après
         ligneActuelle += 1;
     }
@@ -196,7 +241,14 @@ bool testValiditeITD (std::ifstream& fichier) {
     {
         std::cout << "Erreur : Fichier incomplet. Il manque les lignes " << ligneActuelle + 1 << " a " << ordreAttendu.size() <<  std::endl;
         estValide = false;
-    }      
+    }     
+
+    sil::Image image2{"images/" + nomMap };
+    bool testEntreeSortie = verifierEntreeSortieExistent (image2);
+    if (testEntreeSortie == false)
+    {
+        estValide = false;
+    } 
 
     if (estValide) {
         std::cout << "Le fichier est valide." << std::endl;
@@ -205,6 +257,10 @@ bool testValiditeITD (std::ifstream& fichier) {
     else if (!estValide) {
         std::cout << "Le fichier n'est pas valide." << std::endl;
     }
+
+    
+
+    
 
     return estValide;
 }
