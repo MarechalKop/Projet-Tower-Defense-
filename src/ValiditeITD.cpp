@@ -9,6 +9,7 @@
 #include <numeric>   
 #include <sstream>
 
+
 // Pour identifier si toutes les lignes sont bien présente et dans le bon ordre, on va avoir besoin de mettre de côté le premier mot de la ligne
 
 // On utilise pour ça une fonction que l'on a dû créer pour l'exercice 2 du TD 4 du S2 qui permet de découper du texte et on la modifie pour qu'elle ne garde que le premier mot, les autres mots étants inutile
@@ -73,6 +74,20 @@ bool valeursRGBValides (int R, int G, int B)
     }
 }
 
+bool verifierCoordonneNoeud (int longueurImage, int largeurImage, int X, int Y)
+{
+    bool validiteCoordonne = false;
+    if ((X >= 0 && X <= longueurImage) && (Y >= 0 && Y <= largeurImage) )
+    {
+        validiteCoordonne = true;
+        return validiteCoordonne;
+    }
+    else 
+    {
+        return validiteCoordonne;
+    }
+}
+
 bool verifierSiLeFichierImageEstBienPresent (std::ifstream& fichier)
 {
    if (fichier.good())
@@ -87,8 +102,6 @@ bool verifierSiLeFichierImageEstBienPresent (std::ifstream& fichier)
 }
 
 
-
-
 bool verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (std::ifstream& fichier) {
     // On définit l'odre attendu des lignes
     std::vector<std::string> ordreAttendu = {"ITD","map","path","in","out","graph","node"};
@@ -97,17 +110,18 @@ bool verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (std::ifstream
     if (!fichier.is_open())
     {
         std::cout <<"Erreur : nous n'avons pas reussi a ouvrir le fichier ITD" << std::endl;
-        return 1;
+        return false;
     }
     // on va lire et stocker le contenu des lignes du fichier
     std::string contenuLigne {};
     int ligneActuelle {};
+
+    // Variable pour suivre si une erreur a été trouvée
+    bool estValide = true;
     
     // La boucle while permet de lire ligne par ligne le contenu du fichier et s'arrête à quand il n'y plus rien à lire
     while (std::getline(fichier,contenuLigne))
     {   
-        
-        
         // Afin d'éviter que le lecteur lise les lignes de commentaires 
         if (contenuLigne[0] == '#') 
         {
@@ -122,10 +136,10 @@ bool verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (std::ifstream
         std::vector DecoupageMot = split_string(contenuLigne);
 
         // on le compare avec le mot attendu, si ce n'est pas bon, on le dit
-        if (PremierMotaComparer != ordreAttendu[ligneActuelle])
+        if (ligneActuelle < ordreAttendu.size() && PremierMotaComparer != ordreAttendu[ligneActuelle])
         {
             std::cout << "Erreur : La ligne " << ligneActuelle + 1 << " est incorrecte. Le mot attendu est " << ordreAttendu[ligneActuelle] << " au lieu de " << PremierMotaComparer << std::endl;
-            return false;
+            estValide = false;
         }
 
         // si nous sommes sur les lignes couleurs, on vérifié si les valeurs RGB sont justes
@@ -136,42 +150,61 @@ bool verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (std::ifstream
             if (lesValeursRGBSontElleValide == false )
             {
                 std::cout << "Erreur : La ligne " << ligneActuelle + 1 << " est incorrecte. Les valeurs RGB sont fausses " << std::endl;
-            return false;
+                estValide = false;
             }
         }
 
-
-    if (PremierMotaComparer == "map")
-    {
-        std::string nomFichier = DecoupageMot[1];
-        std::ifstream fichierImage("../../../images/" + nomFichier);
-        bool imageDeLaMapExisteElleBien = verifierSiLeFichierImageEstBienPresent(fichierImage);
-
-        if (imageDeLaMapExisteElleBien == false )
+        if (PremierMotaComparer == "map")
         {
-            std::cout << "Erreur : La ligne " << ligneActuelle + 1 << " est incorrecte. L'image de la map n'est pas trouvable ou ne parvient pas a etre ouvrir " << std::endl;
-            return false;
+            std::ifstream fichier ("../../../images/" + DecoupageMot[1]);
+            bool imageDeLaMapExisteElleBien = verifierSiLeFichierImageEstBienPresent(fichier);
+
+             if (imageDeLaMapExisteElleBien == false )
+            {
+                std::cout << "Erreur : La ligne " << ligneActuelle + 1 << " est incorrecte. L'image de la map n'est pas trouvable ou ne parvient pas a etre ouvrir " << std::endl;
+                estValide = false;
+            }
+        }
+
+        int longueurImage = 8;
+        int largeurImage = 8;
+
+        if (PremierMotaComparer == "node")
+    {
+        // Ici, vous devez remplacer longueurImage et largeurImage par les valeurs réelles de la largeur et de la hauteur de votre image.
+        bool coordonneesNoeudValides = verifierCoordonneNoeud(longueurImage, largeurImage, std::stoi(DecoupageMot[2]), std::stoi(DecoupageMot[3]));
+
+        if (coordonneesNoeudValides == false )
+        {
+            std::cout << "Erreur : La ligne " << ligneActuelle + 1 << " est incorrecte. Les coordonnees du noeud " << std::stoi(DecoupageMot[1]) << " sont invalides " << std::endl;
+            estValide = false;
         }
     }
+
 
 
         // on passe à la ligne d'après
         ligneActuelle += 1;
-        // si on dépasse le cadre de la lecture, on arrête la boucle while
-        if (ligneActuelle >= ordreAttendu.size()) {
-            break;
-        }
     }
-        // s'il manque des lignes dans notre fichier, on le dit
-        if (ligneActuelle < ordreAttendu.size()) 
-        {
-            std::cout << "Erreur : Fichier incomplet. Il manque les lignes " << ligneActuelle + 1 << " a " << ordreAttendu.size() <<  std::endl;
-            return false;
-        }      
 
-    std::cout << "Le fichier est valide." << std::endl;
-    return true;
+    // s'il manque des lignes dans notre fichier, on le dit
+    if (ligneActuelle < ordreAttendu.size()) 
+    {
+        std::cout << "Erreur : Fichier incomplet. Il manque les lignes " << ligneActuelle + 1 << " a " << ordreAttendu.size() <<  std::endl;
+        estValide = false;
+    }      
+
+    if (estValide) {
+        std::cout << "Le fichier est valide." << std::endl;
+    }
+
+    else if (!estValide) {
+        std::cout << "Le fichier n'est pas valide." << std::endl;
+    }
+
+    return estValide;
 }
+
 
 
 
