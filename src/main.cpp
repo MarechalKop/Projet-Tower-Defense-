@@ -9,7 +9,7 @@
 
 
 int main () {
-  std::ifstream fichier ("../../../data/level1.itd");
+  std::ifstream fichier ("../../data/level1.itd");
    
-  verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (fichier);
+  testValiditeITD (fichier);
 }

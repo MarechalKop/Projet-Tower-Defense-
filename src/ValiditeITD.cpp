@@ -101,8 +101,7 @@ bool verifierSiLeFichierImageEstBienPresent (std::ifstream& fichier)
    }
 }
 
-
-bool verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (std::ifstream& fichier) {
+bool testValiditeITD (std::ifstream& fichier) {
     // On définit l'odre attendu des lignes
     std::vector<std::string> ordreAttendu = {"ITD","map","path","in","out","graph","node"};
     
@@ -156,7 +155,7 @@ bool verifierSiLesLignesDuFichierITDSontPresentesEtDansLeBonOrdre (std::ifstream
 
         if (PremierMotaComparer == "map")
         {
-            std::ifstream fichier ("../../../images/" + DecoupageMot[1]);
+            std::ifstream fichier ("../../images/" + DecoupageMot[1]);
             bool imageDeLaMapExisteElleBien = verifierSiLeFichierImageEstBienPresent(fichier);
 
              if (imageDeLaMapExisteElleBien == false )
