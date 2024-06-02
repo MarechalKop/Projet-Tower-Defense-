@@ -74,10 +74,11 @@ bool valeursRGBValides (int R, int G, int B)
     }
 }
 
-bool verifierCoordonneNoeud (int longueurImage, int largeurImage, int X, int Y)
+bool verifierCoordonneNoeud (int largeurImage, int hauteurImage, int X, int Y)
 {
+   
     bool validiteCoordonne = false;
-    if ((X >= 0 && X <= longueurImage) && (Y >= 0 && Y <= largeurImage) )
+    if ((X >= 0 && X < largeurImage) && (Y >= 0 && Y < hauteurImage) )
     {
         validiteCoordonne = true;
         return validiteCoordonne;
@@ -117,6 +118,8 @@ bool testValiditeITD (std::ifstream& fichier) {
 
     // Variable pour suivre si une erreur a été trouvée
     bool estValide = true;
+    std::string nomMap ="";
+   
     
     // La boucle while permet de lire ligne par ligne le contenu du fichier et s'arrête à quand il n'y plus rien à lire
     while (std::getline(fichier,contenuLigne))
@@ -152,10 +155,13 @@ bool testValiditeITD (std::ifstream& fichier) {
                 estValide = false;
             }
         }
+        
+        
 
         if (PremierMotaComparer == "map")
         {
-            std::ifstream fichier ("../../images/" + DecoupageMot[1]);
+            nomMap =DecoupageMot[1];
+            std::ifstream fichier ("../../images/" + nomMap);
             bool imageDeLaMapExisteElleBien = verifierSiLeFichierImageEstBienPresent(fichier);
 
              if (imageDeLaMapExisteElleBien == false )
@@ -165,13 +171,12 @@ bool testValiditeITD (std::ifstream& fichier) {
             }
         }
 
-        int longueurImage = 8;
-        int largeurImage = 8;
-
+        
+        
         if (PremierMotaComparer == "node")
-    {
-        // Ici, vous devez remplacer longueurImage et largeurImage par les valeurs réelles de la largeur et de la hauteur de votre image.
-        bool coordonneesNoeudValides = verifierCoordonneNoeud(longueurImage, largeurImage, std::stoi(DecoupageMot[2]), std::stoi(DecoupageMot[3]));
+        {
+        sil::Image image{"images/" + nomMap };
+        bool coordonneesNoeudValides = verifierCoordonneNoeud(image.width(), image.height(), std::stoi(DecoupageMot[2]), std::stoi(DecoupageMot[3]));
 
         if (coordonneesNoeudValides == false )
         {
