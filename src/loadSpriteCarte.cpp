@@ -14,8 +14,8 @@ GLuint* chargerTousLesSprites ()
     int y {};
     int n {};
     std::vector<unsigned char *> Result(4);
-    Result[0] = stbi_load( "../../images/c.png",& x,& y,& n, 0);
-    Result[1] = stbi_load( "../../images/c.png",& x,& y,& n, 0);
+    Result[0] = stbi_load( "../../images/sprites/Tiles/Bleu.png",& x,& y,& n, 0);
+    Result[1] = stbi_load( "../../images/sprites/Tiles/Rouge.png",& x,& y,& n, 0);
     Result[2] = stbi_load( "../../images/sprites/Tiles/FieldsTile_38.png",& x,& y,& n, 0);
     Result[3] = stbi_load( "../../images/sprites/Tiles/FieldsTile_46.png",& x,& y,& n, 0);
     

@@ -8,9 +8,7 @@
 #include <vector>
 #include "dessinerCarte.hpp"
 #include "loadSpriteCarte.hpp"
-
-
-
+#include <sil/sil.hpp>
 
 
 #include <GL/gl.h>
@@ -196,8 +194,11 @@ int main(int /* argc */, char** /* argv */)
 	std::ifstream fichier ("../../data/level1.itd");
    	testValiditeITD (fichier);
 	GLuint* tab = chargerTousLesSprites ();
-	std::string nomMap = recuperationNomFichierMap  (fichier);
-	// sil::Image image{"images/" + nomMap };
+	std::ifstream fichier2 ("../../data/level1.itd");
+	
+	std::string nomMap = recuperationNomFichierMap(fichier2);
+	std::cout << "caca" << nomMap << std::endl;
+	sil::Image image3{"images/" + nomMap };
 
 		
 		
@@ -262,7 +263,7 @@ int main(int /* argc */, char** /* argv */)
 		// glBindTexture(GL_TEXTURE_2D, 0);
 
 
-		DessinCarte (tab);
+		DessinCarte (tab, image3);
 
 
 

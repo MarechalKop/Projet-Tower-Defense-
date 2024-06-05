@@ -11,4 +11,4 @@
 #include <sil/sil.hpp>
 
 std::string recuperationNomFichierMap (std::ifstream& fichier);
-void DessinCarte  (GLuint* tab);
+void DessinCarte  (GLuint* tab, sil::Image image3);
