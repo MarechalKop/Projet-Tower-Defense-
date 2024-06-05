@@ -5,6 +5,17 @@
 #include <sil/sil.hpp>
 
 
+
+
+
+#include <iostream>
+
+#include <algorithm>
+#include <list>
+#include <numeric>   
+#include <sstream>
+
+
 std::string premierMotDeLaligne(std::string const& str);
 bool testValiditeITD (std::ifstream& fichier);
 bool verifierSiLeFichierImageEstBienPresent (std::ifstream& fichier);
