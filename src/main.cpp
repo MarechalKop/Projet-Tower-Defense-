@@ -197,7 +197,7 @@ int main(int /* argc */, char** /* argv */)
    	testValiditeITD (fichier);
 	GLuint* tab = chargerTousLesSprites ();
 	std::string nomMap = recuperationNomFichierMap  (fichier);
-	sil::Image image{"images/" + nomMap };
+	// sil::Image image{"images/" + nomMap };
 
 		
 		
