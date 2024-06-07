@@ -26,6 +26,9 @@
 #include <stack>
 #include <queue>
 
+#include "tours.hpp"
+#include "ennemis.hpp"
+
 
 
 
@@ -151,6 +154,8 @@ int main(int /* argc */, char** /* argv */)
 	float rotation = 0.0;
 
 	phy = 180;
+	theta = 90;
+	dist_zoom = 7;
 	// Exercice 1 /////
 	// int x {};
 	// int y {};
@@ -189,7 +194,15 @@ int main(int /* argc */, char** /* argv */)
 	// 	glBindTexture(GL_TEXTURE_2D, 0);
 	// 	stbi_image_free(Result[i]);
 	// 	}
+	
 
+	 Ennemi ennemi1 = {100, 1.5f, 50, "rouge"};
+
+    // Afficher les attributs de l'ennemi
+    std::cout << "Ennemi1 - Points de vie: " << ennemi1.pts_de_vie
+              << ", Vitesse: " << ennemi1.vitesse
+              << ", Récompense: " << ennemi1.recompense
+              << ", Couleur: " << ennemi1.couleur << std::endl;
 
 	std::ifstream fichier ("../../data/level1.itd");
    	testValiditeITD (fichier);
@@ -197,7 +210,6 @@ int main(int /* argc */, char** /* argv */)
 	std::ifstream fichier2 ("../../data/level1.itd");
 	
 	std::string nomMap = recuperationNomFichierMap(fichier2);
-	std::cout << "caca" << nomMap << std::endl;
 	sil::Image image3{"images/" + nomMap };
 
 		
