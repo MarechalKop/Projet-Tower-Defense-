@@ -196,13 +196,7 @@ int main(int /* argc */, char** /* argv */)
 	// 	}
 	
 
-	 Ennemi ennemi1 = {100, 1.5f, 50, "rouge"};
-
-    // Afficher les attributs de l'ennemi
-    std::cout << "Ennemi1 - Points de vie: " << ennemi1.pts_de_vie
-              << ", Vitesse: " << ennemi1.vitesse
-              << ", Récompense: " << ennemi1.recompense
-              << ", Couleur: " << ennemi1.couleur << std::endl;
+	
 
 	std::ifstream fichier ("../../data/level1.itd");
    	testValiditeITD (fichier);

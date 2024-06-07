@@ -14,14 +14,23 @@
                 {
                     adjacency_list[id];
                 }
+            else {
+                throw std::runtime_error("Le noeud que tu veux ajouter existe déjà LOL");
+            }
             
         }
        
 
  
         void Graph::WeightedGraph::add_directed_edge(int const from, int const to, int const poids)
-        {   std::unordered_map<int, std::vector<WeightedGraphEdge>>::const_iterator chercherto = adjacency_list.find (to);
-            add_vertex(to);
+        {   std::unordered_map<int, std::vector<WeightedGraphEdge>>::const_iterator chercherTo = adjacency_list.find (to);
+        std::unordered_map<int, std::vector<WeightedGraphEdge>>::const_iterator chercherFrom = adjacency_list.find (from);
+            if (chercherTo == adjacency_list.end()) {
+                  add_vertex(to);
+            }
+            else if (chercherFrom == adjacency_list.end()) {
+                  add_vertex(from);
+            }
             WeightedGraphEdge destinationetpoids = {to,poids};
             adjacency_list[from].push_back(destinationetpoids); 
         };
