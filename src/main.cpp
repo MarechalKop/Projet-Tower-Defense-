@@ -201,9 +201,23 @@ int main(int /* argc */, char** /* argv */)
 	std::ifstream fichier ("../../data/level1.itd");
    	testValiditeITD (fichier);
 	GLuint* tab = chargerTousLesSprites ();
-	std::ifstream fichier2 ("../../data/level1.itd");
+	fichier.close();
+	 
+
+	std::ifstream fichier2("../../data/level1.itd");
+    if (!fichier2.is_open()) {
+        std::cerr << "Erreur : Impossible d'ouvrir le fichier ITD." << std::endl;
+        return 1;
+    }
+
+	Graph::WeightedGraph graph;
+    graph.creerNoeudEtArreteGrapheAPartirDeItd(fichier2);
+    fichier2.close();
+	graph.printGraph();
 	
-	std::string nomMap = recuperationNomFichierMap(fichier2);
+	
+	std::ifstream fichier3 ("../../data/level1.itd");
+	std::string nomMap = recuperationNomFichierMap(fichier3);
 	sil::Image image3{"images/" + nomMap };
 
 		
