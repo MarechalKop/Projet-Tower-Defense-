@@ -1,25 +1,20 @@
 #pragma once
-
 #include <string>
 
-// Structure représentant un ennemi
-struct EnnemiType1 {
-    int pts_de_vie {};
-    float vitesse {};
-    int recompense {};
-    std::string couleur {};
-
-    void attaque(int degats);
-    bool estMort();
+enum TypeEnnemi {
+    Type1,
+    Type2
 };
 
-struct EnnemiType2 {
+// Structure représentant un ennemi
+struct Ennemi {
     int pts_de_vie {};
     float vitesse {};
     int recompense {};
     std::string couleur {};
+    TypeEnnemi type;
 
-    void attaque(int degats);
-    bool estMort();
+    void degatsEnnemi(int degats);
+    bool estMort() const;
 };
 
