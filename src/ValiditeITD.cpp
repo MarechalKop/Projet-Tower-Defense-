@@ -25,21 +25,17 @@ std::vector<std::string> split_string(std::string const& str){
         premièreLettreDunMot = std::find_if_not (premièreLettreDunMot,str.end(), estCaractereEspace);
         espaceEntreLesMots = std::find_if (premièreLettreDunMot,str.end(), estCaractereEspace);
         
-       
        for (premièreLettreDunMot; premièreLettreDunMot != espaceEntreLesMots; premièreLettreDunMot++)
        {
         stringDeTravail.push_back(*premièreLettreDunMot);
        }
-
        vectorstring.push_back(stringDeTravail);
         premièreLettreDunMot = espaceEntreLesMots;
         stringDeTravail.clear();
     }
    
-
     return vectorstring;
 }
-
 
 
 std::string premierMotDeLaligne(std::string const& str){
@@ -56,8 +52,6 @@ std::string premierMotDeLaligne(std::string const& str){
     
     return premierMot;
 }
-
-
 
 
 bool valeursRGBValides (int R, int G, int B)
@@ -203,8 +197,6 @@ bool testValiditeITD (std::ifstream& fichier) {
             }
         }
         
-        
-
         if (PremierMotaComparer == "map")
         {
             nomMap =DecoupageMot[1];
@@ -218,8 +210,6 @@ bool testValiditeITD (std::ifstream& fichier) {
             }
         }
 
-        
-        
         if (PremierMotaComparer == "node")
         {
         sil::Image image{"images/" + nomMap };
@@ -259,9 +249,6 @@ bool testValiditeITD (std::ifstream& fichier) {
     }
 
     
-
-    
-
     return estValide;
 }
 

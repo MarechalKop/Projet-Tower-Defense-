@@ -2,7 +2,7 @@
 #include <cmath>
 #include "ennemis.hpp"
 
-const float epsilon = 0.1f;
+const float epsilon = 0.001f;
 
 Graph::Node interpolationLineaire(Graph::Node a, Graph::Node b, float t) {
     Graph::Node result;
@@ -48,8 +48,8 @@ void Ennemi::avancer(float dt) {
         // Mettre à jour la position actuelle et chercher la prochaine position
         this->positionActuelle = this->positionProchaine;
         this->positionProchaine = chercherProchainePosition();
-        std::cout << "Position actuelle: (" << this->positionActuelle.x << ", " << this->positionActuelle.y << ")" << std::endl;
-        std::cout << "Prochaine position: (" << this->positionProchaine.x << ", " << this->positionProchaine.y << ")" << std::endl;
+        // std::cout << "Position actuelle: (" << this->positionActuelle.x << ", " << this->positionActuelle.y << ")" << std::endl;
+        // std::cout << "Prochaine position: (" << this->positionProchaine.x << ", " << this->positionProchaine.y << ")" << std::endl;
     } else {
         // Calculer la nouvelle position en utilisant une interpolation linéaire
         float totalDistance = distance(this->positionActuelle, this->positionProchaine);
@@ -63,14 +63,13 @@ void Ennemi::avancer(float dt) {
         }
 
         std::cout << "Position actuelle en mouvement: (" << this->positionActuelle.x << ", " << this->positionActuelle.y << ")" << std::endl;
-        std::cout << "Distance avec la prochaine position : " << distance(this->positionActuelle, this->positionProchaine) << std::endl;
+        // std::cout << "Distance avec la prochaine position : " << distance(this->positionActuelle, this->positionProchaine) << std::endl;
     }
 }
 
 
-
 Graph::Node Ennemi::chercherProchainePosition() {
-    std::cout << "Chemin actuel : ";
+    // std::cout << "Chemin actuel : ";
     for (int n : this->chemin) {
         std::cout << n << " ";
     }

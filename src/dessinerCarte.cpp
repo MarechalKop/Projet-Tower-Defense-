@@ -101,9 +101,9 @@ void DessinCarte (GLuint* tab, sil::Image image3)
 
 
 
-    for (int x{0}; x < image3.width(); x++)
+    for (int y{0}; y < image3.height(); y++ )
     {
-    for (int y{0}; y < image3.height(); y++)
+    for (int x{0}; x < image3.width(); x++)
     
         {
             
@@ -131,17 +131,26 @@ void DessinCarte (GLuint* tab, sil::Image image3)
             //      glBindTexture(GL_TEXTURE_2D, tab[3]);
             // }
             
+            
+            glPushMatrix();
+
+             glRotatef(180., 0., 0., 1.);
+           
+
             glColor3f(1.0,1.0,1.0);
+                
+               
 		        glBegin(GL_QUADS);
 		        glTexCoord2f(0, 0);
-		        glVertex3f( -4 + x,4 - y,0);
+		        glVertex3f( 4 - x,4 - y,0);
 		        glTexCoord2f(1, 0);
-		        glVertex3f( -3 + x,4 - y,0);
+		        glVertex3f( 3 - x,4 - y,0);
 		        glTexCoord2f(1, 1);
-		        glVertex3f( -3 + x,3 - y,0);
+		        glVertex3f( 3 - x,3 - y,0);
 		        glTexCoord2f(0, 1);
-		        glVertex3f( -4 + x,3 - y,0);
+		        glVertex3f( 4 - x,3 - y,0);
 		        glEnd();
+                glPopMatrix();
 
             glBindTexture(GL_TEXTURE_2D, 0);
         }

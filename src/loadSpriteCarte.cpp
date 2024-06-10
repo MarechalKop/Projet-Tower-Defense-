@@ -19,7 +19,7 @@ GLuint* chargerTousLesSprites ()
     Result[2] = stbi_load( "../../images/sprites/Tiles/FieldsTile_38.png",& x,& y,& n, 0);
     Result[3] = stbi_load( "../../images/sprites/Tiles/FieldsTile_46.png",& x,& y,& n, 0);
     
-    if (Result[0] == 0 || Result[1] == 0 || Result[2] == 0 || Result[3] == 0)
+    if (Result[0] == 0 || Result[1] == 0 || Result[2] == 0 || Result[3] == 0 )
     {
         std::cout << "Il y a une erreur chacal" << std::endl;
     }

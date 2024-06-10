@@ -147,8 +147,8 @@ int main(int /* argc */, char** /* argv */)
 
 	float rotation = 0.0;
 
-	phy = 180;
-	theta = 90;
+	phy = 360;
+	 theta = 270;
 	dist_zoom = 7;
 
 	
@@ -174,11 +174,11 @@ int main(int /* argc */, char** /* argv */)
 
 	std::vector<int> cheminLePlusCourt = graph.dijkstra(idPremierNoeud, idDernierNoeud);
 
-	std::cout << "Le chemin le plus court de " << idPremierNoeud << " a " << idDernierNoeud<< " est : ";
+	// std::cout << "Le chemin le plus court de " << idPremierNoeud << " a " << idDernierNoeud<< " est : ";
     for (int node_id : cheminLePlusCourt) {
-        std::cout << node_id << " ";
+        // std::cout << node_id << " ";
     }
-    std::cout << std::endl;
+    // std::cout << std::endl;
 
 
 	Ennemi ennemi;
@@ -237,12 +237,21 @@ int main(int /* argc */, char** /* argv */)
 		
 		// glBindTexture(GL_TEXTURE_2D, 0);
 		
-
-		std::cout << "Position de l'ennemi : (" << ennemi.positionActuelle.x << ", " << ennemi.positionActuelle.y << ")\n";
-		std::cout << "Prochaine position : (" << ennemi.positionProchaine.x << ", " << ennemi.positionProchaine.y << ")\n";
+		drawFrame();
+		// std::cout << "Position de l'ennemi : (" << ennemi.positionActuelle.x << ", " << ennemi.positionActuelle.y << ")\n";
+		// std::cout << "Prochaine position : (" << ennemi.positionProchaine.x << ", " << ennemi.positionProchaine.y << ")\n";
 		DessinCarte (tab, image3);
 
-
+		glBegin(GL_QUADS);
+    glTexCoord2f(0, 0);
+    glVertex3f(ennemi.positionActuelle.x, ennemi.positionActuelle.y, 0.001);
+    glTexCoord2f(1, 0);
+    glVertex3f(ennemi.positionActuelle.x + 1, ennemi.positionActuelle.y, 0.001);
+    glTexCoord2f(1, 1);
+    glVertex3f(ennemi.positionActuelle.x + 1, ennemi.positionActuelle.y + 1, 0.001);
+    glTexCoord2f(0, 1);
+    glVertex3f(ennemi.positionActuelle.x , ennemi.positionActuelle.y + 1, 0.001);
+    glEnd();
 
 		glDisable(GL_TEXTURE_2D);
 
@@ -267,8 +276,8 @@ int main(int /* argc */, char** /* argv */)
 
 
 		float dt = static_cast<float>(elapsedTime);
-    	std::cout << "Elapsed time (dt): " << dt << std::endl;
-    	std::cout << "Ennemi speed: " << ennemi.vitesse << std::endl;
+    	// std::cout << "Elapsed time (dt): " << dt << std::endl;
+    	// std::cout << "Ennemi speed: " << ennemi.vitesse << std::endl;
     	ennemi.avancer(dt);
 
 

@@ -8,11 +8,11 @@ in 0 60 255
 # Rouge
 out 255 0 0
 graph 8
-node 0 1 1 1
-node 1 6 1 2
-node 2 6 3 3
-node 3 4 3 4
-node 4 4 4 5
-node 5 2 4 6
-node 6 2 6 7
-node 7 6 6 
+node 0 -3 2 1
+node 1 2 2 2
+node 2 2 0 3
+node 3 0 0 4
+node 4 0 -1 5
+node 5 -2 -1 6
+node 6 -2 -3 7
+node 7 2 -3
