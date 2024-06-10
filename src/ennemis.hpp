@@ -12,6 +12,9 @@ struct Ennemi {
     int recompense {};
     std::string couleur {};
     TypeEnnemi type;
+    // Position de l'ennemi
+    int posX;
+    int posY; 
 
     void degatsEnnemi(int degats);
     bool estMort() const;

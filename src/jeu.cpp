@@ -1,6 +1,8 @@
 #include <iostream>
+#include <ctime>
 #include "tours.hpp"
 #include "ennemis.hpp"
+#include "jeu.hpp"
 
 namespace Jeu {
     int total_argent {0};

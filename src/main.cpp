@@ -28,6 +28,7 @@
 
 #include "tours.hpp"
 #include "ennemis.hpp"
+#include "jeu.hpp"
 
 
 
