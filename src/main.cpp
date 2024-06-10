@@ -214,6 +214,17 @@ int main(int /* argc */, char** /* argv */)
     graph.creerNoeudEtArreteGrapheAPartirDeItd(fichier2);
     fichier2.close();
 	graph.printGraph();
+
+	int idPremierNoeud = 0; // Remplacez par l'ID de votre nœud de départ
+    int idDernierNoeud = 7; // Remplacez par l'ID de votre nœud d'arrivée
+
+	std::vector<int> cheminLePlusCourt = graph.dijkstra(idPremierNoeud, idDernierNoeud);
+
+	std::cout << "Le chemin le plus court de " << idPremierNoeud << " a " << idDernierNoeud<< " est : ";
+    for (int node_id : cheminLePlusCourt) {
+        std::cout << node_id << " ";
+    }
+    std::cout << std::endl;
 	
 	
 	std::ifstream fichier3 ("../../data/level1.itd");
