@@ -170,6 +170,6 @@ std::vector<int> Graph::WeightedGraph::dijkstra(int start, int goal) {
     if (path[0] == start) {
         return path;
     } else {
-        return {}; // Return an empty path if no path found
+        return {}; 
     }
 }
