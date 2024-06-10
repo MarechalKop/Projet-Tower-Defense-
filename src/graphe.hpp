@@ -15,8 +15,8 @@ namespace Graph {
 
     struct Node {
         int id {0};
-        int x {0};
-        int y {0};
+        float x {0};
+        float y {0};
         std::vector<WeightedGraphEdge> edges;
     };
 
@@ -32,5 +32,6 @@ namespace Graph {
         std::vector<std::string> split_string(const std::string& str);
         bool operator==(WeightedGraph const& other) const = default;
         bool operator!=(WeightedGraph const& other) const = default;
+        Node getNodePosition(int nodeId); 
     };
 }

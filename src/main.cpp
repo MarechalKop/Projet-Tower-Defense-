@@ -30,16 +30,10 @@
 #include "ennemis.hpp"
 #include "jeu.hpp"
 
-
-
-
-
-
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "3D_tools.hpp"
 #include "draw_scene.hpp"
-
 
 
 /* Window properties */
@@ -157,48 +151,8 @@ int main(int /* argc */, char** /* argv */)
 	phy = 180;
 	theta = 90;
 	dist_zoom = 7;
-	// Exercice 1 /////
-	// int x {};
-	// int y {};
-	// int n {};
-	// 	std::vector<unsigned char *> Result(2);
-	// 	Result[0] = stbi_load( "../../images/c.png",& x,& y,& n, 0);
-	// 	Result[1] = stbi_load( "../../images/c.png",& x,& y,& n, 0);
-
-		
-	// 	if (Result[0] == 0 || Result[1] == 0)
-	// 	{
-	// 		std::cout << "Il y a une erreur chacal" << std::endl;
-	// 	}
-	// 	else 
-	// 	{
-	// 		std::cout << "C'est ok bg" << std::endl;
-	// 	}
-	// 	//////////////////////////////////
-
-	// 	///Exercice 2//////////////
-	// 	int const nombreTexture = 2;
-	// 	GLuint tab[nombreTexture]; 
-		
-		
-	// 	glGenTextures( nombreTexture, tab );
-
-	// 	for (int i {}; i < nombreTexture; i++)
-	// 	{ 
-	// 	glBindTexture(GL_TEXTURE_2D, tab[i] );
-	// 	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    // 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	// 	glTexImage2D(
-	// 	 GL_TEXTURE_2D, 0 , GL_RGB,
- 	// 	x, y, 0, GL_RGB, GL_UNSIGNED_BYTE, Result[i]);
-
-	// 	glBindTexture(GL_TEXTURE_2D, 0);
-	// 	stbi_image_free(Result[i]);
-	// 	}
-	
 
 	
-
 	std::ifstream fichier ("../../data/level1.itd");
    	testValiditeITD (fichier);
 	GLuint* tab = chargerTousLesSprites ();
@@ -226,6 +180,28 @@ int main(int /* argc */, char** /* argv */)
         std::cout << node_id << " ";
     }
     std::cout << std::endl;
+
+
+	Ennemi ennemi;
+	// Initialisez votre ennemi...
+	ennemi.pts_de_vie = 100; // Par exemple
+	ennemi.vitesse = 100; // Par exemple
+	ennemi.recompense = 10; // Par exemple
+	ennemi.couleur = "rouge"; // Par exemple
+	ennemi.type = TypeEnnemi::Type1; // Par exemple
+	ennemi.graphe = &graph;
+
+	if (!cheminLePlusCourt.empty()) {
+    ennemi.positionActuelle = graph.getNodePosition(cheminLePlusCourt[0]);
+    if (cheminLePlusCourt.size() > 1) {
+        ennemi.positionProchaine = graph.getNodePosition(cheminLePlusCourt[1]);
+    } else {
+        ennemi.positionProchaine = ennemi.positionActuelle;
+    }
+    ennemi.setChemin(cheminLePlusCourt);
+    ennemi.chercherProchainePosition(); // Initialiser la prochaine position
+}
+	
 	
 	
 	std::ifstream fichier3 ("../../data/level1.itd");
@@ -244,6 +220,8 @@ int main(int /* argc */, char** /* argv */)
 		/* Get time (in second) at loop beginning */
 		double startTime = glfwGetTime();
 
+		
+
 		/* Cleaning buffers and setting Matrix Mode */
 		glClearColor(0.2,0.0,0.0,0.0);
 
@@ -256,53 +234,19 @@ int main(int /* argc */, char** /* argv */)
 		/* Scene rendering */
 		glEnable(GL_TEXTURE_2D);
 		
-		// glBindTexture(GL_TEXTURE_2D, tab[0]);
-
-		
-		// drawFrame();
-		
-		// glColor3f(1.0,1.0,1.0);
-		// glBegin(GL_QUADS);
-		// glTexCoord2f(0, 0);
-		// glVertex3f( -2,2,0);
-		// glTexCoord2f(1, 0);
-		// glVertex3f( 2,2,0);
-		// glTexCoord2f(1, 1);
-		// glVertex3f( 2,-2,0);
-		// glTexCoord2f(0, 1);
-		// glVertex3f( -2,-2,0);
-		// glEnd();
-		
+		 
 		
 		// glBindTexture(GL_TEXTURE_2D, 0);
-
-		// glBindTexture(GL_TEXTURE_2D, tab[1]);
-
 		
-		// glColor3f(1.0,1.0,1.0);
-		// glBegin(GL_QUADS);
-		// glTexCoord2f(0, 0);
-		// glVertex3f( 2,2,0);
-		// glTexCoord2f(1, 0);
-		// glVertex3f( 6,2,0);
-		// glTexCoord2f(1, 1);
-		// glVertex3f( 6,-2,0);
-		// glTexCoord2f(0, 1);
-		// glVertex3f( 2,-2,0);
-		// glEnd();
-		
-		
-		// glBindTexture(GL_TEXTURE_2D, 0);
 
-
+		std::cout << "Position de l'ennemi : (" << ennemi.positionActuelle.x << ", " << ennemi.positionActuelle.y << ")\n";
+		std::cout << "Prochaine position : (" << ennemi.positionProchaine.x << ", " << ennemi.positionProchaine.y << ")\n";
 		DessinCarte (tab, image3);
 
 
 
 		glDisable(GL_TEXTURE_2D);
 
-
-	
 
 		/* Initial scenery setup */
 
@@ -321,6 +265,13 @@ int main(int /* argc */, char** /* argv */)
 		{
 			glfwWaitEventsTimeout(FRAMERATE_IN_SECONDS-elapsedTime);
 		}
+
+
+		float dt = static_cast<float>(elapsedTime);
+    	std::cout << "Elapsed time (dt): " << dt << std::endl;
+    	std::cout << "Ennemi speed: " << ennemi.vitesse << std::endl;
+    	ennemi.avancer(dt);
+
 
 		/* Animate scenery */
 		rotation++;
