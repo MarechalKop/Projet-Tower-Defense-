@@ -184,7 +184,7 @@ int main(int /* argc */, char** /* argv */)
 	Ennemi ennemi;
 	// Initialisez votre ennemi...
 	ennemi.pts_de_vie = 100; // Par exemple
-	ennemi.vitesse = 200; // Par exemple
+	ennemi.vitesse = 100; // Par exemple
 	ennemi.recompense = 10; // Par exemple
 	ennemi.couleur = "rouge"; // Par exemple
 	ennemi.type = TypeEnnemi::Type1; // Par exemple
@@ -197,9 +197,11 @@ int main(int /* argc */, char** /* argv */)
     } else {
         ennemi.positionProchaine = ennemi.positionActuelle;
     }
-	}
+    ennemi.setChemin(cheminLePlusCourt);
+    ennemi.chercherProchainePosition(); // Initialiser la prochaine position
+}
 	
-	ennemi.setChemin(cheminLePlusCourt);
+	
 	
 	std::ifstream fichier3 ("../../data/level1.itd");
 	std::string nomMap = recuperationNomFichierMap(fichier3);
@@ -237,15 +239,13 @@ int main(int /* argc */, char** /* argv */)
 		
 
 		std::cout << "Position de l'ennemi : (" << ennemi.positionActuelle.x << ", " << ennemi.positionActuelle.y << ")\n";
-
+		std::cout << "Prochaine position : (" << ennemi.positionProchaine.x << ", " << ennemi.positionProchaine.y << ")\n";
 		DessinCarte (tab, image3);
 
 
 
 		glDisable(GL_TEXTURE_2D);
 
-
-	
 
 		/* Initial scenery setup */
 
@@ -267,8 +267,9 @@ int main(int /* argc */, char** /* argv */)
 
 
 		float dt = static_cast<float>(elapsedTime);
-		ennemi.avancer(dt);
-
+    	std::cout << "Elapsed time (dt): " << dt << std::endl;
+    	std::cout << "Ennemi speed: " << ennemi.vitesse << std::endl;
+    	ennemi.avancer(dt);
 
 
 		/* Animate scenery */
