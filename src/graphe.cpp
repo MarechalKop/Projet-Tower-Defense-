@@ -10,6 +10,12 @@
 #include <cmath>
 #include <stdexcept>
 
+
+
+Graph::Node Graph::WeightedGraph::getNodePosition(int nodeId) {
+    return adjacency_list[nodeId];
+}
+
 void Graph::WeightedGraph::addNode(int const id, int x, int y)
 {
     if (adjacency_list.find(id) != adjacency_list.end()) {

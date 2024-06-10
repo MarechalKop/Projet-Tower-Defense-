@@ -1,10 +1,12 @@
 #pragma once
 #include <string>
+#include "graphe.hpp"
 
 enum TypeEnnemi {
     Type1,
     Type2
 };
+
 
 struct Ennemi {
     int pts_de_vie {};
@@ -12,7 +14,20 @@ struct Ennemi {
     int recompense {};
     std::string couleur {};
     TypeEnnemi type;
+    Graph::Node positionActuelle {}; // Utilisez Node pour la position actuelle
+    Graph::Node positionProchaine {}; // Utilisez Node pour la position suivante
+    std::vector<int> chemin {};
+    float distance(Graph::Node a, Graph::Node b);
+    Graph::WeightedGraph* graphe;
+    
 
     void degatsEnnemi(int degats);
     bool estMort() const;
+    void bouger(float dt); // Ajoutez cette méthode pour le mouvement
+    Graph::Node chercherProchainePosition();
+    void setChemin(const std::vector<int>& nouveauChemin); 
+    void avancer(float dt); // Ajoutez cette méthode pour avancer de case en case
+
 };
+
+
