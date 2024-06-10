@@ -5,7 +5,6 @@ enum TypeTour {
     TypeB
 };
 
-// Classe représentant une tour de défense
 struct Tour {
     int puissance {};
     int portee {};

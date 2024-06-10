@@ -6,7 +6,6 @@ enum TypeEnnemi {
     Type2
 };
 
-// Structure représentant un ennemi
 struct Ennemi {
     int pts_de_vie {};
     float vitesse {};
@@ -17,4 +16,3 @@ struct Ennemi {
     void degatsEnnemi(int degats);
     bool estMort() const;
 };
-
