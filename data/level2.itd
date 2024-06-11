@@ -1,0 +1,40 @@
+ITD
+# ligne de commentaire
+map Carte16x16.png
+# Blanc
+path 255 255 255
+# Bleu
+in 0 60 255
+# Rouge
+out 255 0 0
+graph 8
+node 0 -6 7 1
+node 1 -6 4 2
+node 2 -2 4 3
+node 3 -2 5 4
+node 4 1 5 5
+node 5 1 6 6
+node 6 4 6 7
+node 7 4 5 8
+node 8 5 5 9
+node 9 5 1 10
+node 10 4 1 11
+node 11 4 0 12
+node 12 -3 0 13
+node 13 -3 -1 14
+node 14 -6 -1 15
+node 15 -6 -2 16
+node 16 -7 -2 17
+node 17 -7 -5 18
+node 18 -6 -5 19
+node 19 -6 -6 20
+node 20 -4 -6 21
+node 21 -4 -5 22
+node 22 -1 -5 23
+node 23 -1 -4 24
+node 24 2 -4 25
+node 25 2 -5 26
+node 26 3 -5 27
+node 27 3 -6 28
+node 28 5 -6 29
+node 29 5 -8 
