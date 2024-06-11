@@ -27,7 +27,8 @@ struct Ennemi {
     Graph::Node chercherProchainePosition();
     void setChemin(const std::vector<int>& nouveauChemin); 
     void avancer(float dt); // Ajoutez cette méthode pour avancer de case en case
+    void initialiserEnnemi(Graph::WeightedGraph* graphe, const std::vector<int>& cheminLePlusCourt, TypeEnnemi type);
 
 };
 
-
+std::vector<Ennemi> creerEnnemis(int nombreEnnemis, TypeEnnemi type, Graph::WeightedGraph* graphe, const std::vector<int>& cheminLePlusCourt);

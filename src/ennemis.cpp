@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
 #include "ennemis.hpp"
 
 const float epsilon = 0.001f;
@@ -48,8 +49,6 @@ void Ennemi::avancer(float dt) {
         // Mettre à jour la position actuelle et chercher la prochaine position
         this->positionActuelle = this->positionProchaine;
         this->positionProchaine = chercherProchainePosition();
-        // std::cout << "Position actuelle: (" << this->positionActuelle.x << ", " << this->positionActuelle.y << ")" << std::endl;
-        // std::cout << "Prochaine position: (" << this->positionProchaine.x << ", " << this->positionProchaine.y << ")" << std::endl;
     } else {
         // Calculer la nouvelle position en utilisant une interpolation linéaire
         float totalDistance = distance(this->positionActuelle, this->positionProchaine);
@@ -61,20 +60,10 @@ void Ennemi::avancer(float dt) {
             float t = travelDistance / totalDistance;
             this->positionActuelle = interpolationLineaire(this->positionActuelle, this->positionProchaine, t);
         }
-
-        std::cout << "Position actuelle en mouvement: (" << this->positionActuelle.x << ", " << this->positionActuelle.y << ")" << std::endl;
-        // std::cout << "Distance avec la prochaine position : " << distance(this->positionActuelle, this->positionProchaine) << std::endl;
     }
 }
 
-
 Graph::Node Ennemi::chercherProchainePosition() {
-    // std::cout << "Chemin actuel : ";
-    for (int n : this->chemin) {
-        std::cout << n << " ";
-    }
-    std::cout << std::endl;
-
     if (!this->chemin.empty()) {
         int next_node = this->chemin.front();
         this->chemin.erase(this->chemin.begin());
@@ -82,4 +71,34 @@ Graph::Node Ennemi::chercherProchainePosition() {
     } else {
         return this->positionActuelle;
     }
+}
+
+void Ennemi::initialiserEnnemi(Graph::WeightedGraph* graphe, const std::vector<int>& cheminLePlusCourt, TypeEnnemi type) {
+    this->pts_de_vie = 100; // Par exemple
+    this->vitesse = 100; // Par exemple
+    this->recompense = 10; // Par exemple
+    this->couleur = "rouge"; // Par exemple
+    this->type = type; // Utilisez le type passé en paramètre
+    this->graphe = graphe;
+
+    if (!cheminLePlusCourt.empty()) {
+        this->positionActuelle = graphe->getNodePosition(cheminLePlusCourt[0]);
+        if (cheminLePlusCourt.size() > 1) {
+            this->positionProchaine = graphe->getNodePosition(cheminLePlusCourt[1]);
+        } else {
+            this->positionProchaine = this->positionActuelle;
+        }
+        this->setChemin(cheminLePlusCourt);
+        this->chercherProchainePosition(); // Initialiser la prochaine position
+    }
+}
+
+std::vector<Ennemi> creerEnnemis(int nombreEnnemis, TypeEnnemi type, Graph::WeightedGraph* graphe, const std::vector<int>& cheminLePlusCourt) {
+    std::vector<Ennemi> ennemis;
+    for (int i = 0; i < nombreEnnemis; ++i) {
+        Ennemi ennemi;
+        ennemi.initialiserEnnemi(graphe, cheminLePlusCourt, type);
+        ennemis.push_back(ennemi);
+    }
+    return ennemis;
 }

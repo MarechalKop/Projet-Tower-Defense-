@@ -72,7 +72,7 @@ bool verifierCoordonneNoeud (int largeurImage, int hauteurImage, int X, int Y)
 {
    
     bool validiteCoordonne = false;
-    if ((X >= 0 && X < largeurImage) && (Y >= 0 && Y < hauteurImage) )
+    if ((std::abs(X) < largeurImage/2) && (std::abs(Y) < hauteurImage) )
     {
         validiteCoordonne = true;
         return validiteCoordonne;
