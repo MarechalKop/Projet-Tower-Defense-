@@ -9,33 +9,29 @@
 #include <vector>
 #include "stb_image.h"
 
-GLuint* chargerTousLesSpritesCartes()
+GLuint* chargerTousLesSpritesJeu()
 {
     int x, y, n;
-    const int nombreTexture = 4; // Nombre de textures, ajusté pour inclure la nouvelle texture
-    std::vector<unsigned char*> Result(nombreTexture);
+    const int nombreTexture = 1; // Nombre de textures, ajusté pour inclure la nouvelle texture
+    std::vector<unsigned char*> Result2(nombreTexture);
     
-    Result[0] = stbi_load("../../images/sprites/Tiles/Bleu.png", &x, &y, &n, 0);
-    Result[1] = stbi_load("../../images/sprites/Tiles/Rouge.png", &x, &y, &n, 0);
-    Result[2] = stbi_load("../../images/sprites/Tiles/FieldsTile_38.png", &x, &y, &n, 0);
-    Result[3] = stbi_load("../../images/sprites/Tiles/FieldsTile_46.png", &x, &y, &n, 0);
-    // Result[4] = stbi_load("../../images/tank1.png", &x, &y, &n, 0); // Nouvelle texture
-    // Result[4] = stbi_load("../../images/sprites/Units/1/U_Preattack.png", &x, &y, &n, 0);
+    
+    Result2[0] = stbi_load("../../images/sprites/Units/1/U_Preattack.png", &x, &y, &n, 0);
 
     for (int i = 0; i < nombreTexture; i++) {
-        if (Result[i] == nullptr) {
-            std::cerr << "Erreur de chargement de la texture " << i << std::endl;
+        if (Result2[i] == nullptr) {
+            std::cerr << "Erreur de chargement de la texture de jeu " << i << std::endl;
             return nullptr;
         } else {
             std::cout << "Texture " << i << " chargée avec succès : Dimensions (" << x << ", " << y << "), Canaux : " << n << std::endl;
         }
     }
 
-    GLuint* tab = new GLuint[nombreTexture];
-    glGenTextures(nombreTexture, tab);
+    GLuint* tab2 = new GLuint[nombreTexture];
+    glGenTextures(nombreTexture, tab2);
 // ...
 for (int i = 0; i < nombreTexture; i++) {
-    glBindTexture(GL_TEXTURE_2D, tab[i]);
+    glBindTexture(GL_TEXTURE_2D, tab2[i]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
@@ -52,7 +48,7 @@ for (int i = 0; i < nombreTexture; i++) {
 
     glTexImage2D(
         GL_TEXTURE_2D, 0, format,
-        x, y, 0, format, GL_UNSIGNED_BYTE, Result[i]
+        x, y, 0, format, GL_UNSIGNED_BYTE, Result2[i]
     );
 
     GLenum error = glGetError();
@@ -61,10 +57,10 @@ for (int i = 0; i < nombreTexture; i++) {
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);
-    stbi_image_free(Result[i]);
+    stbi_image_free(Result2[i]);
 }
 // ...
 
 
-    return tab;
+    return tab2;
 }

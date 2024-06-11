@@ -8,4 +8,5 @@
 #include <cmath>
 #include <vector>
 
-GLuint* chargerTousLesSprites (); 
+GLuint* chargerTousLesSpritesCartes (); 
+GLuint* chargerTousLesSpritesJeu (); 

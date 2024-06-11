@@ -116,7 +116,10 @@ int main(int /* argc */, char** /* argv */)
 {
 	/* GLFW initialisation */
 	GLFWwindow* window;
-	if (!glfwInit()) return -1;
+	  if (!glfwInit()) {
+        std::cerr << "Erreur lors de l'initialisation de GLFW" << std::endl;
+        return -1;
+    }
 
 	/* Callback to a function if an error is rised by GLFW */
 	glfwSetErrorCallback(onError);
@@ -125,6 +128,7 @@ int main(int /* argc */, char** /* argv */)
 	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, NULL, NULL);
 	if (!window)
 	{
+		std::cerr << "Erreur lors de la création de la fenêtre GLFW" << std::endl;
 		// If no context created : exit !
 		glfwTerminate();
 		return -1;
@@ -135,6 +139,7 @@ int main(int /* argc */, char** /* argv */)
 	
 	// Intialize glad (loads the OpenGL functions)
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+		std::cerr << "Erreur lors de l'initialisation de GLAD" << std::endl;
 		return -1;
 	}
 
@@ -145,6 +150,8 @@ int main(int /* argc */, char** /* argv */)
 
 	glPointSize(5.0);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	float rotation = 0.0;
 
@@ -158,7 +165,12 @@ int main(int /* argc */, char** /* argv */)
 
 	std::ifstream fichier ("../../data/level1.itd");
    	testValiditeITD (fichier);
-	GLuint* tab = chargerTousLesSprites ();
+	GLuint* tab = chargerTousLesSpritesCartes ();
+	GLuint* tab2 = chargerTousLesSpritesJeu();
+	if (!tab) {
+        std::cerr << "Erreur lors du chargement des textures" << std::endl;
+        return -1;
+    }
 	fichier.close();
 	 
 	std::ifstream fichier2("../../data/level1.itd");
@@ -221,6 +233,7 @@ int main(int /* argc */, char** /* argv */)
 			ennemisType1[i].avancer(dt);
 
 			// Afficher l'ennemi
+			glBindTexture(GL_TEXTURE_2D, tab2[0]);	
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
 			glVertex3f(ennemisType1[i].positionActuelle.x, ennemisType1[i].positionActuelle.y, 0.001);
@@ -231,6 +244,7 @@ int main(int /* argc */, char** /* argv */)
 			glTexCoord2f(0, 1);
 			glVertex3f(ennemisType1[i].positionActuelle.x, ennemisType1[i].positionActuelle.y + 1, 0.001);
 			glEnd();
+			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
 		glDisable(GL_TEXTURE_2D);
@@ -249,6 +263,7 @@ int main(int /* argc */, char** /* argv */)
 	}
 
 	glDeleteTextures(4, tab);
+	glDeleteTextures(1, tab2);
 
 	glfwTerminate();
 	return 0;
