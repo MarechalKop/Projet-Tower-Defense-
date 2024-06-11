@@ -149,16 +149,18 @@ int main(int /* argc */, char** /* argv */)
 	float rotation = 0.0;
 
 	phy = 360;
-	 theta = 270;
+	theta = 270;
 	dist_zoom = 7;
-
 	
+	float intervalleApparition = 0.015; // Intervalle de 1 seconde entre chaque apparition
+	float tempsEcouleDepuisDerniereApparition = 0.5f;
+	int prochainEnnemiAAfficher = 0;
+
 	std::ifstream fichier ("../../data/level1.itd");
    	testValiditeITD (fichier);
 	GLuint* tab = chargerTousLesSprites ();
 	fichier.close();
 	 
-
 	std::ifstream fichier2("../../data/level1.itd");
     if (!fichier2.is_open()) {
         std::cerr << "Erreur : Impossible d'ouvrir le fichier ITD." << std::endl;
@@ -175,122 +177,79 @@ int main(int /* argc */, char** /* argv */)
 
 	std::vector<int> cheminLePlusCourt = graph.dijkstra(idPremierNoeud, idDernierNoeud);
 
-	// std::cout << "Le chemin le plus court de " << idPremierNoeud << " a " << idDernierNoeud<< " est : ";
-    for (int node_id : cheminLePlusCourt) {
+	for (int node_id : cheminLePlusCourt) {
         // std::cout << node_id << " ";
     }
-    // std::cout << std::endl;
 
+	std::vector<Ennemi> ennemisType1 = creerEnnemis(5, Type1, &graph, cheminLePlusCourt);
 
-	Ennemi ennemi;
-	// Initialisez votre ennemi...
-	ennemi.pts_de_vie = 100; // Par exemple
-	ennemi.vitesse = 100; // Par exemple
-	ennemi.recompense = 10; // Par exemple
-	ennemi.couleur = "rouge"; // Par exemple
-	ennemi.type = TypeEnnemi::Type1; // Par exemple
-	ennemi.graphe = &graph;
-
-	if (!cheminLePlusCourt.empty()) {
-    ennemi.positionActuelle = graph.getNodePosition(cheminLePlusCourt[0]);
-    if (cheminLePlusCourt.size() > 1) {
-        ennemi.positionProchaine = graph.getNodePosition(cheminLePlusCourt[1]);
-    } else {
-        ennemi.positionProchaine = ennemi.positionActuelle;
-    }
-    ennemi.setChemin(cheminLePlusCourt);
-    ennemi.chercherProchainePosition(); // Initialiser la prochaine position
-}
-	
-	
-	
 	std::ifstream fichier3 ("../../data/level1.itd");
 	std::string nomMap = recuperationNomFichierMap(fichier3);
 	sil::Image image3{"images/" + nomMap };
 
-		
-		
-		//////////////////////////////////
-
-		
-
-	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
-		/* Get time (in second) at loop beginning */
 		double startTime = glfwGetTime();
 
-		
-
-		/* Cleaning buffers and setting Matrix Mode */
 		glClearColor(0.2,0.0,0.0,0.0);
-
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		setCamera();
-
-		/* Scene rendering */
 		glEnable(GL_TEXTURE_2D);
-		
-		 
-		
-		// glBindTexture(GL_TEXTURE_2D, 0);
-		
+
 		drawFrame();
-		// std::cout << "Position de l'ennemi : (" << ennemi.positionActuelle.x << ", " << ennemi.positionActuelle.y << ")\n";
-		// std::cout << "Prochaine position : (" << ennemi.positionProchaine.x << ", " << ennemi.positionProchaine.y << ")\n";
-		DessinCarte (tab, image3);
+		DessinCarte(tab, image3);
 
-		glBegin(GL_QUADS);
-    glTexCoord2f(0, 0);
-    glVertex3f(ennemi.positionActuelle.x, ennemi.positionActuelle.y, 0.001);
-    glTexCoord2f(1, 0);
-    glVertex3f(ennemi.positionActuelle.x + 1, ennemi.positionActuelle.y, 0.001);
-    glTexCoord2f(1, 1);
-    glVertex3f(ennemi.positionActuelle.x + 1, ennemi.positionActuelle.y + 1, 0.001);
-    glTexCoord2f(0, 1);
-    glVertex3f(ennemi.positionActuelle.x , ennemi.positionActuelle.y + 1, 0.001);
-    glEnd();
-
-		glDisable(GL_TEXTURE_2D);
-
-
-		/* Initial scenery setup */
+		double currentTime = glfwGetTime();
+		float dt = static_cast<float>(currentTime - startTime);
 
 		
 
-		/* Swap front and back buffers */
-		glfwSwapBuffers(window);
+		// Logique d'apparition des ennemis
+		
+		std::cout << tempsEcouleDepuisDerniereApparition << std::endl;
 
-		/* Poll for and process events */
-		glfwPollEvents();
-
-		/* Elapsed time computation from loop begining */
-		double elapsedTime = glfwGetTime() - startTime;
-		/* If to few time is spend vs our wanted FPS, we wait */
-		if(elapsedTime < FRAMERATE_IN_SECONDS)
-		{
-			glfwWaitEventsTimeout(FRAMERATE_IN_SECONDS-elapsedTime);
+		if (prochainEnnemiAAfficher < ennemisType1.size() && tempsEcouleDepuisDerniereApparition >= intervalleApparition) {
+			tempsEcouleDepuisDerniereApparition = 0.0f;
+			prochainEnnemiAAfficher++;
+			std::cout << "prochain ennemi à afficher" << prochainEnnemiAAfficher << std::endl;
 		}
 
+		// Affichage et mouvement des ennemis
+		for (int i = 0; i < prochainEnnemiAAfficher; ++i) {
+			ennemisType1[i].avancer(dt);
 
-		float dt = static_cast<float>(elapsedTime);
-    	// std::cout << "Elapsed time (dt): " << dt << std::endl;
-    	// std::cout << "Ennemi speed: " << ennemi.vitesse << std::endl;
-    	ennemi.avancer(dt);
+			// Afficher l'ennemi
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(ennemisType1[i].positionActuelle.x, ennemisType1[i].positionActuelle.y, 0.001);
+			glTexCoord2f(1, 0);
+			glVertex3f(ennemisType1[i].positionActuelle.x + 1, ennemisType1[i].positionActuelle.y, 0.001);
+			glTexCoord2f(1, 1);
+			glVertex3f(ennemisType1[i].positionActuelle.x + 1, ennemisType1[i].positionActuelle.y + 1, 0.001);
+			glTexCoord2f(0, 1);
+			glVertex3f(ennemisType1[i].positionActuelle.x, ennemisType1[i].positionActuelle.y + 1, 0.001);
+			glEnd();
+		}
 
+		glDisable(GL_TEXTURE_2D);
+		glfwSwapBuffers(window);
+		glfwPollEvents();
 
-		/* Animate scenery */
-		rotation++;
+		double endTime = glfwGetTime();
+		double elapsedTime = endTime - startTime;
+
+		if(elapsedTime < FRAMERATE_IN_SECONDS)
+		{
+			glfwWaitEventsTimeout(FRAMERATE_IN_SECONDS - elapsedTime);
+		}
+
+		tempsEcouleDepuisDerniereApparition += dt;
 	}
 
 	glDeleteTextures(4, tab);
 
-
 	glfwTerminate();
 	return 0;
 }
-
-
