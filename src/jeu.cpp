@@ -29,10 +29,22 @@ void mettreAJourJeu(std::vector<Tour>& tours, std::vector<Ennemi>& ennemis, floa
 
     // Faire tirer les tours sur les ennemis à portée
     for (auto& tour : tours) {
+        Ennemi* ennemiPlusProche = nullptr;
+        float distanceMin = std::numeric_limits<float>::max();
+
         for (auto& ennemi : ennemis) {
-            if (!ennemi.estMort()) {
-                tourAttaqueEnnemi(tour, ennemi);
+            if (!ennemi.estMort() && tour.estDansPortee(ennemi.positionActuelle.x, ennemi.positionActuelle.y)) {
+                float distance = std::max(std::abs(ennemi.positionActuelle.x - tour.posX), std::abs(ennemi.positionActuelle.y - tour.posY));
+                if (distance < distanceMin) {
+                    distanceMin = distance;
+                    ennemiPlusProche = &ennemi;
+                }
             }
+        }
+        
+        if (ennemiPlusProche && tour.peutTirer()) {
+            tourAttaqueEnnemi(tour, *ennemiPlusProche);
+            tour.miseAJourTempsTir();
         }
     }
 }
