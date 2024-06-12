@@ -204,6 +204,22 @@ int main(int /* argc */, char** /* argv */)
 
 	while (!glfwWindowShouldClose(window))
 	{
+
+
+		bool tousMorts = true;
+    for (const auto& ennemi : ennemisType1) {
+        if (!ennemi.estMort()) {
+            tousMorts = false;
+            break;
+        }
+    	}
+
+		if (tousMorts) {
+        std::cout << "La vague est terminée !" << std::endl;
+
+    }
+
+
 		double startTime = glfwGetTime();
 
 		glClearColor(0.2,0.0,0.0,0.0);
@@ -233,8 +249,9 @@ int main(int /* argc */, char** /* argv */)
 
 		// Affichage et mouvement des ennemis
 		for (int i = 0; i < prochainEnnemiAAfficher; ++i) {
-			ennemisType1[i].avancer(dt);
 			
+			if (!ennemisType1[i].estMort()) {
+        	ennemisType1[i].avancer(dt);
 			glBindTexture(GL_TEXTURE_2D, tab2[0]);    
 			glPushMatrix();  // Sauvegarder la matrice de transformation actuelle
 
@@ -258,6 +275,10 @@ int main(int /* argc */, char** /* argv */)
 
 			glPopMatrix();  // Restaurer la matrice de transformation originale
 			glBindTexture(GL_TEXTURE_2D, 0);
+			}
+			
+			
+			
 			}
 
 
