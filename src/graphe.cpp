@@ -179,3 +179,7 @@ std::vector<int> Graph::WeightedGraph::dijkstra(int start, int goal) {
         return {}; 
     }
 }
+
+bool Graph::Node::operator==(const Node& other) const {
+    return x == other.x && y == other.y;
+}

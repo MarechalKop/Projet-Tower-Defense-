@@ -35,6 +35,9 @@
 #include "3D_tools.hpp"
 #include "draw_scene.hpp"
 
+#include "jeu.hpp"
+
+
 
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 1000;
@@ -204,7 +207,13 @@ int main(int /* argc */, char** /* argv */)
 
 	while (!glfwWindowShouldClose(window))
 	{
+		if (tousEnnemisMorts()) {
+    	commencerNouvelleVague();
+		}
 
+		if (ennemiAtteintFin()) {
+ 	   	finPartie(false);
+		}
 
 		bool tousMorts = true;
     for (const auto& ennemi : ennemisType1) {
@@ -249,6 +258,8 @@ int main(int /* argc */, char** /* argv */)
 
 		// Affichage et mouvement des ennemis
 		for (int i = 0; i < prochainEnnemiAAfficher; ++i) {
+
+			ennemisType1[i].pts_de_vie -= 0.00001;
 			
 			if (!ennemisType1[i].estMort()) {
         	ennemisType1[i].avancer(dt);
@@ -276,7 +287,6 @@ int main(int /* argc */, char** /* argv */)
 			glPopMatrix();  // Restaurer la matrice de transformation originale
 			glBindTexture(GL_TEXTURE_2D, 0);
 			}
-			
 			
 			
 			}

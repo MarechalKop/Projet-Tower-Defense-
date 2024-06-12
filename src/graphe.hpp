@@ -18,6 +18,7 @@ namespace Graph {
         float x {0};
         float y {0};
         std::vector<WeightedGraphEdge> edges;
+         bool operator==(const Node& other) const;
     };
 
     struct WeightedGraph {
