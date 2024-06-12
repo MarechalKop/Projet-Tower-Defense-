@@ -1,6 +1,6 @@
 ITD
 # ligne de commentaire
-map Carte16x16.png
+map Carte16x16Colors.png
 # Blanc
 path 255 255 255
 # Bleu

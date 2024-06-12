@@ -157,13 +157,14 @@ int main(int /* argc */, char** /* argv */)
 
 	phy = 360;
 	theta = 270;
-	dist_zoom = 7;
+	dist_zoom = 13.5;
+	int hauteuraffichage = 0;
 	
 	float intervalleApparition = 0.015; // Intervalle de 1 seconde entre chaque apparition
 	float tempsEcouleDepuisDerniereApparition = 0.5f;
 	int prochainEnnemiAAfficher = 0;
 
-	std::ifstream fichier ("../../data/level1.itd");
+	std::ifstream fichier ("../../data/level2.itd");
    	testValiditeITD (fichier);
 	GLuint* tab = chargerTousLesSpritesCartes ();
 	GLuint* tab2 = chargerTousLesSpritesJeu();
@@ -173,7 +174,7 @@ int main(int /* argc */, char** /* argv */)
     }
 	fichier.close();
 	 
-	std::ifstream fichier2("../../data/level1.itd");
+	std::ifstream fichier2("../../data/level2.itd");
     if (!fichier2.is_open()) {
         std::cerr << "Erreur : Impossible d'ouvrir le fichier ITD." << std::endl;
         return 1;
@@ -185,7 +186,7 @@ int main(int /* argc */, char** /* argv */)
 	graph.printGraph();
 
 	int idPremierNoeud = 0; // Remplacez par l'ID de votre nœud de départ
-    int idDernierNoeud = 7; // Remplacez par l'ID de votre nœud d'arrivée
+    int idDernierNoeud = 29; // Remplacez par l'ID de votre nœud d'arrivée
 
 	std::vector<int> cheminLePlusCourt = graph.dijkstra(idPremierNoeud, idDernierNoeud);
 
@@ -195,9 +196,11 @@ int main(int /* argc */, char** /* argv */)
 
 	std::vector<Ennemi> ennemisType1 = creerEnnemis(5, Type1, &graph, cheminLePlusCourt);
 
-	std::ifstream fichier3 ("../../data/level1.itd");
+	std::ifstream fichier3 ("../../data/level2.itd");
 	std::string nomMap = recuperationNomFichierMap(fichier3);
 	sil::Image image3{"images/" + nomMap };
+
+	 std::vector<std::vector<int>> indicesTextures = scanCartePourTexture (tab,image3);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -211,7 +214,7 @@ int main(int /* argc */, char** /* argv */)
 		glEnable(GL_TEXTURE_2D);
 
 		drawFrame();
-		DessinCarte(tab, image3);
+		DessinCarte(tab, image3, indicesTextures);
 
 		double currentTime = glfwGetTime();
 		float dt = static_cast<float>(currentTime - startTime);
@@ -231,21 +234,32 @@ int main(int /* argc */, char** /* argv */)
 		// Affichage et mouvement des ennemis
 		for (int i = 0; i < prochainEnnemiAAfficher; ++i) {
 			ennemisType1[i].avancer(dt);
+			
+			glBindTexture(GL_TEXTURE_2D, tab2[0]);    
+			glPushMatrix();  // Sauvegarder la matrice de transformation actuelle
 
-			// Afficher l'ennemi
-			glBindTexture(GL_TEXTURE_2D, tab2[0]);	
+			// Déplacer l'origine au centre de l'ennemi
+			glTranslatef(ennemisType1[i].positionActuelle.x + 0.5f, ennemisType1[i].positionActuelle.y + 0.5f, 0);
+
+			// Agrandir l'ennemi
+			glScalef(2.1f, 2.1f, 1.0f);  // Ajustez ces valeurs pour changer la taille de l'ennemi
+
+			// Dessiner l'ennemi à l'origine (puisque nous avons déplacé l'origine)
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
-			glVertex3f(ennemisType1[i].positionActuelle.x, ennemisType1[i].positionActuelle.y, 0.001);
+			glVertex3f(-0.5f, -0.5f, 0.001 + i * 0.001);  // Ajoutez un décalage à la coordonnée z en fonction de l'index de l'ennemi
 			glTexCoord2f(1, 0);
-			glVertex3f(ennemisType1[i].positionActuelle.x + 1, ennemisType1[i].positionActuelle.y, 0.001);
+			glVertex3f(0.5f, -0.5f, 0.001 + i * 0.001);
 			glTexCoord2f(1, 1);
-			glVertex3f(ennemisType1[i].positionActuelle.x + 1, ennemisType1[i].positionActuelle.y + 1, 0.001);
+			glVertex3f(0.5f, 0.5f, 0.001 + i * 0.001);
 			glTexCoord2f(0, 1);
-			glVertex3f(ennemisType1[i].positionActuelle.x, ennemisType1[i].positionActuelle.y + 1, 0.001);
+			glVertex3f(-0.5f, 0.5f, 0.001 + i * 0.001);
 			glEnd();
+
+			glPopMatrix();  // Restaurer la matrice de transformation originale
 			glBindTexture(GL_TEXTURE_2D, 0);
-		}
+			}
+
 
 		glDisable(GL_TEXTURE_2D);
 		glfwSwapBuffers(window);
