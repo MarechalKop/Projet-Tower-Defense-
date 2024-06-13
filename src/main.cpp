@@ -160,13 +160,15 @@ int main(int /* argc */, char** /* argv */)
 
 	phy = 360;
 	theta = 270;
-	dist_zoom = 13.5;
+	dist_zoom = 13.8;
 	int hauteuraffichage = 0;
+	int indicateurVague = 0;
+
+
 
 	
-
-	
-	float intervalleApparition = 0.015; // Intervalle de 1 seconde entre chaque apparition
+	float intervalleApparitionType1 = 0.015;
+	float intervalleApparitionType2 = 0.055; // Intervalle de 1 seconde entre chaque apparition
 	float tempsEcouleDepuisDerniereApparition = 0.5f;
 	
 
@@ -254,7 +256,7 @@ int main(int /* argc */, char** /* argv */)
 
 		double startTime = glfwGetTime();
 
-		glClearColor(0.2,0.0,0.0,0.0);
+		glClearColor(0.0,0.0,0.0,0.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
@@ -278,11 +280,23 @@ int main(int /* argc */, char** /* argv */)
 		
 		// std::cout << tempsEcouleDepuisDerniereApparition << std::endl;
 
-		if (Jeu::prochainEnnemiAAfficher < Jeu::vaguesEnnemis[Jeu::vagueActuelle].size() && tempsEcouleDepuisDerniereApparition >= intervalleApparition) {
+		if (Jeu::vaguesEnnemis[Jeu::vagueActuelle][indicateurVague].type == Type1) { 
+		if (Jeu::prochainEnnemiAAfficher < Jeu::vaguesEnnemis[Jeu::vagueActuelle].size() && tempsEcouleDepuisDerniereApparition >= intervalleApparitionType1) {
         tempsEcouleDepuisDerniereApparition = 0.0f;
         Jeu::prochainEnnemiAAfficher++;
         std::cout << "prochain ennemi à afficher" << Jeu::prochainEnnemiAAfficher << std::endl;
     	}
+		}
+
+
+		if (Jeu::vaguesEnnemis[Jeu::vagueActuelle][indicateurVague].type == Type2) { 
+		if (Jeu::prochainEnnemiAAfficher < Jeu::vaguesEnnemis[Jeu::vagueActuelle].size() && tempsEcouleDepuisDerniereApparition >= intervalleApparitionType2) {
+        tempsEcouleDepuisDerniereApparition = 0.0f;
+        Jeu::prochainEnnemiAAfficher++;
+        std::cout << "prochain ennemi à afficher" << Jeu::prochainEnnemiAAfficher << std::endl;
+    	}
+		}
+		
 
 		// Affichage et mouvement des ennemis
 		for (int i = 0; i < Jeu::prochainEnnemiAAfficher; ++i){
@@ -291,14 +305,33 @@ int main(int /* argc */, char** /* argv */)
 			
 			if (!Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].estMort()) {
         	Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].avancer(dt);
-			glBindTexture(GL_TEXTURE_2D, tab2[0]);    
+
+			if (Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].type == Type1) 
+			{
+			glBindTexture(GL_TEXTURE_2D, tab2[0]);   
+			indicateurVague = i;
+			} 
+
+
+			if (Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].type == Type2) 
+			{
+			glBindTexture(GL_TEXTURE_2D, tab2[2]);   
+			indicateurVague = i;
+			} 
 			glPushMatrix();  // Sauvegarder la matrice de transformation actuelle
 
 			// Déplacer l'origine au centre de l'ennemi
 			glTranslatef(Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].positionActuelle.x + 0.5f, Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].positionActuelle.y + 0.5f, 0);
 
+			if (Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].type == Type1)  { 
 			// Agrandir l'ennemi
 			glScalef(2.1f, 2.1f, 1.0f);  // Ajustez ces valeurs pour changer la taille de l'ennemi
+			}
+
+			if (Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].type == Type2)  { 
+			// Agrandir l'ennemi
+			glScalef(2.9f, 2.9f, 1.0f);  // Ajustez ces valeurs pour changer la taille de l'ennemi
+			}
 
 			// Dessiner l'ennemi à l'origine (puisque nous avons déplacé l'origine)
 			glBegin(GL_QUADS);
@@ -327,7 +360,7 @@ int main(int /* argc */, char** /* argv */)
 
 			glPushMatrix();
 			glTranslatef(tour.posX + 0.5f, tour.posY + 0.5f, 0.0f);
-			glScalef(2.0f, 2.0f, 1.0f);  // Ajustez la taille de la tour si nécessaire
+			glScalef(2.5f, 2.5f, 1.0f);  // Ajustez la taille de la tour si nécessaire
 
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
@@ -366,7 +399,7 @@ int main(int /* argc */, char** /* argv */)
 	}
 
 	glDeleteTextures(4, tab);
-	glDeleteTextures(2, tab2);
+	glDeleteTextures(3, tab2);
 
 	glfwTerminate();
 	return 0;

@@ -79,12 +79,26 @@ Graph::Node Ennemi::chercherProchainePosition() {
 }
 
 void Ennemi::initialiserEnnemi(Graph::WeightedGraph* graphe, const std::vector<int>& cheminLePlusCourt, TypeEnnemi type) {
-    this->pts_de_vie = 100; // Par exemple
-    this->vitesse = 100; // Par exemple
-    this->recompense = 50; // Par exemple
-    this->couleur = "rouge"; // Par exemple
     this->type = type; // Utilisez le type passé en paramètre
     this->graphe = graphe;
+
+    // Initialiser les attributs en fonction du type
+    switch (type) {
+        case Type1:
+            this->pts_de_vie = 100; // Par exemple
+            this->vitesse = 100; // Par exemple
+            this->recompense = 50; // Par exemple
+            this->couleur = "rouge"; // Par exemple
+            break;
+        case Type2:
+            this->pts_de_vie = 200; // Par exemple
+            this->vitesse = 50; // Par exemple
+            this->recompense = 100; // Par exemple
+            this->couleur = "bleu"; // Par exemple
+            break;
+        // Ajoutez d'autres types d'ennemis ici si nécessaire
+    }
+
 
     if (!cheminLePlusCourt.empty()) {
         this->positionActuelle = graphe->getNodePosition(cheminLePlusCourt[0]);
