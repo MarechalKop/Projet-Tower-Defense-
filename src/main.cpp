@@ -163,11 +163,12 @@ int main(int /* argc */, char** /* argv */)
 	dist_zoom = 13.5;
 	int hauteuraffichage = 0;
 	float dt {};
+	
 
 	
 	float intervalleApparition = 0.015; // Intervalle de 1 seconde entre chaque apparition
 	float tempsEcouleDepuisDerniereApparition = 0.5f;
-	int prochainEnnemiAAfficher = 0;
+	
 
 	std::ifstream fichier ("../../data/level2.itd");
    	testValiditeITD (fichier);
@@ -207,7 +208,7 @@ int main(int /* argc */, char** /* argv */)
 	std::vector<Ennemi> vague1 = creerEnnemis(5, Type1, &graph, cheminLePlusCourt);
 	std::vector<Ennemi> vague2 = creerEnnemis(10, Type2, &graph, cheminLePlusCourt);
 	std::vector<Ennemi> vague3 = creerEnnemis(15, Type2, &graph, cheminLePlusCourt);
-
+	
 
 	Jeu::vaguesEnnemis.push_back(vague1);
 	Jeu::vaguesEnnemis.push_back(vague2);
@@ -227,13 +228,13 @@ int main(int /* argc */, char** /* argv */)
 		
 
 
-	std::cout << Jeu::tempsDepuisFinVague << std::endl;
+	// std::cout << Jeu::tempsDepuisFinVague << std::endl;
 
 	if (Jeu::tempsDepuisFinVague >= 0.1f && Jeu::partieEnCours) {
     commencerNouvelleVague();
     Jeu::tempsDepuisFinVague = 0.0f;  // Réinitialisez le temps depuis la fin de la vague
 }
-
+	
 
 	
 
@@ -261,18 +262,18 @@ int main(int /* argc */, char** /* argv */)
 
 		// Logique d'apparition des ennemis
 		
-		std::cout << tempsEcouleDepuisDerniereApparition << std::endl;
+		// std::cout << tempsEcouleDepuisDerniereApparition << std::endl;
 
-		if (prochainEnnemiAAfficher < Jeu::vaguesEnnemis[Jeu::vagueActuelle].size() && tempsEcouleDepuisDerniereApparition >= intervalleApparition ) {
-			tempsEcouleDepuisDerniereApparition = 0.0f;
-			prochainEnnemiAAfficher++;
-			std::cout << "prochain ennemi à afficher" << prochainEnnemiAAfficher << std::endl;
-		}
+		if (Jeu::prochainEnnemiAAfficher < Jeu::vaguesEnnemis[Jeu::vagueActuelle].size() && tempsEcouleDepuisDerniereApparition >= intervalleApparition) {
+        tempsEcouleDepuisDerniereApparition = 0.0f;
+        Jeu::prochainEnnemiAAfficher++;
+        std::cout << "prochain ennemi à afficher" << Jeu::prochainEnnemiAAfficher << std::endl;
+    }
 
 		// Affichage et mouvement des ennemis
-		for (int i = 0; i < prochainEnnemiAAfficher; ++i) {
+		for (int i = 0; i < Jeu::prochainEnnemiAAfficher; ++i) {
 
-			 Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].pts_de_vie -= 0.00001;
+		 	Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].pts_de_vie -= 0.00001;
 			
 			if (!Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].estMort()) {
         	Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].avancer(dt);
@@ -301,9 +302,8 @@ int main(int /* argc */, char** /* argv */)
 			glBindTexture(GL_TEXTURE_2D, 0);
 			}
 			
-			
 			}
-
+		ennemiAtteintFin(Jeu::vaguesEnnemis[Jeu::vagueActuelle], Jeu::graph, Jeu::idDernierNoeud);
 
 		glDisable(GL_TEXTURE_2D);
 		glfwSwapBuffers(window);
@@ -318,7 +318,11 @@ int main(int /* argc */, char** /* argv */)
 		}
 
 		tempsEcouleDepuisDerniereApparition += dt;
-
+		std::cout << dt << std::endl;
+		Jeu::total_argentEnFloat += 0.05;
+		Jeu::totalArgentInt = static_cast<int>(Jeu::total_argentEnFloat);
+		std::cout << "Le joueur ce gros rat a " << Jeu::totalArgentInt << " ecus" << std::endl;
+		std::cout << "Pts de vie Joueur " << Jeu::points_de_vieJoueur << std::endl;
 	    finPartie();
 	}
 

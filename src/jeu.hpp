@@ -7,13 +7,13 @@ void tourAttaqueEnnemi(Tour& tour, Ennemi& ennemi);
 void mettreAJourJeu(std::vector<Tour>& tours, std::vector<Ennemi>& ennemis, float dt);
 void commencerNouvelleVague();
 bool tousEnnemisMorts(std::vector<Ennemi>& ennemis);
-bool ennemiAtteintFin(const std::vector<Ennemi>& ennemis, Graph::WeightedGraph* graph, int idDernierNoeud);
+bool ennemiAtteintFin(std::vector<Ennemi>& ennemis, Graph::WeightedGraph* graph, int idDernierNoeud);
 void finPartie();
 void finVague(bool victoire);
 
 
 namespace Jeu {
-    extern int total_argent;
+    extern float total_argentEnFloat ;
     extern std::vector<Ennemi> ennemis;
     extern std::vector<std::vector<Ennemi>> vaguesEnnemis;
     extern Graph::WeightedGraph* graph;
@@ -22,4 +22,7 @@ namespace Jeu {
     extern bool partieEnCours;
     extern bool vagueEnCours;
     extern float tempsDepuisFinVague;
+    extern int prochainEnnemiAAfficher;
+    extern int points_de_vieJoueur;
+    extern int totalArgentInt;
 }

@@ -81,7 +81,7 @@ Graph::Node Ennemi::chercherProchainePosition() {
 void Ennemi::initialiserEnnemi(Graph::WeightedGraph* graphe, const std::vector<int>& cheminLePlusCourt, TypeEnnemi type) {
     this->pts_de_vie = 100; // Par exemple
     this->vitesse = 100; // Par exemple
-    this->recompense = 10; // Par exemple
+    this->recompense = 50; // Par exemple
     this->couleur = "rouge"; // Par exemple
     this->type = type; // Utilisez le type passé en paramètre
     this->graphe = graphe;

@@ -23,6 +23,7 @@ struct Ennemi {
 
     void degatsEnnemi(int degats);
     bool estMort() const;
+    bool aAtteintLaFin ;
     void bouger(float dt); // Ajoutez cette méthode pour le mouvement
     Graph::Node chercherProchainePosition();
     void setChemin(const std::vector<int>& nouveauChemin); 

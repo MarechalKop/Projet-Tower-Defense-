@@ -7,7 +7,8 @@
 #include "graphe.hpp"
 
 namespace Jeu {
-    int total_argent {0};
+    float total_argentEnFloat {100};
+    int totalArgentInt;
     std::vector<Ennemi> ennemis;
     std::vector<std::vector<Ennemi>> vaguesEnnemis;
     Graph::WeightedGraph* graph;
@@ -16,6 +17,9 @@ namespace Jeu {
     bool partieEnCours = true;
     bool vagueEnCours = false;
     float tempsDepuisFinVague = 0.0f;
+    int prochainEnnemiAAfficher = 0;
+    int points_de_vieJoueur = 3;
+    
 }
 
 
@@ -27,7 +31,7 @@ void tourAttaqueEnnemi(Tour& tour, Ennemi& ennemi) {
         tour.miseAJourTempsTir();
 
         if (ennemi.estMort()) {
-            Jeu::total_argent += ennemi.recompense;
+            Jeu::total_argentEnFloat += ennemi.recompense;
         }
     }
 }
@@ -68,6 +72,7 @@ void commencerNouvelleVague() {
         Jeu::ennemis = Jeu::vaguesEnnemis[Jeu::vagueActuelle];
         Jeu::vagueEnCours = true;
         Jeu::vagueActuelle++;
+        Jeu::prochainEnnemiAAfficher = 0;
     }
 }
 
@@ -82,11 +87,13 @@ bool tousEnnemisMorts(std::vector<Ennemi>& ennemis) {
 }
 
 // Méthode pour vérifier si un ennemi a atteint le dernier noeud
-bool ennemiAtteintFin(const std::vector<Ennemi>& ennemis, Graph::WeightedGraph* graph, int idDernierNoeud) {
-    for (const auto& ennemi : ennemis) {
+bool ennemiAtteintFin(std::vector<Ennemi>& ennemis, Graph::WeightedGraph* graph, int idDernierNoeud)  {
+    for (auto& ennemi : ennemis) {
         float distance = sqrt(pow(ennemi.positionActuelle.x - graph->getNodePosition(idDernierNoeud).x, 2) +
                               pow(ennemi.positionActuelle.y - graph->getNodePosition(idDernierNoeud).y, 2));
-        if (distance < 0.5) {  // Remplacez 0.1 par le seuil approprié pour votre jeu
+        if (distance <= 0.1 && ennemi.aAtteintLaFin != true) {  // Vérifie si l'ennemi a atteint la fin et n'a pas encore été comptabilisé
+            ennemi.aAtteintLaFin = true;  // Marque l'ennemi comme ayant atteint la fin
+            Jeu::points_de_vieJoueur--;  // Le joueur perd un point de vie
             return true;
         }
     }
@@ -96,10 +103,11 @@ bool ennemiAtteintFin(const std::vector<Ennemi>& ennemis, Graph::WeightedGraph* 
 
 
 
+
 // Méthode pour gérer la fin de la partie
 void finPartie() {
     // Si un ennemi atteint le dernier nœud, la partie se termine et le joueur perd
-    if (ennemiAtteintFin(Jeu::vaguesEnnemis[Jeu::vagueActuelle], Jeu::graph, Jeu::idDernierNoeud)) {
+    if (Jeu::points_de_vieJoueur <= 0) {
         Jeu::partieEnCours = false;
         std::cout << "Vous avez perdu la partie." << std::endl;
     } 
