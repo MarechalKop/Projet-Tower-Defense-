@@ -218,12 +218,20 @@ int main(int /* argc */, char** /* argv */)
 	tour1.posX = 2; // Position X de la tour sur la carte
 	tour1.posY = 3; // Position Y de la tour sur la carte
 
+	Tour tour2;
+	tour2.puissance = 10;
+	tour2.portee = 10; // Portée en distance de Chebyshev
+	tour2.cadence = 1.0f; // Cadence de tir en dixièmes de seconde
+	tour2.type = TypeTour::TypeA;
+	tour2.posX = 5; // Position X de la tour sur la carte
+	tour2.posY = -2; // Position Y de la tour sur la carte
+
 	Jeu::vaguesEnnemis.push_back(vague1);
 	Jeu::vaguesEnnemis.push_back(vague2);
 	Jeu::vaguesEnnemis.push_back(vague3);
 
 
-	std::vector<Tour> tours = {tour1};
+	std::vector<Tour> tours = {tour1, tour2};
 	std::ifstream fichier3 ("../../data/level2.itd");
 	std::string nomMap = recuperationNomFichierMap(fichier3);
 	sil::Image image3{"images/" + nomMap };
@@ -312,6 +320,29 @@ int main(int /* argc */, char** /* argv */)
 
 		// Affichage de la tour fixe
 		for (const auto& tour : tours) {
+			if (tour.peutTirer()) {
+				std::cout << "Tour à la position (" << tour.posX << ", " << tour.posY << ") tire sur un ennemi!" << std::endl;
+
+				// Exemple simplifié : Recherche de l'ennemi le plus proche dans la vague actuelle
+				Ennemi* cible = nullptr;
+				float distanceMin = std::numeric_limits<float>::max();
+
+				for (auto& ennemi : Jeu::vaguesEnnemis[Jeu::vagueActuelle]) {
+					// Calcul de la distance entre la tour et l'ennemi
+					float distance = std::sqrt(std::pow(ennemi.positionActuelle.x - tour.posX, 2) +
+											std::pow(ennemi.positionActuelle.y - tour.posY, 2));
+
+					// Vérification si l'ennemi est à portée et plus proche que la cible actuelle
+					if (distance <= tour.portee && distance < distanceMin) {
+						cible = &ennemi;
+						distanceMin = distance;
+					}
+				}
+				if (cible) {
+					cible->pts_de_vie -= tour.puissance;
+					std::cout << "La tour inflige " << tour.puissance << " points de dégâts à l'ennemi" << std::endl;
+				}
+			}
 			glBindTexture(GL_TEXTURE_2D, tab2[1]);  // Utiliser la texture de la tour
 
 			glPushMatrix();
