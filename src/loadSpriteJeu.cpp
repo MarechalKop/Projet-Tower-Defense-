@@ -11,19 +11,22 @@
 
 GLuint* chargerTousLesSpritesJeu()
 {
-    int x, y, n;
-    const int nombreTexture = 1; // Nombre de textures, ajusté pour inclure la nouvelle texture
+    //int x, y, n;
+    const int nombreTexture = 2; // Nombre de textures, ajusté pour inclure la nouvelle texture
     std::vector<unsigned char*> Result2(nombreTexture);
+    std::vector<int> widths(nombreTexture), heights(nombreTexture), channels(nombreTexture);
     
     
-    Result2[0] = stbi_load("../../images/sprites/Units/1/U_Preattack.png", &x, &y, &n, 0);
+    Result2[0] = stbi_load("../../images/sprites/Units/1/U_Preattack.png", &widths[0], &heights[0], &channels[0], 0);
+    // Texture d'une tour
+    Result2[1] = stbi_load("../../images/sprites/2 Idle/tour1.png", &widths[1], &heights[1], &channels[1], 0);
 
     for (int i = 0; i < nombreTexture; i++) {
         if (Result2[i] == nullptr) {
             std::cerr << "Erreur de chargement de la texture de jeu " << i << std::endl;
             return nullptr;
         } else {
-            std::cout << "Texture " << i << " chargée avec succès : Dimensions (" << x << ", " << y << "), Canaux : " << n << std::endl;
+            std::cout << "Texture " << i << " chargée avec succès : Dimensions (" << widths[i] << ", " << heights[i] << "), Canaux : " << channels[i] << std::endl;
         }
     }
 
@@ -37,18 +40,18 @@ for (int i = 0; i < nombreTexture; i++) {
 
     // Utilisez le nombre de canaux que vous avez obtenu lors du chargement de l'image
     GLenum format;
-    if (n == 4) {
+    if (channels[i] == 4) {
         format = GL_RGBA;
-    } else if (n == 3) {
+    } else if (channels[i] == 3) {
         format = GL_RGB;
     } else {
-        std::cerr << "Unsupported number of channels: " << n << std::endl;
+        std::cerr << "Unsupported number of channels: " << channels[i] << std::endl;
         return nullptr;
     }
 
     glTexImage2D(
         GL_TEXTURE_2D, 0, format,
-        x, y, 0, format, GL_UNSIGNED_BYTE, Result2[i]
+        widths[i], heights[i], 0, format, GL_UNSIGNED_BYTE, Result2[i]
     );
 
     GLenum error = glGetError();

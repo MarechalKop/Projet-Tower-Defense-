@@ -7,19 +7,18 @@
 #include "graphe.hpp"
 
 namespace Jeu {
-    float total_argentEnFloat {100};
-    int totalArgentInt;
-    std::vector<Ennemi> ennemis;
-    std::vector<std::vector<Ennemi>> vaguesEnnemis;
-    Graph::WeightedGraph* graph;
-    int idDernierNoeud;
-    int vagueActuelle = 0;
-    bool partieEnCours = true;
-    bool vagueEnCours = false;
-    float tempsDepuisFinVague = 0.0f;
-    int prochainEnnemiAAfficher = 0;
     int points_de_vieJoueur = 3;
-    
+    int prochainEnnemiAAfficher = 0;
+    float tempsDepuisFinVague = 0.0f;
+    bool vagueEnCours = false;
+    bool partieEnCours = true;
+    int vagueActuelle = 0;
+    int idDernierNoeud;
+    Graph::WeightedGraph* graph;
+    std::vector<std::vector<Ennemi>> vaguesEnnemis;
+    std::vector<Ennemi> ennemis;
+    int totalArgentInt;
+    float total_argentEnFloat {100};
 }
 
 
@@ -114,8 +113,8 @@ void finPartie() {
     // Si tous les ennemis de la dernière vague sont morts, la partie se termine et le joueur gagne
     else if (Jeu::vagueActuelle == Jeu::vaguesEnnemis.size() - 1 && tousEnnemisMorts(Jeu::vaguesEnnemis[Jeu::vagueActuelle])) {
         Jeu::partieEnCours = false;
-        std::cout << "Félicitations, vous avez gagné la partie !" << std::endl;
     }
+        std::cout << "Félicitations, vous avez gagné la partie !" << std::endl;
 }
 
 void finVague(bool victoire) {

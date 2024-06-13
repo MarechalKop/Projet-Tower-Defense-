@@ -209,12 +209,21 @@ int main(int /* argc */, char** /* argv */)
 	std::vector<Ennemi> vague2 = creerEnnemis(10, Type2, &graph, cheminLePlusCourt);
 	std::vector<Ennemi> vague3 = creerEnnemis(15, Type2, &graph, cheminLePlusCourt);
 	
+	// Création d'une tour fixe (pour tester)
+	Tour tour1;
+	tour1.puissance = 10;
+	tour1.portee = 5; // Portée en distance de Chebyshev
+	tour1.cadence = 1.0f; // Cadence de tir en dixièmes de seconde
+	tour1.type = TypeTour::TypeA;
+	tour1.posX = 2; // Position X de la tour sur la carte
+	tour1.posY = 3; // Position Y de la tour sur la carte
 
 	Jeu::vaguesEnnemis.push_back(vague1);
 	Jeu::vaguesEnnemis.push_back(vague2);
 	Jeu::vaguesEnnemis.push_back(vague3);
 
 
+	std::vector<Tour> tours = {tour1};
 	std::ifstream fichier3 ("../../data/level2.itd");
 	std::string nomMap = recuperationNomFichierMap(fichier3);
 	sil::Image image3{"images/" + nomMap };
@@ -236,7 +245,8 @@ int main(int /* argc */, char** /* argv */)
 }
 	
 
-	
+    }
+
 
 		double startTime = glfwGetTime();
 
@@ -305,6 +315,31 @@ int main(int /* argc */, char** /* argv */)
 			}
 		ennemiAtteintFin(Jeu::vaguesEnnemis[Jeu::vagueActuelle], Jeu::graph, Jeu::idDernierNoeud);
 
+		}
+
+		// Affichage de la tour fixe
+		for (const auto& tour : tours) {
+			glBindTexture(GL_TEXTURE_2D, tab2[1]);  // Utiliser la texture de la tour
+
+			glPushMatrix();
+			glTranslatef(tour.posX + 0.5f, tour.posY + 0.5f, 0.0f);
+			glScalef(2.0f, 2.0f, 1.0f);  // Ajustez la taille de la tour si nécessaire
+
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(-0.5f, -0.5f, 0.001);  // Ajustez le décalage z si nécessaire
+			glTexCoord2f(1, 0);
+			glVertex3f(0.5f, -0.5f, 0.001);
+			glTexCoord2f(1, 1);
+			glVertex3f(0.5f, 0.5f, 0.001);
+			glTexCoord2f(0, 1);
+			glVertex3f(-0.5f, 0.5f, 0.001);
+			glEnd();
+
+			glPopMatrix();
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+
 		glDisable(GL_TEXTURE_2D);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -327,7 +362,7 @@ int main(int /* argc */, char** /* argv */)
 	}
 
 	glDeleteTextures(4, tab);
-	glDeleteTextures(1, tab2);
+	glDeleteTextures(2, tab2);
 
 	glfwTerminate();
 	return 0;
