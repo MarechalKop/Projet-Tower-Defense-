@@ -119,7 +119,7 @@ int main(int /* argc */, char** /* argv */)
 {
 	/* GLFW initialisation */
 	GLFWwindow* window;
-	  if (!glfwInit()) {
+	if (!glfwInit()) {
         std::cerr << "Erreur lors de l'initialisation de GLFW" << std::endl;
         return -1;
     }
@@ -166,15 +166,15 @@ int main(int /* argc */, char** /* argv */)
 	
 
 	
-	float intervalleApparition = 0.015; // Intervalle de 1 seconde entre chaque apparition
+	float intervalleApparition = 0.015f; // Intervalle de 1 seconde entre chaque apparition
 	float tempsEcouleDepuisDerniereApparition = 0.5f;
 	
 
 	std::ifstream fichier ("../../data/level2.itd");
    	testValiditeITD (fichier);
-	GLuint* tab = chargerTousLesSpritesCartes ();
+	GLuint* tab = chargerTousLesSpritesCartes();
 	GLuint* tab2 = chargerTousLesSpritesJeu();
-	if (!tab) {
+	if (!tab || !tab2) {
         std::cerr << "Erreur lors du chargement des textures" << std::endl;
         return -1;
     }
@@ -212,7 +212,7 @@ int main(int /* argc */, char** /* argv */)
 	// Création d'une tour fixe (pour tester)
 	Tour tour1;
 	tour1.puissance = 10;
-	tour1.portee = 5; // Portée en distance de Chebyshev
+	tour1.portee = 10; // Portée en distance de Chebyshev
 	tour1.cadence = 1.0f; // Cadence de tir en dixièmes de seconde
 	tour1.type = TypeTour::TypeA;
 	tour1.posX = 2; // Position X de la tour sur la carte
@@ -234,19 +234,13 @@ int main(int /* argc */, char** /* argv */)
 
 	while (!glfwWindowShouldClose(window))
 	{
-		
 
+		// std::cout << Jeu::tempsDepuisFinVague << std::endl;
 
-	// std::cout << Jeu::tempsDepuisFinVague << std::endl;
-
-	if (Jeu::tempsDepuisFinVague >= 0.1f && Jeu::partieEnCours) {
-    commencerNouvelleVague();
-    Jeu::tempsDepuisFinVague = 0.0f;  // Réinitialisez le temps depuis la fin de la vague
-}
-	
-
-    }
-
+		if (Jeu::tempsDepuisFinVague >= 0.1f && Jeu::partieEnCours) {
+			commencerNouvelleVague();
+			Jeu::tempsDepuisFinVague = 0.0f;  // Réinitialisez le temps depuis la fin de la vague
+		}
 
 		double startTime = glfwGetTime();
 
@@ -264,9 +258,9 @@ int main(int /* argc */, char** /* argv */)
 		float dt = static_cast<float>(currentTime - startTime);
 
 		if (tousEnnemisMorts(Jeu::vaguesEnnemis[Jeu::vagueActuelle])) {
-    	finVague(true);  // Le joueur a gagné la vague
-		Jeu::tempsDepuisFinVague += dt;
-    	// break;
+			finVague(true);  // Le joueur a gagné la vague
+			Jeu::tempsDepuisFinVague += dt;
+    		// break;
     	}
 	
 
@@ -275,47 +269,46 @@ int main(int /* argc */, char** /* argv */)
 		// std::cout << tempsEcouleDepuisDerniereApparition << std::endl;
 
 		if (Jeu::prochainEnnemiAAfficher < Jeu::vaguesEnnemis[Jeu::vagueActuelle].size() && tempsEcouleDepuisDerniereApparition >= intervalleApparition) {
-        tempsEcouleDepuisDerniereApparition = 0.0f;
-        Jeu::prochainEnnemiAAfficher++;
-        std::cout << "prochain ennemi à afficher" << Jeu::prochainEnnemiAAfficher << std::endl;
-    }
+			tempsEcouleDepuisDerniereApparition = 0.0f;
+			Jeu::prochainEnnemiAAfficher++;
+			std::cout << "prochain ennemi à afficher" << Jeu::prochainEnnemiAAfficher << std::endl;
+		}
 
 		// Affichage et mouvement des ennemis
 		for (int i = 0; i < Jeu::prochainEnnemiAAfficher; ++i) {
 
-		 	Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].pts_de_vie -= 0.00001;
+		 	//Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].pts_de_vie -= 0.00001;
 			
 			if (!Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].estMort()) {
-        	Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].avancer(dt);
-			glBindTexture(GL_TEXTURE_2D, tab2[0]);    
-			glPushMatrix();  // Sauvegarder la matrice de transformation actuelle
+				Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].avancer(dt);
+				glBindTexture(GL_TEXTURE_2D, tab2[0]);    
+				glPushMatrix();  // Sauvegarder la matrice de transformation actuelle
 
-			// Déplacer l'origine au centre de l'ennemi
-			glTranslatef(Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].positionActuelle.x + 0.5f, Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].positionActuelle.y + 0.5f, 0);
+				// Déplacer l'origine au centre de l'ennemi
+				glTranslatef(Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].positionActuelle.x + 0.5f, Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].positionActuelle.y + 0.5f, 0);
 
-			// Agrandir l'ennemi
-			glScalef(2.1f, 2.1f, 1.0f);  // Ajustez ces valeurs pour changer la taille de l'ennemi
+				// Agrandir l'ennemi
+				glScalef(2.1f, 2.1f, 1.0f);  // Ajustez ces valeurs pour changer la taille de l'ennemi
 
-			// Dessiner l'ennemi à l'origine (puisque nous avons déplacé l'origine)
-			glBegin(GL_QUADS);
-			glTexCoord2f(0, 0);
-			glVertex3f(-0.5f, -0.5f, 0.001 + i * 0.001);  // Ajoutez un décalage à la coordonnée z en fonction de l'index de l'ennemi
-			glTexCoord2f(1, 0);
-			glVertex3f(0.5f, -0.5f, 0.001 + i * 0.001);
-			glTexCoord2f(1, 1);
-			glVertex3f(0.5f, 0.5f, 0.001 + i * 0.001);
-			glTexCoord2f(0, 1);
-			glVertex3f(-0.5f, 0.5f, 0.001 + i * 0.001);
-			glEnd();
+				// Dessiner l'ennemi à l'origine (puisque nous avons déplacé l'origine)
+				glBegin(GL_QUADS);
+				glTexCoord2f(0, 0);
+				glVertex3f(-0.5f, -0.5f, 0.001 + i * 0.001);  // Ajoutez un décalage à la coordonnée z en fonction de l'index de l'ennemi
+				glTexCoord2f(1, 0);
+				glVertex3f(0.5f, -0.5f, 0.001 + i * 0.001);
+				glTexCoord2f(1, 1);
+				glVertex3f(0.5f, 0.5f, 0.001 + i * 0.001);
+				glTexCoord2f(0, 1);
+				glVertex3f(-0.5f, 0.5f, 0.001 + i * 0.001);
+				glEnd();
 
-			glPopMatrix();  // Restaurer la matrice de transformation originale
-			glBindTexture(GL_TEXTURE_2D, 0);
-			}
-			
-			}
-		ennemiAtteintFin(Jeu::vaguesEnnemis[Jeu::vagueActuelle], Jeu::graph, Jeu::idDernierNoeud);
-
+				glPopMatrix();  // Restaurer la matrice de transformation originale
+				glBindTexture(GL_TEXTURE_2D, 0);
+			}	
 		}
+
+		ennemiAtteintFin(Jeu::vaguesEnnemis[Jeu::vagueActuelle], Jeu::graph, Jeu::idDernierNoeud);
+		
 
 		// Affichage de la tour fixe
 		for (const auto& tour : tours) {
@@ -327,13 +320,13 @@ int main(int /* argc */, char** /* argv */)
 
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
-			glVertex3f(-0.5f, -0.5f, 0.001);  // Ajustez le décalage z si nécessaire
+			glVertex3f(-0.5f, -0.5f, 0.001f);  // Ajustez le décalage z si nécessaire
 			glTexCoord2f(1, 0);
-			glVertex3f(0.5f, -0.5f, 0.001);
+			glVertex3f(0.5f, -0.5f, 0.001f);
 			glTexCoord2f(1, 1);
-			glVertex3f(0.5f, 0.5f, 0.001);
+			glVertex3f(0.5f, 0.5f, 0.001f);
 			glTexCoord2f(0, 1);
-			glVertex3f(-0.5f, 0.5f, 0.001);
+			glVertex3f(-0.5f, 0.5f, 0.001f);
 			glEnd();
 
 			glPopMatrix();
