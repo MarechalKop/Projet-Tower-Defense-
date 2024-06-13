@@ -8,11 +8,18 @@
 
 namespace Jeu {
     int total_argent {0};
-    std::vector<Ennemi> ennemis; // Ajoutez cette ligne
-    std::vector<std::vector<Ennemi>> vaguesEnnemis; // Ajoutez cette ligne
-    Graph::WeightedGraph* graph; // Ajoutez cette ligne
-    int idDernierNoeud; // Ajoutez cette ligneS
+    std::vector<Ennemi> ennemis;
+    std::vector<std::vector<Ennemi>> vaguesEnnemis;
+    Graph::WeightedGraph* graph;
+    int idDernierNoeud;
+    int vagueActuelle = 0;
+    bool partieEnCours = true;
+    bool vagueEnCours = false;
+    float tempsDepuisFinVague = 0.0f;
 }
+
+
+
 
 void tourAttaqueEnnemi(Tour& tour, Ennemi& ennemi) {
     if (tour.peutTirer() && tour.estDansPortee(ennemi.positionActuelle.x, ennemi.positionActuelle.y)) {
@@ -54,24 +61,19 @@ void mettreAJourJeu(std::vector<Tour>& tours, std::vector<Ennemi>& ennemis, floa
 }
 
 
-// Ajoutez ces variables à votre espace de noms Jeu
-bool partieEnCours = true;
-bool vagueEnCours = false;
-int vagueActuelle = 0;
-std::vector<std::vector<Ennemi>> vaguesEnnemis; // Contient toutes les vagues d'ennemis
 
 // Méthode pour commencer une nouvelle vague
 void commencerNouvelleVague() {
-    if (vagueActuelle < vaguesEnnemis.size()) {
-        Jeu::ennemis = vaguesEnnemis[vagueActuelle];
-        vagueEnCours = true;
-        vagueActuelle++;
+    if (Jeu::vagueActuelle < Jeu::vaguesEnnemis.size()) {
+        Jeu::ennemis = Jeu::vaguesEnnemis[Jeu::vagueActuelle];
+        Jeu::vagueEnCours = true;
+        Jeu::vagueActuelle++;
     }
 }
 
 // Méthode pour vérifier si tous les ennemis sont morts
-bool tousEnnemisMorts() {
-    for (const auto& ennemi : Jeu::ennemis) {
+bool tousEnnemisMorts(std::vector<Ennemi>& ennemis) {
+    for (const auto& ennemi : ennemis) {
         if (!ennemi.estMort()) {
             return false;
         }
@@ -80,21 +82,39 @@ bool tousEnnemisMorts() {
 }
 
 // Méthode pour vérifier si un ennemi a atteint le dernier noeud
-bool ennemiAtteintFin() {
-    for (const auto& ennemi : Jeu::ennemis) {
-        if (ennemi.positionActuelle == Jeu::graph->getNodePosition(Jeu::idDernierNoeud)) {
+bool ennemiAtteintFin(const std::vector<Ennemi>& ennemis, Graph::WeightedGraph* graph, int idDernierNoeud) {
+    for (const auto& ennemi : ennemis) {
+        float distance = sqrt(pow(ennemi.positionActuelle.x - graph->getNodePosition(idDernierNoeud).x, 2) +
+                              pow(ennemi.positionActuelle.y - graph->getNodePosition(idDernierNoeud).y, 2));
+        if (distance < 0.5) {  // Remplacez 0.1 par le seuil approprié pour votre jeu
             return true;
         }
     }
     return false;
 }
 
+
+
+
 // Méthode pour gérer la fin de la partie
-void finPartie(bool victoire) {
-    partieEnCours = false;
+void finPartie() {
+    // Si un ennemi atteint le dernier nœud, la partie se termine et le joueur perd
+    if (ennemiAtteintFin(Jeu::vaguesEnnemis[Jeu::vagueActuelle], Jeu::graph, Jeu::idDernierNoeud)) {
+        Jeu::partieEnCours = false;
+        std::cout << "Vous avez perdu la partie." << std::endl;
+    } 
+    // Si tous les ennemis de la dernière vague sont morts, la partie se termine et le joueur gagne
+    else if (Jeu::vagueActuelle == Jeu::vaguesEnnemis.size() - 1 && tousEnnemisMorts(Jeu::vaguesEnnemis[Jeu::vagueActuelle])) {
+        Jeu::partieEnCours = false;
+        std::cout << "Félicitations, vous avez gagné la partie !" << std::endl;
+    }
+}
+
+void finVague(bool victoire) {
+    Jeu::vagueEnCours = false;
     if (victoire) {
-        std::cout << "Félicitations, vous avez gagné !" << std::endl;
+        std::cout << "Félicitations, vous avez terminé la vague !" << std::endl;
     } else {
-        std::cout << "Vous avez perdu." << std::endl;
+        std::cout << "Vous avez perdu la vague." << std::endl;
     }
 }

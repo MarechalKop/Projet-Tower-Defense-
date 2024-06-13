@@ -44,6 +44,11 @@ void Ennemi::bouger(float dt) {
 }
 
 void Ennemi::avancer(float dt) {
+
+     if (estMort()) {
+        return;
+    }
+
     // Vérifier si l'ennemi a atteint la position suivante
     if (distance(this->positionActuelle, this->positionProchaine) <= epsilon) {
         // Mettre à jour la position actuelle et chercher la prochaine position
