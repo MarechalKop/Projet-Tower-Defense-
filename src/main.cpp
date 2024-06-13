@@ -162,6 +162,8 @@ int main(int /* argc */, char** /* argv */)
 	theta = 270;
 	dist_zoom = 13.5;
 	int hauteuraffichage = 0;
+	float dt {};
+
 	
 	float intervalleApparition = 0.015; // Intervalle de 1 seconde entre chaque apparition
 	float tempsEcouleDepuisDerniereApparition = 0.5f;
@@ -184,12 +186,17 @@ int main(int /* argc */, char** /* argv */)
     }
 
 	Graph::WeightedGraph graph;
+	Jeu::graph = &graph;
     graph.creerNoeudEtArreteGrapheAPartirDeItd(fichier2);
     fichier2.close();
 	graph.printGraph();
+	bool partieEnCours = true;
+	Jeu::partieEnCours = partieEnCours;
 
 	int idPremierNoeud = 0; // Remplacez par l'ID de votre nœud de départ
     int idDernierNoeud = 29; // Remplacez par l'ID de votre nœud d'arrivée
+	Jeu::idDernierNoeud = idDernierNoeud;
+
 
 	std::vector<int> cheminLePlusCourt = graph.dijkstra(idPremierNoeud, idDernierNoeud);
 
@@ -208,37 +215,38 @@ int main(int /* argc */, char** /* argv */)
 
 	std::vector<Tour> tours = {tour1};
 
-	std::vector<Ennemi> ennemisType1 = creerEnnemis(5, Type1, &graph, cheminLePlusCourt);
+	std::vector<Ennemi> vague1 = creerEnnemis(5, Type1, &graph, cheminLePlusCourt);
+	std::vector<Ennemi> vague2 = creerEnnemis(10, Type2, &graph, cheminLePlusCourt);
+	std::vector<Ennemi> vague3 = creerEnnemis(15, Type2, &graph, cheminLePlusCourt);
+
+
+	Jeu::vaguesEnnemis.push_back(vague1);
+	Jeu::vaguesEnnemis.push_back(vague2);
+	Jeu::vaguesEnnemis.push_back(vague3);
+
 
 	std::ifstream fichier3 ("../../data/level2.itd");
 	std::string nomMap = recuperationNomFichierMap(fichier3);
 	sil::Image image3{"images/" + nomMap };
 
-	 std::vector<std::vector<int>> indicesTextures = scanCartePourTexture (tab,image3);
+	std::vector<std::vector<int>> indicesTextures = scanCartePourTexture (tab,image3);
+
+
 
 	while (!glfwWindowShouldClose(window))
 	{
-		if (tousEnnemisMorts()) {
-    	commencerNouvelleVague();
-		}
+		
 
-		if (ennemiAtteintFin()) {
- 	   	finPartie(false);
-		}
 
-		bool tousMorts = true;
-    for (const auto& ennemi : ennemisType1) {
-        if (!ennemi.estMort()) {
-            tousMorts = false;
-            break;
-        }
-    	}
+	std::cout << Jeu::tempsDepuisFinVague << std::endl;
 
-		if (tousMorts) {
-        std::cout << "La vague est terminée !" << std::endl;
+	if (Jeu::tempsDepuisFinVague >= 0.1f && Jeu::partieEnCours) {
+    commencerNouvelleVague();
+    Jeu::tempsDepuisFinVague = 0.0f;  // Réinitialisez le temps depuis la fin de la vague
+}
 
-    }
 
+	
 
 		double startTime = glfwGetTime();
 
@@ -255,13 +263,18 @@ int main(int /* argc */, char** /* argv */)
 		double currentTime = glfwGetTime();
 		float dt = static_cast<float>(currentTime - startTime);
 
-		
+		if (tousEnnemisMorts(Jeu::vaguesEnnemis[Jeu::vagueActuelle])) {
+    	finVague(true);  // Le joueur a gagné la vague
+		Jeu::tempsDepuisFinVague += dt;
+    	// break;
+    	}
+	
 
 		// Logique d'apparition des ennemis
 		
 		std::cout << tempsEcouleDepuisDerniereApparition << std::endl;
 
-		if (prochainEnnemiAAfficher < ennemisType1.size() && tempsEcouleDepuisDerniereApparition >= intervalleApparition) {
+		if (prochainEnnemiAAfficher < Jeu::vaguesEnnemis[Jeu::vagueActuelle].size() && tempsEcouleDepuisDerniereApparition >= intervalleApparition ) {
 			tempsEcouleDepuisDerniereApparition = 0.0f;
 			prochainEnnemiAAfficher++;
 			std::cout << "prochain ennemi à afficher" << prochainEnnemiAAfficher << std::endl;
@@ -270,15 +283,15 @@ int main(int /* argc */, char** /* argv */)
 		// Affichage et mouvement des ennemis
 		for (int i = 0; i < prochainEnnemiAAfficher; ++i) {
 
-			ennemisType1[i].pts_de_vie -= 0.00001;
+			 Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].pts_de_vie -= 0.00001;
 			
-			if (!ennemisType1[i].estMort()) {
-        	ennemisType1[i].avancer(dt);
+			if (!Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].estMort()) {
+        	Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].avancer(dt);
 			glBindTexture(GL_TEXTURE_2D, tab2[0]);    
 			glPushMatrix();  // Sauvegarder la matrice de transformation actuelle
 
 			// Déplacer l'origine au centre de l'ennemi
-			glTranslatef(ennemisType1[i].positionActuelle.x + 0.5f, ennemisType1[i].positionActuelle.y + 0.5f, 0);
+			glTranslatef(Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].positionActuelle.x + 0.5f, Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].positionActuelle.y + 0.5f, 0);
 
 			// Agrandir l'ennemi
 			glScalef(2.1f, 2.1f, 1.0f);  // Ajustez ces valeurs pour changer la taille de l'ennemi
@@ -337,6 +350,8 @@ int main(int /* argc */, char** /* argv */)
 		}
 
 		tempsEcouleDepuisDerniereApparition += dt;
+
+	    finPartie();
 	}
 
 	glDeleteTextures(4, tab);
