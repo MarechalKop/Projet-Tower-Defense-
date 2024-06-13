@@ -162,7 +162,7 @@ int main(int /* argc */, char** /* argv */)
 	theta = 270;
 	dist_zoom = 13.5;
 	int hauteuraffichage = 0;
-	float dt {};
+
 	
 
 	
@@ -205,11 +205,7 @@ int main(int /* argc */, char** /* argv */)
         // std::cout << node_id << " ";
     }
 
-	std::vector<Ennemi> vague1 = creerEnnemis(5, Type1, &graph, cheminLePlusCourt);
-	std::vector<Ennemi> vague2 = creerEnnemis(10, Type2, &graph, cheminLePlusCourt);
-	std::vector<Ennemi> vague3 = creerEnnemis(15, Type2, &graph, cheminLePlusCourt);
-	
-	// Création d'une tour fixe (pour tester)
+		// Création d'une tour fixe (pour tester)
 	Tour tour1;
 	tour1.puissance = 10;
 	tour1.portee = 5; // Portée en distance de Chebyshev
@@ -217,13 +213,21 @@ int main(int /* argc */, char** /* argv */)
 	tour1.type = TypeTour::TypeA;
 	tour1.posX = 2; // Position X de la tour sur la carte
 	tour1.posY = 3; // Position Y de la tour sur la carte
+	std::vector<Tour> tours = {tour1};
+
+	std::vector<Ennemi> vague1 = creerEnnemis(5, Type1, &graph, cheminLePlusCourt);
+	std::vector<Ennemi> vague2 = creerEnnemis(10, Type2, &graph, cheminLePlusCourt);
+	std::vector<Ennemi> vague3 = creerEnnemis(15, Type2, &graph, cheminLePlusCourt);
+	
+
+
 
 	Jeu::vaguesEnnemis.push_back(vague1);
 	Jeu::vaguesEnnemis.push_back(vague2);
 	Jeu::vaguesEnnemis.push_back(vague3);
 
 
-	std::vector<Tour> tours = {tour1};
+	
 	std::ifstream fichier3 ("../../data/level2.itd");
 	std::string nomMap = recuperationNomFichierMap(fichier3);
 	sil::Image image3{"images/" + nomMap };
@@ -237,15 +241,15 @@ int main(int /* argc */, char** /* argv */)
 		
 
 
-	// std::cout << Jeu::tempsDepuisFinVague << std::endl;
+		// std::cout << Jeu::tempsDepuisFinVague << std::endl;
 
-	if (Jeu::tempsDepuisFinVague >= 0.1f && Jeu::partieEnCours) {
-    commencerNouvelleVague();
-    Jeu::tempsDepuisFinVague = 0.0f;  // Réinitialisez le temps depuis la fin de la vague
-}
+		if (Jeu::tempsDepuisFinVague >= 0.1f && Jeu::partieEnCours) {
+		commencerNouvelleVague();
+		Jeu::tempsDepuisFinVague = 0.0f;  // Réinitialisez le temps depuis la fin de la vague
+		}
 	
 
-    }
+    
 
 
 		double startTime = glfwGetTime();
@@ -278,12 +282,12 @@ int main(int /* argc */, char** /* argv */)
         tempsEcouleDepuisDerniereApparition = 0.0f;
         Jeu::prochainEnnemiAAfficher++;
         std::cout << "prochain ennemi à afficher" << Jeu::prochainEnnemiAAfficher << std::endl;
-    }
+    	}
 
 		// Affichage et mouvement des ennemis
-		for (int i = 0; i < Jeu::prochainEnnemiAAfficher; ++i) {
+		for (int i = 0; i < Jeu::prochainEnnemiAAfficher; ++i){
 
-		 	Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].pts_de_vie -= 0.00001;
+		 	Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].pts_de_vie -= 0.0000001;
 			
 			if (!Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].estMort()) {
         	Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].avancer(dt);
@@ -312,10 +316,10 @@ int main(int /* argc */, char** /* argv */)
 			glBindTexture(GL_TEXTURE_2D, 0);
 			}
 			
-			}
+		}
 		ennemiAtteintFin(Jeu::vaguesEnnemis[Jeu::vagueActuelle], Jeu::graph, Jeu::idDernierNoeud);
 
-		}
+		
 
 		// Affichage de la tour fixe
 		for (const auto& tour : tours) {
