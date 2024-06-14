@@ -9,21 +9,25 @@
 #include <vector>
 #include "stb_image.h"
 
-GLuint* chargerTousLesSpritesJeu()
+GLuint* chargerTousLesSpritesChiffre()
 {
     //int x, y, n;
-    const int nombreTexture = 6; // Nombre de textures, ajusté pour inclure la nouvelle texture
+    const int nombreTexture = 10; // Nombre de textures, ajusté pour inclure la nouvelle texture
     std::vector<unsigned char*> Result2(nombreTexture);
     std::vector<int> widths(nombreTexture), heights(nombreTexture), channels(nombreTexture);
     
     
-    Result2[0] = stbi_load("../../images/sprites/Units/1/U_Preattack.png", &widths[0], &heights[0], &channels[0], 0);
+    Result2[0] = stbi_load("../../images/0.png", &widths[0], &heights[0], &channels[0], 0);
     // Texture d'une tour
-    Result2[1] = stbi_load("../../images/sprites/2 Idle/tour1.png", &widths[1], &heights[1], &channels[1], 0);
-    Result2[2] = stbi_load("../../images/sprites/Units/1/D_Preattack.png", &widths[2], &heights[2], &channels[2], 0);
-    Result2[3] = stbi_load("../../images/sprites/2 Idle/tour2.png", &widths[3], &heights[3], &channels[3], 0);
-    Result2[4] = stbi_load("../../images/coeur.png", &widths[4], &heights[4], &channels[4], 0);
-    Result2[5] = stbi_load("../../images/Argent.png", &widths[5], &heights[5], &channels[5], 0);
+    Result2[1] = stbi_load("../../images/1.png", &widths[1], &heights[1], &channels[1], 0);
+    Result2[2] = stbi_load("../../images/2.png", &widths[2], &heights[2], &channels[2], 0);
+    Result2[3] = stbi_load("../../images/3.png", &widths[3], &heights[3], &channels[3], 0);
+    Result2[4] = stbi_load("../../images/4.png", &widths[4], &heights[4], &channels[4], 0);
+    Result2[5] = stbi_load("../../images/5.png", &widths[5], &heights[5], &channels[5], 0);
+    Result2[6] = stbi_load("../../images/6.png", &widths[6], &heights[6], &channels[6], 0);
+    Result2[7] = stbi_load("../../images/7.png", &widths[7], &heights[7], &channels[7], 0);
+    Result2[8] = stbi_load("../../images/8.png", &widths[8], &heights[8], &channels[8], 0);
+    Result2[9] = stbi_load("../../images/9.png", &widths[9], &heights[9], &channels[9], 0);
    
     for (int i = 0; i < nombreTexture; i++) {
         if (Result2[i] == nullptr) {

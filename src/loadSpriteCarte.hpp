@@ -10,3 +10,4 @@
 
 GLuint* chargerTousLesSpritesCartes (); 
 GLuint* chargerTousLesSpritesJeu (); 
+GLuint* chargerTousLesSpritesChiffre (); 

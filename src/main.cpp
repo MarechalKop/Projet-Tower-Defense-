@@ -177,6 +177,7 @@ int main(int /* argc */, char** /* argv */)
    	testValiditeITD (fichier);
 	GLuint* tab = chargerTousLesSpritesCartes ();
 	GLuint* tab2 = chargerTousLesSpritesJeu();
+	GLuint* tab3 = chargerTousLesSpritesChiffre();
 	if (!tab) {
         std::cerr << "Erreur lors du chargement des textures" << std::endl;
         return -1;
@@ -317,7 +318,7 @@ int main(int /* argc */, char** /* argv */)
 		// Affichage et mouvement des ennemis
 		for (int i = 0; i < Jeu::prochainEnnemiAAfficher; ++i){
 
-		 	// Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].pts_de_vie -= 0.0000001;
+		 	Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].pts_de_vie += 100;
 			
 			if (!Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].estMort()) {
         	Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].avancer(dt);
@@ -429,34 +430,33 @@ int main(int /* argc */, char** /* argv */)
 
 
 
-		// for (int i {0}; i < Jeu::points_de_vieJoueur; i++)
-		// 	{
+		for (int i {0}; i < Jeu::points_de_vieJoueur; i++)
+			{
 
-		// 	glBindTexture(GL_TEXTURE_2D, tab2[1]);  // Utiliser la texture de la tour
+			glBindTexture(GL_TEXTURE_2D, tab2[4]);  // Utiliser la texture de la tour
 
-		// 	glPushMatrix();
-		// 	glTranslatef(-12, 5, 1);
-		// 	glScalef(2.5f, 2.5f, 1.0f);  // Ajustez la taille de la tour si nécessaire
+			glPushMatrix();
+			glTranslatef(6 + i*2.5  , 5, 1);
+			glScalef(1.5f, 1.5f, 1.0f);  // Ajustez la taille de la tour si nécessaire
 
-		// 	glBegin(GL_QUADS);
-		// 	glTexCoord2f(0, 0);
-		// 	glVertex3f(-0.5f, -0.5f, 0.1 );  // Ajustez le décalage z si nécessaire
-		// 	glTexCoord2f(1, 0);
-		// 	glVertex3f(0.5f, -0.5f, 0.1);
-		// 	glTexCoord2f(1, 1);
-		// 	glVertex3f(0.5f, 0.5f, 0.1);
-		// 	glTexCoord2f(0, 1);
-		// 	glVertex3f(-0.5f, 0.5f, 0.1);
-		// 	glEnd();
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(-0.5f, -0.5f, 0.1 );  // Ajustez le décalage z si nécessaire
+			glTexCoord2f(1, 0);
+			glVertex3f(0.5f, -0.5f, 0.1);
+			glTexCoord2f(1, 1);
+			glVertex3f(0.5f, 0.5f, 0.1);
+			glTexCoord2f(0, 1);
+			glVertex3f(-0.5f, 0.5f, 0.1);
+			glEnd();
 
-		// 	glPopMatrix();
-		// 	glBindTexture(GL_TEXTURE_2D, 0);
+			glPopMatrix();
+			glBindTexture(GL_TEXTURE_2D, 0);
+			
+			}
 
-		// 	}
-
-		glDisable(GL_TEXTURE_2D);
-		glfwSwapBuffers(window);
-		glfwPollEvents();
+		
+		
 
 		double endTime = glfwGetTime();
 		double elapsedTime = endTime - startTime;
@@ -474,11 +474,72 @@ int main(int /* argc */, char** /* argv */)
 		std::cout << "Pts de vie Joueur " << Jeu::points_de_vieJoueur << std::endl;
 		std::cout << "Nous sommes a la vague " << Jeu::vagueActuelle + 1 << std::endl;
 		std::cout << "Il y a " << Jeu::vaguesEnnemis.size()  << " vagues" << std::endl;
+
+
+		std::string argentStr = std::to_string(Jeu::totalArgentInt);  // Convertir l'argent en chaîne de caractères
+		for (int i = 0; i < argentStr.size(); i++)
+		{
+		int chiffre = argentStr[i] - '0';  // Convertir le caractère en chiffre
+		std::cout << chiffre << std::endl;
+
+		glBindTexture(GL_TEXTURE_2D, tab3[chiffre]);  // Utiliser la texture du chiffre
+			
+			glPushMatrix();
+			glTranslatef(6 + i*1.5  , 3, 1);
+			glScalef(1.f, 1.f, 1.0f); 
+
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(-0.5f, -0.5f, 0.1 );  // Ajustez le décalage z si nécessaire
+			glTexCoord2f(1, 0);
+			glVertex3f(0.5f, -0.5f, 0.1);
+			glTexCoord2f(1, 1);
+			glVertex3f(0.5f, 0.5f, 0.1);
+			glTexCoord2f(0, 1);
+			glVertex3f(-0.5f, 0.5f, 0.1);
+			glEnd();
+
+			glPopMatrix();
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+
+			glBindTexture(GL_TEXTURE_2D, tab2[5]);  // Utiliser la texture du chiffre
+			
+			glPushMatrix();
+			glTranslatef(10.5 , 3, 1);
+			glScalef(1.f, 1.2f, 1.0f); 
+
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(-0.5f, -0.5f, 0.1 );  // Ajustez le décalage z si nécessaire
+			glTexCoord2f(1, 0);
+			glVertex3f(0.5f, -0.5f, 0.1);
+			glTexCoord2f(1, 1);
+			glVertex3f(0.5f, 0.5f, 0.1);
+			glTexCoord2f(0, 1);
+			glVertex3f(-0.5f, 0.5f, 0.1);
+			glEnd();
+
+			glPopMatrix();
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+
+
+
+
+
+		}
+
+
 	    finPartie();
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+		glDisable(GL_TEXTURE_2D);
 	}
 
 	glDeleteTextures(24, tab);
-	glDeleteTextures(4, tab2);
+	glDeleteTextures(6, tab2);
+	glDeleteTextures(10, tab3);
 
 	glfwTerminate();
 	return 0;
