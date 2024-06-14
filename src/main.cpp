@@ -115,6 +115,40 @@ void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* m
 	}
 }
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
+// Coordonnées du bouton "Quitter" en OpenGL
+const float QUIT_BUTTON_X = 8.5f;
+const float QUIT_BUTTON_Y = -6.0f;
+const float BUTTON_WIDTH = 2.0f;  // Largeur du bouton (d'une extrémité à l'autre du quad)
+const float BUTTON_HEIGHT = 1.0f; // Hauteur du bouton (d'une extrémité à l'autre du quad)
+
+void handleMouseClick(GLFWwindow* window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        double mouseX, mouseY;
+        glfwGetCursorPos(window, &mouseX, &mouseY);
+
+        // Obtenez les dimensions de la fenêtre GLFW
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+
+        // Convertissez les coordonnées de la souris en coordonnées OpenGL
+        float normalizedX = (2.0f * (float)mouseX) / (float)width - 1.0f;
+        float normalizedY = 1.0f - (2.0f * (float)mouseY) / (float)height;
+
+        // Vérifiez si les coordonnées du clic sont à l'intérieur du bouton "Quitter"
+        if (normalizedX >= QUIT_BUTTON_X &&
+            normalizedX <= (QUIT_BUTTON_X + BUTTON_WIDTH) &&
+            normalizedY >= QUIT_BUTTON_Y &&
+            normalizedY <= (QUIT_BUTTON_Y + BUTTON_HEIGHT)) {
+            glfwSetWindowShouldClose(window, GLFW_TRUE);  // Fermer la fenêtre GLFW
+        }
+    }
+}
+
+
 int main(int /* argc */, char** /* argv */)
 {
 	/* GLFW initialisation */
@@ -148,6 +182,8 @@ int main(int /* argc */, char** /* argv */)
 
 	glfwSetWindowSizeCallback(window,onWindowResized);
 	glfwSetKeyCallback(window, onKey);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetMouseButtonCallback(window, handleMouseClick);
 
 	onWindowResized(window,WINDOW_WIDTH,WINDOW_HEIGHT);
 
@@ -529,6 +565,161 @@ int main(int /* argc */, char** /* argv */)
 
 
 		}
+
+
+		int prixTourA = 100;
+    	int prixTourB = 200;
+
+		std::string prixTourAStr = std::to_string(prixTourA);
+    	std::string prixTourBStr = std::to_string(prixTourB);
+
+		bool assezArgentTourA = Jeu::totalArgentInt >= prixTourA;
+    	bool assezArgentTourB = Jeu::totalArgentInt >= prixTourB;
+		float alphaTourA = assezArgentTourA ? 1.0f : 0.5f;
+    	float alphaTourB = assezArgentTourB ? 1.0f : 0.5f;
+
+		// Tour type A
+		glBindTexture(GL_TEXTURE_2D, tab2[1]);
+		glColor4f(1.0f, 1.0f, 1.0f, alphaTourA);
+		glPushMatrix();
+		glTranslatef(6, -0.5, 1); // Position de l'image de la tour 1
+		glScalef(0.9f, 0.9f, 1.0f);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0, 0);
+		glVertex3f(-1.f, -1.25f, 0.1);
+		glTexCoord2f(1, 0);
+		glVertex3f(1.f, -1.25f, 0.1);
+		glTexCoord2f(1, 1);
+		glVertex3f(1.f, 1.25f, 0.1);
+		glTexCoord2f(0, 1);
+		glVertex3f(-1.f, 1.25f, 0.1);
+		glEnd();
+		glPopMatrix();
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		// Affichage du prix de la tour 1
+		for (int i = 0; i < prixTourAStr.size(); i++) {
+			int chiffre = prixTourAStr[i] - '0';
+			glBindTexture(GL_TEXTURE_2D, tab3[chiffre]);
+			glColor4f(1.0f, 1.0f, 1.0f, alphaTourA);
+			glPushMatrix();
+			glTranslatef(8 + i, -0.6, 1); // Position du prix de la tour 1
+			glScalef(0.75f, 0.75f, 1.0f);
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(-0.5f, -0.5f, 0.1);
+			glTexCoord2f(1, 0);
+			glVertex3f(0.5f, -0.5f, 0.1);
+			glTexCoord2f(1, 1);
+			glVertex3f(0.5f, 0.5f, 0.1);
+			glTexCoord2f(0, 1);
+			glVertex3f(-0.5f, 0.5f, 0.1);
+			glEnd();
+			glPopMatrix();
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+
+			glBindTexture(GL_TEXTURE_2D, tab2[5]);
+			
+			glPushMatrix();
+			glTranslatef(11.25, -0.6, 1);
+			glScalef(0.75f, 0.77f, 1.0f);
+
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(-0.5f, -0.5f, 0.1 );  // Ajustez le décalage z si nécessaire
+			glTexCoord2f(1, 0);
+			glVertex3f(0.5f, -0.5f, 0.1);
+			glTexCoord2f(1, 1);
+			glVertex3f(0.5f, 0.5f, 0.1);
+			glTexCoord2f(0, 1);
+			glVertex3f(-0.5f, 0.5f, 0.1);
+			glEnd();
+
+			glPopMatrix();
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+		// Tour type B
+		glBindTexture(GL_TEXTURE_2D, tab2[3]);
+		glColor4f(1.0f, 1.0f, 1.0f, alphaTourB);
+		glPushMatrix();
+		glTranslatef(6, -3, 1); // Position de l'image de la tour 2
+		glScalef(0.75f, 0.75f, 1.0f);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0, 0);
+		glVertex3f(-1.f, -1.5f, 0.1);
+		glTexCoord2f(1, 0);
+		glVertex3f(1.f, -1.5f, 0.1);
+		glTexCoord2f(1, 1);
+		glVertex3f(1.f, 1.5f, 0.1);
+		glTexCoord2f(0, 1);
+		glVertex3f(-1.f, 1.5f, 0.1);
+		glEnd();
+		glPopMatrix();
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		// Affichage du prix de la tour 2
+		for (int i = 0; i < prixTourBStr.size(); i++) {
+			int chiffre = prixTourBStr[i] - '0';
+			glBindTexture(GL_TEXTURE_2D, tab3[chiffre]);
+			glColor4f(1.0f, 1.0f, 1.0f, alphaTourB);
+			glPushMatrix();
+			glTranslatef(8 + i, -3.25, 1); // Position du prix de la tour 2
+			glScalef(0.75f, 0.75f, 1.0f);
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(-0.5f, -0.5f, 0.1);
+			glTexCoord2f(1, 0);
+			glVertex3f(0.5f, -0.5f, 0.1);
+			glTexCoord2f(1, 1);
+			glVertex3f(0.5f, 0.5f, 0.1);
+			glTexCoord2f(0, 1);
+			glVertex3f(-0.5f, 0.5f, 0.1);
+			glEnd();
+			glPopMatrix();
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+
+		glBindTexture(GL_TEXTURE_2D, tab2[5]);
+			
+			glPushMatrix();
+			glTranslatef(11.25, -3.25, 1);
+			glScalef(0.75f, 0.77f, 1.0f);
+
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(-0.5f, -0.5f, 0.1 );  // Ajustez le décalage z si nécessaire
+			glTexCoord2f(1, 0);
+			glVertex3f(0.5f, -0.5f, 0.1);
+			glTexCoord2f(1, 1);
+			glVertex3f(0.5f, 0.5f, 0.1);
+			glTexCoord2f(0, 1);
+			glVertex3f(-0.5f, 0.5f, 0.1);
+			glEnd();
+
+			glPopMatrix();
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			//Bouton quitter
+			glBindTexture(GL_TEXTURE_2D, tab2[6]);
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			glPushMatrix();
+			glTranslatef(QUIT_BUTTON_X, QUIT_BUTTON_Y, 1.0f);
+			glScalef(1.0f, 1.0f, 1.0f);
+
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(-2.0f, -0.5f, 0.1 );  // Ajustez le décalage z si nécessaire
+			glTexCoord2f(1, 0);
+			glVertex3f(2.0f, -0.5f, 0.1);
+			glTexCoord2f(1, 1);
+			glVertex3f(2.0f, 0.5f, 0.1);
+			glTexCoord2f(0, 1);
+			glVertex3f(-2.0f, 0.5f, 0.1);
+			glEnd();
+
+			glPopMatrix();
+			glBindTexture(GL_TEXTURE_2D, 0);
 
 
 	    finPartie();
