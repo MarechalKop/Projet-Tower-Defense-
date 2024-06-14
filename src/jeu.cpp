@@ -114,13 +114,13 @@ void finPartie() {
     else if (Jeu::vagueActuelle == Jeu::vaguesEnnemis.size() - 1 && tousEnnemisMorts(Jeu::vaguesEnnemis[Jeu::vagueActuelle])) {
         Jeu::partieEnCours = false;
     }
-        std::cout << "Félicitations, vous avez gagné la partie !" << std::endl;
+        std::cout << "Felicitations, vous avez gagne la partie !" << std::endl;
 }
 
 void finVague(bool victoire) {
     Jeu::vagueEnCours = false;
     if (victoire) {
-        std::cout << "Félicitations, vous avez terminé la vague !" << std::endl;
+        std::cout << "Felicitations, vous avez termine la vague !" << std::endl;
     } else {
         std::cout << "Vous avez perdu la vague." << std::endl;
     }
