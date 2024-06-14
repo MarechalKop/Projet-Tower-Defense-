@@ -220,7 +220,7 @@ int main(int /* argc */, char** /* argv */)
 
 	Tour tour2;
 	tour2.puissance = 10;
-	tour2.portee = 10; // Portée en distance de Chebyshev
+	tour2.portee = 5; // Portée en distance de Chebyshev
 	tour2.cadence = 1.0f; // Cadence de tir en dixièmes de seconde
 	tour2.type = TypeTour::TypeA;
 	tour2.posX = 5; // Position X de la tour sur la carte
@@ -273,7 +273,10 @@ int main(int /* argc */, char** /* argv */)
 		glEnable(GL_TEXTURE_2D);
 
 		drawFrame();
+		glPushMatrix();
+		glTranslatef(-6,0, 0);
 		DessinCarte(tab, image3, indicesTextures);
+		glPopMatrix();
 
 		double currentTime = glfwGetTime();
 		float dt = static_cast<float>(currentTime - startTime);
@@ -305,6 +308,10 @@ int main(int /* argc */, char** /* argv */)
         std::cout << "prochain ennemi à afficher" << Jeu::prochainEnnemiAAfficher << std::endl;
     	}
 		}
+
+		glPushMatrix();
+		glTranslatef(-6,0, 0);
+		
 		
 
 		// Affichage et mouvement des ennemis
@@ -366,7 +373,7 @@ int main(int /* argc */, char** /* argv */)
 		// Affichage de la tour fixe
 		for (const auto& tour : tours) {
 
-			
+				indiceZ +=1;
 
 				if (tour.peutTirer()) {
 				std::cout << "Tour a la position (" << tour.posX << ", " << tour.posY << ") tire sur un ennemi !" << std::endl;
@@ -390,10 +397,7 @@ int main(int /* argc */, char** /* argv */)
 					cible->pts_de_vie -= tour.puissance;
 					std::cout << "La tour inflige " << tour.puissance << " points de degats a l'ennemi" << std::endl;
 				}
-			}
-
-
-
+				}
 
 
 			glBindTexture(GL_TEXTURE_2D, tab2[1]);  // Utiliser la texture de la tour
@@ -404,18 +408,51 @@ int main(int /* argc */, char** /* argv */)
 
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
-			glVertex3f(-0.5f, -0.5f, 0.01);  // Ajustez le décalage z si nécessaire
+			glVertex3f(-0.5f, -0.8f, 0.015 );  // Ajustez le décalage z si nécessaire
 			glTexCoord2f(1, 0);
-			glVertex3f(0.5f, -0.5f, 0.01);
+			glVertex3f(0.5f, -0.8f, 0.015);
 			glTexCoord2f(1, 1);
-			glVertex3f(0.5f, 0.5f, 0.01);
+			glVertex3f(0.5f, 0.5f, 0.015);
 			glTexCoord2f(0, 1);
-			glVertex3f(-0.5f, 0.5f, 0.01);
+			glVertex3f(-0.5f, 0.5f, 0.015);
 			glEnd();
 
 			glPopMatrix();
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
+
+		glPopMatrix();
+
+
+		// La partie qui suit a pour but d'afficher les coeurs du joueurs
+
+
+
+
+		// for (int i {0}; i < Jeu::points_de_vieJoueur; i++)
+		// 	{
+
+		// 	glBindTexture(GL_TEXTURE_2D, tab2[1]);  // Utiliser la texture de la tour
+
+		// 	glPushMatrix();
+		// 	glTranslatef(-12, 5, 1);
+		// 	glScalef(2.5f, 2.5f, 1.0f);  // Ajustez la taille de la tour si nécessaire
+
+		// 	glBegin(GL_QUADS);
+		// 	glTexCoord2f(0, 0);
+		// 	glVertex3f(-0.5f, -0.5f, 0.1 );  // Ajustez le décalage z si nécessaire
+		// 	glTexCoord2f(1, 0);
+		// 	glVertex3f(0.5f, -0.5f, 0.1);
+		// 	glTexCoord2f(1, 1);
+		// 	glVertex3f(0.5f, 0.5f, 0.1);
+		// 	glTexCoord2f(0, 1);
+		// 	glVertex3f(-0.5f, 0.5f, 0.1);
+		// 	glEnd();
+
+		// 	glPopMatrix();
+		// 	glBindTexture(GL_TEXTURE_2D, 0);
+
+		// 	}
 
 		glDisable(GL_TEXTURE_2D);
 		glfwSwapBuffers(window);
@@ -435,11 +472,13 @@ int main(int /* argc */, char** /* argv */)
 		Jeu::totalArgentInt = static_cast<int>(Jeu::total_argentEnFloat);
 		std::cout << "Le joueur ce gros rat a " << Jeu::totalArgentInt << " ecus" << std::endl;
 		std::cout << "Pts de vie Joueur " << Jeu::points_de_vieJoueur << std::endl;
+		std::cout << "Nous sommes a la vague " << Jeu::vagueActuelle + 1 << std::endl;
+		std::cout << "Il y a " << Jeu::vaguesEnnemis.size()  << " vagues" << std::endl;
 	    finPartie();
 	}
 
-	glDeleteTextures(4, tab);
-	glDeleteTextures(3, tab2);
+	glDeleteTextures(24, tab);
+	glDeleteTextures(4, tab2);
 
 	glfwTerminate();
 	return 0;

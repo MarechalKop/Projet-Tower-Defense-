@@ -12,7 +12,7 @@
 GLuint* chargerTousLesSpritesJeu()
 {
     //int x, y, n;
-    const int nombreTexture = 3; // Nombre de textures, ajusté pour inclure la nouvelle texture
+    const int nombreTexture = 4; // Nombre de textures, ajusté pour inclure la nouvelle texture
     std::vector<unsigned char*> Result2(nombreTexture);
     std::vector<int> widths(nombreTexture), heights(nombreTexture), channels(nombreTexture);
     
@@ -21,6 +21,7 @@ GLuint* chargerTousLesSpritesJeu()
     // Texture d'une tour
     Result2[1] = stbi_load("../../images/sprites/2 Idle/tour1.png", &widths[1], &heights[1], &channels[1], 0);
     Result2[2] = stbi_load("../../images/sprites/Units/1/D_Preattack.png", &widths[2], &heights[2], &channels[2], 0);
+    Result2[3] = stbi_load("../../images/sprites/2 Idle/tour2.png", &widths[3], &heights[3], &channels[3], 0);
    
     for (int i = 0; i < nombreTexture; i++) {
         if (Result2[i] == nullptr) {

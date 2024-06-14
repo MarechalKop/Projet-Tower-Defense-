@@ -22,8 +22,6 @@ namespace Jeu {
 }
 
 
-
-
 void tourAttaqueEnnemi(Tour& tour, Ennemi& ennemi) {
     if (tour.peutTirer() && tour.estDansPortee(ennemi.positionActuelle.x, ennemi.positionActuelle.y)) {
         ennemi.degatsEnnemi(tour.puissance);
@@ -31,9 +29,12 @@ void tourAttaqueEnnemi(Tour& tour, Ennemi& ennemi) {
 
         if (ennemi.estMort()) {
             Jeu::total_argentEnFloat += ennemi.recompense;
+            Jeu::totalArgentInt = static_cast<int>(Jeu::total_argentEnFloat);
+            std::cout << "Le joueur a gagné " << ennemi.recompense << " ecus" << std::endl;
         }
     }
 }
+
 
 void mettreAJourJeu(std::vector<Tour>& tours, std::vector<Ennemi>& ennemis, float dt) {
     // Mettre à jour les positions des ennemis
@@ -113,8 +114,9 @@ void finPartie() {
     // Si tous les ennemis de la dernière vague sont morts, la partie se termine et le joueur gagne
     else if (Jeu::vagueActuelle == Jeu::vaguesEnnemis.size() - 1 && tousEnnemisMorts(Jeu::vaguesEnnemis[Jeu::vagueActuelle])) {
         Jeu::partieEnCours = false;
-    }
         std::cout << "Felicitations, vous avez gagne la partie !" << std::endl;
+    }
+        
 }
 
 void finVague(bool victoire) {
