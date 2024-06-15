@@ -36,13 +36,14 @@
 #include "draw_scene.hpp"
 
 #include "jeu.hpp"
+#include <utility>
 
 
 
 /* Window properties */
-static const unsigned int WINDOW_WIDTH = 1000;
+static const unsigned int WINDOW_WIDTH = 2000;
 static const unsigned int WINDOW_HEIGHT = 1000;
-static const char WINDOW_TITLE[] = "TD05";
+static const char WINDOW_TITLE[] = "L'attaque des fardadets malicieux à MocheVille";
 static float aspectRatio = 1.0;
 
 /* Minimal time wanted between two images */
@@ -69,11 +70,29 @@ void onWindowResized(GLFWwindow* /* window */, int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 }
 
+	bool placementTour = false;
+
+	static int posXTourEnAttenteTypeA; // Ajout d'une tour en attente
+	static int posYTourEnAttenteTypeA;
+
+	static std::vector<std::pair<int,int>> PeutOnPlacerTourIci;
+
+    
+
 void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* mods */)
 {
 	int is_pressed = (action == GLFW_PRESS); 
 	switch(key) {
-		case GLFW_KEY_A :
+		case GLFW_KEY_Q : 
+			if (is_pressed && Jeu::totalArgentInt >= 100 && placementTour == false)
+			{
+				posXTourEnAttenteTypeA = 0;
+				posYTourEnAttenteTypeA = 0;
+				Jeu::total_argentEnFloat -= 100;
+				placementTour = true;
+			}
+			break; 
+
 		case GLFW_KEY_ESCAPE :
 			if (is_pressed) glfwSetWindowShouldClose(window, GLFW_TRUE);
 			break;
@@ -83,34 +102,39 @@ void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* m
 				std::cout <<"Mode filaire : "<<((flag_filaire)?"ON":"OFF")<<std::endl;
 			}
 			break;
-		case GLFW_KEY_R :
-			if (is_pressed) flag_animate_rot_arm = 1-flag_animate_rot_arm;
-			break;
-		case GLFW_KEY_T :
-			if (is_pressed) flag_animate_rot_scale = 1-flag_animate_rot_scale;
-			break;
-		case GLFW_KEY_J :
-			if(dist_zoom<60.0f) dist_zoom*=1.1;
-			std::cout<<"Zoom is "<<dist_zoom<<std::endl;
-			break;
-		case GLFW_KEY_I :
-			if(dist_zoom>1.0f) dist_zoom*=0.9;
-			std::cout<<"Zoom is "<<dist_zoom<<std::endl;
-			break;
+		// case GLFW_KEY_R :
+		// 	if (is_pressed) flag_animate_rot_arm = 1-flag_animate_rot_arm;
+		// 	break;
+		// case GLFW_KEY_T :
+		// 	if (is_pressed) flag_animate_rot_scale = 1-flag_animate_rot_scale;
+		// 	break;
+		// case GLFW_KEY_J :
+		// 	if(dist_zoom<60.0f) dist_zoom*=1.1;
+		// 	std::cout<<"Zoom is "<<dist_zoom<<std::endl;
+		// 	break;
+		// case GLFW_KEY_I :
+		// 	if(dist_zoom>1.0f) dist_zoom*=0.9;
+		// 	std::cout<<"Zoom is "<<dist_zoom<<std::endl;
+		// 	break;
 		case GLFW_KEY_UP :
-			if (phy>2) phy -= 2;
-			std::cout<<"Phy : "<<phy<<std::endl;
+			if (is_pressed && placementTour && posYTourEnAttenteTypeA < 7) {
+			posYTourEnAttenteTypeA ++;
+			}
 			break;
 		case GLFW_KEY_DOWN :
-			if (phy<=88.) phy += 2;
-			std::cout<<"Phy : "<<phy<<std::endl;
+			if (is_pressed && placementTour && posYTourEnAttenteTypeA >= -7) {
+			posYTourEnAttenteTypeA --;
+			}
 			break;
 		case GLFW_KEY_LEFT :
-			theta -= 5;
+			if (is_pressed && placementTour && posXTourEnAttenteTypeA > -7) {
+			posXTourEnAttenteTypeA --;
+			}
 			break;
 		case GLFW_KEY_RIGHT :
-			theta += 5;
-			break;
+			if (is_pressed && placementTour && posXTourEnAttenteTypeA < 7 ) {
+			posXTourEnAttenteTypeA ++;
+			}
 		default: std::cout<<"Touche non gérée"<<std::endl;
 	}
 }
@@ -151,6 +175,11 @@ void handleMouseClick(GLFWwindow* window, int button, int action, int mods) {
 
 int main(int /* argc */, char** /* argv */)
 {
+
+	// Ajouter des éléments au vecteur
+	CreationVectorPeutOnPlacerTourIci(PeutOnPlacerTourIci);
+
+
 	/* GLFW initialisation */
 	GLFWwindow* window;
 	  if (!glfwInit()) {
@@ -246,26 +275,12 @@ int main(int /* argc */, char** /* argv */)
         // std::cout << node_id << " ";
     }
 
-		// Création d'une tour fixe (pour tester)
-	Tour tour1;
-	tour1.puissance = 50;
-	tour1.portee = 4; // Portée en distance de Chebyshev
-	tour1.cadence = 1.f; // Cadence de tir en dixièmes de seconde
-	tour1.type = TypeTour::TypeA;
-	tour1.posX = 2; // Position X de la tour sur la carte
-	tour1.posY = 3; // Position Y de la tour sur la carte
+
+	Tour tourA = creerTour(TypeTour::TypeA, -1, 3);
+	Tour tourB = creerTour(TypeTour::TypeB, 5, -2);
 
 
-	Tour tour2;
-	tour2.puissance = 150;
-	tour2.portee = 4; // Portée en distance de Chebyshev
-	tour2.cadence = 20.0f; // Cadence de tir en dixièmes de seconde
-	tour2.type = TypeTour::TypeB;
-	tour2.posX = 5; // Position X de la tour sur la carte
-	tour2.posY = -2; // Position Y de la tour sur la carte
-
-
-	std::vector<Tour> tours = {tour1,tour2};
+	std::vector<Tour> tours = {tourA,tourB};
 
 	std::vector<Ennemi> vague1 = creerEnnemis(5, Type1, &graph, cheminLePlusCourt);
 	std::vector<Ennemi> vague2 = creerEnnemis(10, Type2, &graph, cheminLePlusCourt);
@@ -292,8 +307,6 @@ int main(int /* argc */, char** /* argv */)
 	while (!glfwWindowShouldClose(window))
 	{
 		
-
-
 		// std::cout << Jeu::tempsDepuisFinVague << std::endl;
 
 		if (Jeu::tempsDepuisFinVague >= 0.1f && Jeu::partieEnCours) {
@@ -320,7 +333,36 @@ int main(int /* argc */, char** /* argv */)
 		double currentTime = glfwGetTime();
 		float dt = static_cast<float>(currentTime - startTime);
 
+		std::cout << "placement tour est " << placementTour << std::endl;
+
+		glPushMatrix();
+		glTranslatef(-6,0, 0);
 		
+		if (placementTour == true)
+		{
+			glPushMatrix();  // Sauvegarder la matrice de transformation actuelle
+
+			// Déplacer l'origine au centre de l'ennemi
+			glTranslatef(posXTourEnAttenteTypeA + 0.5f, posYTourEnAttenteTypeA + 0.5f, 0);
+			std::cout << "la tour en attente se trouve en " << "( " << posXTourEnAttenteTypeA << " ; " << posYTourEnAttenteTypeA << " )" << std::endl;
+
+
+			// Dessiner l'ennemi à l'origine (puisque nous avons déplacé l'origine)
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(-0.5f, -0.5f, 0.5);  // Ajoutez un décalage à la coordonnée z en fonction de l'index de l'ennemi
+			glTexCoord2f(1, 0);
+			glVertex3f(0.5f, -0.5f, 0.5);
+			glTexCoord2f(1, 1);
+			glVertex3f(0.5f, 0.5f, 0.5);
+			glTexCoord2f(0, 1);
+			glVertex3f(-0.5f, 0.5f, 0.5);
+			glEnd();
+
+			glPopMatrix();  // Restaurer la matrice de transformation originale
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+		glPopMatrix();
 	
 
 		// Logique d'apparition des ennemis
@@ -421,7 +463,7 @@ int main(int /* argc */, char** /* argv */)
 			glBindTexture(GL_TEXTURE_2D, tab2[1]);  // Utiliser la texture de la tour
 			glPushMatrix();
 			glTranslatef(tour.posX + 0.5f, tour.posY + 0.5f, 0.0f);
-			glScalef(2.5f, 2.5f, 1.0f);  // Ajustez la taille de la tour si nécessaire
+			glScalef(2.f, 2.f, 1.0f);  // Ajustez la taille de la tour si nécessaire
 
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
@@ -442,7 +484,7 @@ int main(int /* argc */, char** /* argv */)
 			glBindTexture(GL_TEXTURE_2D, tab2[3]);  // Utiliser la texture de la tour
 			glPushMatrix();
 			glTranslatef(tour.posX + 0.5f, tour.posY + 0.5f, 0.0f);
-			glScalef(2.5f, 2.5f, 1.0f);  // Ajustez la taille de la tour si nécessaire
+			glScalef(2.1f, 2.1f, 1.0f);  // Ajustez la taille de la tour si nécessaire
 
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
@@ -480,7 +522,7 @@ int main(int /* argc */, char** /* argv */)
 		glTranslatef(it->PositionX + 0.5f, it->PositionY + 0.5f, 0);
 
 		// Ajuster la taille du projectile si nécessaire
-		glScalef(0.5f, 0.5f, 1.0f);  // Ajustez ces valeurs pour changer la taille du projectile
+		glScalef(0.3f, 0.3f, 1.0f);  // Ajustez ces valeurs pour changer la taille du projectile
 
 		// Dessiner le projectile à l'origine (puisque nous avons déplacé l'origine)
 		glBegin(GL_QUADS);
@@ -509,7 +551,12 @@ int main(int /* argc */, char** /* argv */)
 
 		if (it->cible->estMort()) {
         Jeu::total_argentEnFloat += it->cible->recompense;
+		
         Jeu::totalArgentInt = static_cast<int>(Jeu::total_argentEnFloat);
+		if (Jeu::totalArgentInt >= 999)
+		{
+			Jeu::totalArgentInt = 999;
+		}
         std::cout << "Le joueur a gagné " << it->cible->recompense << " ecus" << std::endl;
     }
 		
@@ -758,13 +805,13 @@ int main(int /* argc */, char** /* argv */)
 
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
-			glVertex3f(-0.5f, -0.5f, 0.1 );  // Ajustez le décalage z si nécessaire
+			glVertex3f(-0.5f, -0.5f, 0.1f);  // Ajustez le décalage z si nécessaire
 			glTexCoord2f(1, 0);
-			glVertex3f(0.5f, -0.5f, 0.1);
+			glVertex3f(0.5f, -0.5f, 0.1f);
 			glTexCoord2f(1, 1);
-			glVertex3f(0.5f, 0.5f, 0.1);
+			glVertex3f(0.5f, 0.5f, 0.1f);
 			glTexCoord2f(0, 1);
-			glVertex3f(-0.5f, 0.5f, 0.1);
+			glVertex3f(-0.5f, 0.5f, 0.1f);
 			glEnd();
 
 			glPopMatrix();
@@ -779,13 +826,13 @@ int main(int /* argc */, char** /* argv */)
 
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
-			glVertex3f(-2.0f, -0.5f, 0.1 );  // Ajustez le décalage z si nécessaire
+			glVertex3f(-2.0f, -0.5f, 0.1f );  // Ajustez le décalage z si nécessaire
 			glTexCoord2f(1, 0);
-			glVertex3f(2.0f, -0.5f, 0.1);
+			glVertex3f(2.0f, -0.5f, 0.1f);
 			glTexCoord2f(1, 1);
-			glVertex3f(2.0f, 0.5f, 0.1);
+			glVertex3f(2.0f, 0.5f, 0.1f);
 			glTexCoord2f(0, 1);
-			glVertex3f(-2.0f, 0.5f, 0.1);
+			glVertex3f(-2.0f, 0.5f, 0.1f);
 			glEnd();
 
 			glPopMatrix();
@@ -796,6 +843,16 @@ int main(int /* argc */, char** /* argv */)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		glDisable(GL_TEXTURE_2D);
+
+
+		
+
+
+
+
+
+
+
 	}
 
 	glDeleteTextures(24, tab);

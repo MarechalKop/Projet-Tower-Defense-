@@ -11,7 +11,7 @@ bool ennemiAtteintFin(std::vector<Ennemi>& ennemis, Graph::WeightedGraph* graph,
 void finPartie();
 void finVague(bool victoire);
 bool UnennemiALaFin(std::vector<Ennemi>& ennemis, Graph::WeightedGraph* graph, int idDernierNoeud);
-
+void CreationVectorPeutOnPlacerTourIci(std::vector<std::pair<int,int>> PeutOnPlacerTourIci);
 
 namespace Jeu {
     extern float total_argentEnFloat ;

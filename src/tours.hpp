@@ -27,7 +27,11 @@ struct Tour {
 
     // Méthode pour mettre à jour le temps du dernier tir
     void miseAJourTempsTir();
+
+   
 };
+
+ Tour creerTour(TypeTour type, int positionX, int positionY);
 
 struct Projectile {
     float PositionX;
