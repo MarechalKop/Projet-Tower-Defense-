@@ -70,9 +70,7 @@ void onWindowResized(GLFWwindow* /* window */, int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-<<<<<<< HEAD
 int typeTourSelectionnee = -1; // -1 indique qu'aucune tour n'est sélectionnée
-=======
 	bool placementTour = false;
 
 	static int posXTourEnAttenteTypeA; // Ajout d'une tour en attente
@@ -81,13 +79,20 @@ int typeTourSelectionnee = -1; // -1 indique qu'aucune tour n'est sélectionnée
 	static std::vector<std::pair<int,int>> PeutOnPlacerTourIci;
 
     
->>>>>>> 020312a76bd0fed92d06afea3af3b39ff8298788
 
 void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* mods */)
 {
 	int is_pressed = (action == GLFW_PRESS); 
 	switch(key) {
-<<<<<<< HEAD
+		case GLFW_KEY_Q : 
+			if (is_pressed && Jeu::totalArgentInt >= 100 && placementTour == false)
+			{
+				posXTourEnAttenteTypeA = 0;
+				posYTourEnAttenteTypeA = 0;
+				Jeu::total_argentEnFloat -= 100;
+				placementTour = true;
+			}
+			break; 
 		// comment ça c'est en qwerty?
 		case GLFW_KEY_V :
 			typeTourSelectionnee = 1; // Tour de type A
@@ -98,18 +103,6 @@ void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* m
             std::cout << "Tour B sélectionnée" << std::endl;
             break;
 		case GLFW_KEY_A :
-=======
-		case GLFW_KEY_Q : 
-			if (is_pressed && Jeu::totalArgentInt >= 100 && placementTour == false)
-			{
-				posXTourEnAttenteTypeA = 0;
-				posYTourEnAttenteTypeA = 0;
-				Jeu::total_argentEnFloat -= 100;
-				placementTour = true;
-			}
-			break; 
-
->>>>>>> 020312a76bd0fed92d06afea3af3b39ff8298788
 		case GLFW_KEY_ESCAPE :
 			if (is_pressed) glfwSetWindowShouldClose(window, GLFW_TRUE);
 			break;
