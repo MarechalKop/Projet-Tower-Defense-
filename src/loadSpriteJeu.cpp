@@ -24,6 +24,7 @@ GLuint* chargerTousLesSpritesJeu()
     Result2[3] = stbi_load("../../images/sprites/2 Idle/tour2.png", &widths[3], &heights[3], &channels[3], 0);
     Result2[4] = stbi_load("../../images/coeur.png", &widths[4], &heights[4], &channels[4], 0);
     Result2[5] = stbi_load("../../images/Argent.png", &widths[5], &heights[5], &channels[5], 0);
+    Result2[6] = stbi_load("../../images/quit_button.png", &widths[6], &heights[6], &channels[6], 0);
     Result2[6] = stbi_load("../../images/boulet.png", &widths[6], &heights[6], &channels[6], 0);
    
     for (int i = 0; i < nombreTexture; i++) {
