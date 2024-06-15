@@ -69,10 +69,21 @@ void onWindowResized(GLFWwindow* /* window */, int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 }
 
+int typeTourSelectionnee = -1; // -1 indique qu'aucune tour n'est sélectionnée
+
 void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* mods */)
 {
 	int is_pressed = (action == GLFW_PRESS); 
 	switch(key) {
+		// comment ça c'est en qwerty?
+		case GLFW_KEY_V :
+			typeTourSelectionnee = 1; // Tour de type A
+            std::cout << "Tour A sélectionnée" << std::endl;
+            break;
+		case GLFW_KEY_B :
+			typeTourSelectionnee = 2; // Tour de type B
+            std::cout << "Tour B sélectionnée" << std::endl;
+            break;
 		case GLFW_KEY_A :
 		case GLFW_KEY_ESCAPE :
 			if (is_pressed) glfwSetWindowShouldClose(window, GLFW_TRUE);
@@ -115,39 +126,6 @@ void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* m
 	}
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-}
-
-// Coordonnées du bouton "Quitter" en OpenGL
-const float QUIT_BUTTON_X = 8.5f;
-const float QUIT_BUTTON_Y = -6.0f;
-const float BUTTON_WIDTH = 2.0f;  // Largeur du bouton (d'une extrémité à l'autre du quad)
-const float BUTTON_HEIGHT = 1.0f; // Hauteur du bouton (d'une extrémité à l'autre du quad)
-
-void handleMouseClick(GLFWwindow* window, int button, int action, int mods) {
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-        double mouseX, mouseY;
-        glfwGetCursorPos(window, &mouseX, &mouseY);
-
-        // Obtenez les dimensions de la fenêtre GLFW
-        int width, height;
-        glfwGetWindowSize(window, &width, &height);
-
-        // Convertissez les coordonnées de la souris en coordonnées OpenGL
-        float normalizedX = (2.0f * (float)mouseX) / (float)width - 1.0f;
-        float normalizedY = 1.0f - (2.0f * (float)mouseY) / (float)height;
-
-        // Vérifiez si les coordonnées du clic sont à l'intérieur du bouton "Quitter"
-        if (normalizedX >= QUIT_BUTTON_X &&
-            normalizedX <= (QUIT_BUTTON_X + BUTTON_WIDTH) &&
-            normalizedY >= QUIT_BUTTON_Y &&
-            normalizedY <= (QUIT_BUTTON_Y + BUTTON_HEIGHT)) {
-            glfwSetWindowShouldClose(window, GLFW_TRUE);  // Fermer la fenêtre GLFW
-        }
-    }
-}
-
 
 int main(int /* argc */, char** /* argv */)
 {
@@ -182,8 +160,6 @@ int main(int /* argc */, char** /* argv */)
 
 	glfwSetWindowSizeCallback(window,onWindowResized);
 	glfwSetKeyCallback(window, onKey);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glfwSetMouseButtonCallback(window, handleMouseClick);
 
 	onWindowResized(window,WINDOW_WIDTH,WINDOW_HEIGHT);
 
@@ -597,6 +573,16 @@ int main(int /* argc */, char** /* argv */)
 		glPopMatrix();
 		glBindTexture(GL_TEXTURE_2D, 0);
 
+		if (typeTourSelectionnee == 1) {
+        glColor3f(1.0, 1.0, 0.0); // Couleur jaune pour le contour
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(5.1f, -1.75f, 0.2); // Coin bas gauche du contour
+        glVertex3f(13.0f, -1.75f, 0.2); // Coin bas droit du contour
+        glVertex3f(13.0f, 0.75f, 0.2);  // Coin haut droit du contour
+        glVertex3f(5.1f, 0.75f, 0.2);  // Coin haut gauche du contour
+        glEnd();
+    }
+
 		// Affichage du prix de la tour 1
 		for (int i = 0; i < prixTourAStr.size(); i++) {
 			int chiffre = prixTourAStr[i] - '0';
@@ -658,6 +644,16 @@ int main(int /* argc */, char** /* argv */)
 		glPopMatrix();
 		glBindTexture(GL_TEXTURE_2D, 0);
 
+		if (typeTourSelectionnee == 2) {
+        glColor3f(1.0, 1.0, 0.0); // Couleur jaune pour le contour
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(5.1f, -4.5f, 0.2); // Coin bas gauche du contour
+        glVertex3f(13.0f, -4.5f, 0.2); // Coin bas droit du contour
+        glVertex3f(13.0f, -2.0f, 0.2);  // Coin haut droit du contour
+        glVertex3f(5.1f, -2.0f, 0.2);  // Coin haut gauche du contour
+        glEnd();
+    }
+
 		// Affichage du prix de la tour 2
 		for (int i = 0; i < prixTourBStr.size(); i++) {
 			int chiffre = prixTourBStr[i] - '0';
@@ -704,7 +700,7 @@ int main(int /* argc */, char** /* argv */)
 			glBindTexture(GL_TEXTURE_2D, tab2[6]);
 			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			glPushMatrix();
-			glTranslatef(QUIT_BUTTON_X, QUIT_BUTTON_Y, 1.0f);
+			glTranslatef(8.5f, -6.0f, 1.0f);
 			glScalef(1.0f, 1.0f, 1.0f);
 
 			glBegin(GL_QUADS);
