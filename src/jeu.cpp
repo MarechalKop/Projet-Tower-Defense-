@@ -19,28 +19,33 @@ namespace Jeu {
     std::vector<Ennemi> ennemis;
     int totalArgentInt;
     float total_argentEnFloat {100};
+    float tempsTotalFlèche = 0.005;
+    std::vector<Projectile> projectiles;
+
 }
 
 
 void tourAttaqueEnnemi(Tour& tour, Ennemi& ennemi) {
-    if (tour.peutTirer() && tour.estDansPortee(ennemi.positionActuelle.x, ennemi.positionActuelle.y)) {
-        ennemi.degatsEnnemi(tour.puissance);
+    if (tour.peutTirer() && tour.estDansPortee(ennemi.positionActuelle.x, ennemi.positionActuelle.y) && ennemi.aTouche) {
+       
         tour.miseAJourTempsTir();
 
-        if (ennemi.estMort()) {
-            Jeu::total_argentEnFloat += ennemi.recompense;
-            Jeu::totalArgentInt = static_cast<int>(Jeu::total_argentEnFloat);
-            std::cout << "Le joueur a gagné " << ennemi.recompense << " ecus" << std::endl;
-        }
+        Projectile projectile(tour.posX, tour.posY, ennemi.positionActuelle.x, ennemi.positionActuelle.y, Jeu::tempsTotalFlèche, tour.puissance, &ennemi);
+        Jeu::projectiles.push_back(projectile);
+        std::cout << "Projectile ajouté à la liste" << std::endl;  // Ajoutez cette ligne
+        std::cout << "Projectile ajouté. Nombre total de projectiles : " << Jeu::projectiles.size() << std::endl;
+
+        
+
+
+        std::cout << "Projectile lancé de (" << tour.posX << ", " << tour.posY << ") vers (" << ennemi.positionActuelle.x << ", " << ennemi.positionActuelle.y << ")" << std::endl;
+
     }
 }
 
 
-void mettreAJourJeu(std::vector<Tour>& tours, std::vector<Ennemi>& ennemis, float dt) {
-    // Mettre à jour les positions des ennemis
-    for (auto& ennemi : ennemis) {
-        ennemi.avancer(dt);
-    }
+void mettreAJourTour(std::vector<Tour>& tours, std::vector<Ennemi>& ennemis, float dt) {
+
 
     // Faire tirer les tours sur les ennemis à portée
     for (auto& tour : tours) {
@@ -94,6 +99,17 @@ bool ennemiAtteintFin(std::vector<Ennemi>& ennemis, Graph::WeightedGraph* graph,
         if (distance <= 0.1 && ennemi.aAtteintLaFin != true) {  // Vérifie si l'ennemi a atteint la fin et n'a pas encore été comptabilisé
             ennemi.aAtteintLaFin = true;  // Marque l'ennemi comme ayant atteint la fin
             Jeu::points_de_vieJoueur--;  // Le joueur perd un point de vie
+            return true;
+        }
+    }
+    return false;
+}
+
+bool UnennemiALaFin(std::vector<Ennemi>& ennemis, Graph::WeightedGraph* graph, int idDernierNoeud)  {
+    for (auto& ennemi : ennemis) {
+        float distance = sqrt(pow(ennemi.positionActuelle.x - graph->getNodePosition(idDernierNoeud).x, 2) +
+                              pow(ennemi.positionActuelle.y - graph->getNodePosition(idDernierNoeud).y, 2));
+        if (distance <= 0.1) {  // Vérifie si l'ennemi a atteint la fin et n'a pas encore été comptabilisé
             return true;
         }
     }

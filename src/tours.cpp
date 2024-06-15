@@ -22,3 +22,4 @@ bool Tour::peutTirer() const {
 void Tour::miseAJourTempsTir() {
     dernierTir = std::time(nullptr);
 }
+

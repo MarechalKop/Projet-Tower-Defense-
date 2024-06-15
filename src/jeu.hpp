@@ -4,12 +4,13 @@
 #include "ennemis.hpp"
 
 void tourAttaqueEnnemi(Tour& tour, Ennemi& ennemi);
-void mettreAJourJeu(std::vector<Tour>& tours, std::vector<Ennemi>& ennemis, float dt);
+void mettreAJourTour(std::vector<Tour>& tours, std::vector<Ennemi>& ennemis, float dt);
 void commencerNouvelleVague();
 bool tousEnnemisMorts(std::vector<Ennemi>& ennemis);
 bool ennemiAtteintFin(std::vector<Ennemi>& ennemis, Graph::WeightedGraph* graph, int idDernierNoeud);
 void finPartie();
 void finVague(bool victoire);
+bool UnennemiALaFin(std::vector<Ennemi>& ennemis, Graph::WeightedGraph* graph, int idDernierNoeud);
 
 
 namespace Jeu {
@@ -25,4 +26,6 @@ namespace Jeu {
     extern int prochainEnnemiAAfficher;
     extern int points_de_vieJoueur;
     extern int totalArgentInt;
+    extern std::vector<Projectile> projectiles;
+    extern float tempsTotalFlèche;
 }

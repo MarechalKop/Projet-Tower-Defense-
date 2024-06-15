@@ -164,6 +164,7 @@ int main(int /* argc */, char** /* argv */)
 	int hauteuraffichage = 0;
 	int indicateurVague = 0;
 	int indiceZ = 1;
+	bool EnnemiArriveFin = false;
 
 
 
@@ -211,19 +212,19 @@ int main(int /* argc */, char** /* argv */)
 
 		// Création d'une tour fixe (pour tester)
 	Tour tour1;
-	tour1.puissance = 10;
-	tour1.portee = 5; // Portée en distance de Chebyshev
-	tour1.cadence = 1.0f; // Cadence de tir en dixièmes de seconde
+	tour1.puissance = 50;
+	tour1.portee = 4; // Portée en distance de Chebyshev
+	tour1.cadence = 1.f; // Cadence de tir en dixièmes de seconde
 	tour1.type = TypeTour::TypeA;
 	tour1.posX = 2; // Position X de la tour sur la carte
 	tour1.posY = 3; // Position Y de la tour sur la carte
 
 
 	Tour tour2;
-	tour2.puissance = 10;
-	tour2.portee = 5; // Portée en distance de Chebyshev
-	tour2.cadence = 1.0f; // Cadence de tir en dixièmes de seconde
-	tour2.type = TypeTour::TypeA;
+	tour2.puissance = 150;
+	tour2.portee = 4; // Portée en distance de Chebyshev
+	tour2.cadence = 20.0f; // Cadence de tir en dixièmes de seconde
+	tour2.type = TypeTour::TypeB;
 	tour2.posX = 5; // Position X de la tour sur la carte
 	tour2.posY = -2; // Position Y de la tour sur la carte
 
@@ -234,6 +235,7 @@ int main(int /* argc */, char** /* argv */)
 	std::vector<Ennemi> vague2 = creerEnnemis(10, Type2, &graph, cheminLePlusCourt);
 	std::vector<Ennemi> vague3 = creerEnnemis(15, Type2, &graph, cheminLePlusCourt);
 	
+	std::vector<Projectile> projectiles;
 
 
 
@@ -282,11 +284,7 @@ int main(int /* argc */, char** /* argv */)
 		double currentTime = glfwGetTime();
 		float dt = static_cast<float>(currentTime - startTime);
 
-		if (tousEnnemisMorts(Jeu::vaguesEnnemis[Jeu::vagueActuelle])) {
-    	finVague(true);  // Le joueur a gagné la vague
-		Jeu::tempsDepuisFinVague += dt;
-    	// break;
-    	}
+		
 	
 
 		// Logique d'apparition des ennemis
@@ -297,7 +295,7 @@ int main(int /* argc */, char** /* argv */)
 		if (Jeu::prochainEnnemiAAfficher < Jeu::vaguesEnnemis[Jeu::vagueActuelle].size() && tempsEcouleDepuisDerniereApparition >= intervalleApparitionType1) {
         tempsEcouleDepuisDerniereApparition = 0.0f;
         Jeu::prochainEnnemiAAfficher++;
-        std::cout << "prochain ennemi à afficher" << Jeu::prochainEnnemiAAfficher << std::endl;
+        std::cout << "prochain ennemi a afficher" << Jeu::prochainEnnemiAAfficher << std::endl;
     	}
 		}
 
@@ -318,7 +316,7 @@ int main(int /* argc */, char** /* argv */)
 		// Affichage et mouvement des ennemis
 		for (int i = 0; i < Jeu::prochainEnnemiAAfficher; ++i){
 
-		 	Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].pts_de_vie += 100;
+		 	// Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].pts_de_vie += 100;
 			
 			if (!Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].estMort()) {
         	Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].avancer(dt);
@@ -367,7 +365,12 @@ int main(int /* argc */, char** /* argv */)
 			}
 			
 		}
+
 		ennemiAtteintFin(Jeu::vaguesEnnemis[Jeu::vagueActuelle], Jeu::graph, Jeu::idDernierNoeud);
+		bool EnnemiArriveFin = UnennemiALaFin(Jeu::vaguesEnnemis[Jeu::vagueActuelle], Jeu::graph, Jeu::idDernierNoeud);
+		std::cout << "Un ennemi est arrive a la fin :" << EnnemiArriveFin << std::endl;
+
+		
 
 		
 
@@ -376,33 +379,10 @@ int main(int /* argc */, char** /* argv */)
 
 				indiceZ +=1;
 
-				if (tour.peutTirer()) {
-				std::cout << "Tour a la position (" << tour.posX << ", " << tour.posY << ") tire sur un ennemi !" << std::endl;
-
-				// Exemple simplifié : Recherche de l'ennemi le plus proche dans la vague actuelle
-				Ennemi* cible = nullptr;
-				float distanceMin = std::numeric_limits<float>::max();
-
-				for (auto& ennemi : Jeu::vaguesEnnemis[Jeu::vagueActuelle]) {
-					// Calcul de la distance entre la tour et l'ennemi
-					float distance = std::sqrt(std::pow(ennemi.positionActuelle.x - tour.posX, 2) +
-											std::pow(ennemi.positionActuelle.y - tour.posY, 2));
-
-					// Vérification si l'ennemi est à portée et plus proche que la cible actuelle
-					if (distance <= tour.portee && distance < distanceMin) {
-						cible = &ennemi;
-						distanceMin = distance;
-					}
-				}
-				if (cible) {
-					cible->pts_de_vie -= tour.puissance;
-					std::cout << "La tour inflige " << tour.puissance << " points de degats a l'ennemi" << std::endl;
-				}
-				}
-
-
+				mettreAJourTour( tours, Jeu::vaguesEnnemis[Jeu::vagueActuelle],  dt);
+			
+			if (tour.type== TypeA ) { 
 			glBindTexture(GL_TEXTURE_2D, tab2[1]);  // Utiliser la texture de la tour
-
 			glPushMatrix();
 			glTranslatef(tour.posX + 0.5f, tour.posY + 0.5f, 0.0f);
 			glScalef(2.5f, 2.5f, 1.0f);  // Ajustez la taille de la tour si nécessaire
@@ -420,9 +400,94 @@ int main(int /* argc */, char** /* argv */)
 
 			glPopMatrix();
 			glBindTexture(GL_TEXTURE_2D, 0);
+			}
+
+			if (tour.type == TypeB ) { 
+			glBindTexture(GL_TEXTURE_2D, tab2[3]);  // Utiliser la texture de la tour
+			glPushMatrix();
+			glTranslatef(tour.posX + 0.5f, tour.posY + 0.5f, 0.0f);
+			glScalef(2.5f, 2.5f, 1.0f);  // Ajustez la taille de la tour si nécessaire
+
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(-0.5f, -1, 0.015 );  // Ajustez le décalage z si nécessaire
+			glTexCoord2f(1, 0);
+			glVertex3f(0.5f, -1, 0.015);
+			glTexCoord2f(1, 1);
+			glVertex3f(0.5f, 0.5f, 0.015);
+			glTexCoord2f(0, 1);
+			glVertex3f(-0.5f, 0.5f, 0.015);
+			glEnd();
+
+			glPopMatrix();
+			glBindTexture(GL_TEXTURE_2D, 0);
+			}
+			
 		}
 
-		glPopMatrix();
+		
+
+		std::cout << "Nombre de projectiles avant la boucle : " << Jeu::projectiles.size() << std::endl;
+
+		for (auto it = Jeu::projectiles.begin(); it != Jeu::projectiles.end(); /* pas d'incrémentation ici */) {
+		std::cout << "Mise a jour du projectile" << std::endl;
+    	it->updatePosition(dt);
+
+
+		it->cible->aTouche = false;
+
+		glBindTexture(GL_TEXTURE_2D, tab2[6]);
+		// Dessiner le projectile
+		glPushMatrix();  // Sauvegarder la matrice de transformation actuelle
+
+		// Déplacer l'origine au centre du projectile
+		glTranslatef(it->PositionX + 0.5f, it->PositionY + 0.5f, 0);
+
+		// Ajuster la taille du projectile si nécessaire
+		glScalef(0.5f, 0.5f, 1.0f);  // Ajustez ces valeurs pour changer la taille du projectile
+
+		// Dessiner le projectile à l'origine (puisque nous avons déplacé l'origine)
+		glBegin(GL_QUADS);
+		glTexCoord2f(0, 0);
+		glVertex3f(-0.5f, -0.5f, 0.2);  // Ajoutez un décalage à la coordonnée z si nécessaire
+		glTexCoord2f(1, 0);
+		glVertex3f(0.5f, -0.5f, 0.2);
+		glTexCoord2f(1, 1);
+		glVertex3f(0.5f, 0.5f, 0.2);
+		glTexCoord2f(0, 1);
+		glVertex3f(-0.5f, 0.5f, 0.2);
+		glEnd();
+
+		glPopMatrix();  // Restaurer la matrice de transformation originale
+		glBindTexture(GL_TEXTURE_2D, 0);
+		
+
+	
+
+		if (it->cibleAtteinte()) {
+		it->cible->degatsEnnemi(it->puissance);
+		it->cible->aTouche = true;
+
+		// Ajout d'une instruction d'impression
+		std::cout << "Projectile a atteint la cible !" << std::endl;
+
+		if (it->cible->estMort()) {
+        Jeu::total_argentEnFloat += it->cible->recompense;
+        Jeu::totalArgentInt = static_cast<int>(Jeu::total_argentEnFloat);
+        std::cout << "Le joueur a gagné " << it->cible->recompense << " ecus" << std::endl;
+    }
+		
+
+		it = Jeu::projectiles.erase(it);
+		} 
+	else {
+		++it;
+		}
+	}
+
+	glPopMatrix();
+
+
 
 
 		// La partie qui suit a pour but d'afficher les coeurs du joueurs
@@ -455,6 +520,8 @@ int main(int /* argc */, char** /* argv */)
 			
 			}
 
+
+
 		
 		
 
@@ -468,7 +535,9 @@ int main(int /* argc */, char** /* argv */)
 
 		tempsEcouleDepuisDerniereApparition += dt;
 		std::cout << dt << std::endl;
+		if (Jeu::partieEnCours){ 
 		Jeu::total_argentEnFloat += 0.05;
+		}
 		Jeu::totalArgentInt = static_cast<int>(Jeu::total_argentEnFloat);
 		std::cout << "Le joueur ce gros rat a " << Jeu::totalArgentInt << " ecus" << std::endl;
 		std::cout << "Pts de vie Joueur " << Jeu::points_de_vieJoueur << std::endl;
@@ -523,13 +592,14 @@ int main(int /* argc */, char** /* argv */)
 			glPopMatrix();
 			glBindTexture(GL_TEXTURE_2D, 0);
 
-
-
-
-
-
 		}
 
+		if (tousEnnemisMorts(Jeu::vaguesEnnemis[Jeu::vagueActuelle]) || (EnnemiArriveFin == true && Jeu::points_de_vieJoueur > 0) ) {
+    	finVague(true);  // Le joueur a gagné la vague
+		Jeu::tempsDepuisFinVague += dt;
+		EnnemiArriveFin = false;
+    	// break;
+    	}
 
 	    finPartie();
 		glfwSwapBuffers(window);
@@ -538,7 +608,7 @@ int main(int /* argc */, char** /* argv */)
 	}
 
 	glDeleteTextures(24, tab);
-	glDeleteTextures(6, tab2);
+	glDeleteTextures(7, tab2);
 	glDeleteTextures(10, tab3);
 
 	glfwTerminate();
