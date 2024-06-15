@@ -472,7 +472,7 @@ int main(int /* argc */, char** /* argv */)
 
 		it->cible->aTouche = false;
 
-		glBindTexture(GL_TEXTURE_2D, tab2[6]);
+		glBindTexture(GL_TEXTURE_2D, tab2[7]);
 		// Dessiner le projectile
 		glPushMatrix();  // Sauvegarder la matrice de transformation actuelle
 
