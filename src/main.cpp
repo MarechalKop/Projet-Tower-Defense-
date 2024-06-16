@@ -73,10 +73,13 @@ void onWindowResized(GLFWwindow* /* window */, int width, int height)
 int typeTourSelectionnee = -1; // -1 indique qu'aucune tour n'est sélectionnée
 	bool placementTour = false;
 
-	static int posXTourEnAttenteTypeA; // Ajout d'une tour en attente
-	static int posYTourEnAttenteTypeA;
+	static int posXTourEnAttente; // Ajout d'une tour en attente
+	static int posYTourEnAttente;
 
-	static std::vector<std::pair<int,int>> PeutOnPlacerTourIci;
+	
+	static bool TourPeutEtrePlaceeIci = false;
+	std::vector<Tour> tours;
+	std::vector<std::pair<int,int>> TableauNouvellesCasesInterdites;
 
     
 
@@ -87,20 +90,50 @@ void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* m
 		case GLFW_KEY_Q : 
 			if (is_pressed && Jeu::totalArgentInt >= 100 && placementTour == false)
 			{
-				posXTourEnAttenteTypeA = 0;
-				posYTourEnAttenteTypeA = 0;
+				typeTourSelectionnee = 1; // Tour de type A
+            	std::cout << "Tour A sélectionnée" << std::endl;
+				posXTourEnAttente = 0;
+				posYTourEnAttente = 0;
 				Jeu::total_argentEnFloat -= 100;
 				placementTour = true;
 			}
+			else if (is_pressed && placementTour == true && TourPeutEtrePlaceeIci == true && typeTourSelectionnee == 1)
+			{
+			
+				Tour tourA = creerTour(TypeTour::TypeA, posXTourEnAttente, posYTourEnAttente);
+				tours.push_back(tourA);
+				TableauNouvellesCasesInterdites.push_back(std::make_pair(posXTourEnAttente,posYTourEnAttente));
+				
+				placementTour = false;
+				typeTourSelectionnee = -1;
+			}
 			break; 
 		// comment ça c'est en qwerty?
-		case GLFW_KEY_V :
-			typeTourSelectionnee = 1; // Tour de type A
-            std::cout << "Tour A sélectionnée" << std::endl;
-            break;
-		case GLFW_KEY_B :
+		// case GLFW_KEY_V :
+			
+        //     break;
+		case GLFW_KEY_W :
+			if (is_pressed && Jeu::totalArgentInt >= 200 && placementTour == false)
+			{
 			typeTourSelectionnee = 2; // Tour de type B
             std::cout << "Tour B sélectionnée" << std::endl;
+			std::cout << "Tour A sélectionnée" << std::endl;
+			posXTourEnAttente = 0;
+			posYTourEnAttente = 0;
+			Jeu::total_argentEnFloat -= 200;
+			placementTour = true;
+			}
+			else if (is_pressed && placementTour == true && TourPeutEtrePlaceeIci == true && typeTourSelectionnee == 2)
+			{
+				
+				
+				Tour tourA = creerTour(TypeTour::TypeB, posXTourEnAttente, posYTourEnAttente);
+				tours.push_back(tourA);
+				TableauNouvellesCasesInterdites.push_back(std::make_pair(posXTourEnAttente,posYTourEnAttente));
+				
+				placementTour = false;
+				typeTourSelectionnee = -1;
+			}
             break;
 		case GLFW_KEY_A :
 		case GLFW_KEY_ESCAPE :
@@ -127,23 +160,23 @@ void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* m
 		// 	std::cout<<"Zoom is "<<dist_zoom<<std::endl;
 		// 	break;
 		case GLFW_KEY_UP :
-			if (is_pressed && placementTour && posYTourEnAttenteTypeA < 7) {
-			posYTourEnAttenteTypeA ++;
+			if (is_pressed && placementTour && posYTourEnAttente < 7) {
+			posYTourEnAttente ++;
 			}
 			break;
 		case GLFW_KEY_DOWN :
-			if (is_pressed && placementTour && posYTourEnAttenteTypeA >= -7) {
-			posYTourEnAttenteTypeA --;
+			if (is_pressed && placementTour && posYTourEnAttente >= -7) {
+			posYTourEnAttente --;
 			}
 			break;
 		case GLFW_KEY_LEFT :
-			if (is_pressed && placementTour && posXTourEnAttenteTypeA > -7) {
-			posXTourEnAttenteTypeA --;
+			if (is_pressed && placementTour && posXTourEnAttente > -7) {
+			posXTourEnAttente --;
 			}
 			break;
 		case GLFW_KEY_RIGHT :
-			if (is_pressed && placementTour && posXTourEnAttenteTypeA < 7 ) {
-			posXTourEnAttenteTypeA ++;
+			if (is_pressed && placementTour && posXTourEnAttente < 7 ) {
+			posXTourEnAttente ++;
 			}
 		default: std::cout<<"Touche non gérée"<<std::endl;
 	}
@@ -154,7 +187,12 @@ int main(int /* argc */, char** /* argv */)
 {
 
 	// Ajouter des éléments au vecteur
-	CreationVectorPeutOnPlacerTourIci(PeutOnPlacerTourIci);
+	std::vector<std::pair<int,int>> PeutOnPlacerTourIci = CreationVectorPeutOnPlacerTourIci();
+
+	for (int i{}; i < PeutOnPlacerTourIci.size(); i++)
+	{
+		std::cout << "Coordonee autorisee (" << PeutOnPlacerTourIci[i].first << " ; " << PeutOnPlacerTourIci[i].second << ")" << std::endl;
+	}
 
 
 	/* GLFW initialisation */
@@ -205,6 +243,8 @@ int main(int /* argc */, char** /* argv */)
 	int indicateurVague = 0;
 	int indiceZ = 1;
 	bool EnnemiArriveFin = false;
+	int nombreSegment = 100;
+	int rayon {};
 
 
 
@@ -255,9 +295,10 @@ int main(int /* argc */, char** /* argv */)
 	Tour tourB = creerTour(TypeTour::TypeB, 5, -2);
 
 
-	std::vector<Tour> tours = {tourA,tourB};
+	
+	tours.push_back(tourA);
 
-	std::vector<Ennemi> vague1 = creerEnnemis(5, Type1, &graph, cheminLePlusCourt);
+	std::vector<Ennemi> vague1 = creerEnnemis(20, Type1, &graph, cheminLePlusCourt);
 	std::vector<Ennemi> vague2 = creerEnnemis(10, Type2, &graph, cheminLePlusCourt);
 	std::vector<Ennemi> vague3 = creerEnnemis(15, Type2, &graph, cheminLePlusCourt);
 	
@@ -281,6 +322,12 @@ int main(int /* argc */, char** /* argv */)
 
 	while (!glfwWindowShouldClose(window))
 	{
+
+		std::cout << "Contenu du tableau des cases interdites : " << std::endl;
+		for (int i{}; i < TableauNouvellesCasesInterdites.size(); i++)
+		{
+			std::cout << "( " << TableauNouvellesCasesInterdites[i].first << " " << TableauNouvellesCasesInterdites[i].second << " )" << std::endl;
+		}
 		
 		// std::cout << Jeu::tempsDepuisFinVague << std::endl;
 
@@ -315,29 +362,145 @@ int main(int /* argc */, char** /* argv */)
 		
 		if (placementTour == true)
 		{
+			TourPeutEtrePlaceeIci = false;
+		
+
+			if (typeTourSelectionnee == 1){
+			
+			glBindTexture(GL_TEXTURE_2D, tab2[1]); 
+			
 			glPushMatrix();  // Sauvegarder la matrice de transformation actuelle
 
 			// Déplacer l'origine au centre de l'ennemi
-			glTranslatef(posXTourEnAttenteTypeA + 0.5f, posYTourEnAttenteTypeA + 0.5f, 0);
-			std::cout << "la tour en attente se trouve en " << "( " << posXTourEnAttenteTypeA << " ; " << posYTourEnAttenteTypeA << " )" << std::endl;
+			glTranslatef(posXTourEnAttente - 0.5f, posYTourEnAttente, 0);
+			glScalef(2.f, 2.f, 1.0f);
+			std::cout << "la tour en attente se trouve en " << "( " << posXTourEnAttente << " ; " << posYTourEnAttente << " )" << std::endl;
+			for (int i {}; i < PeutOnPlacerTourIci.size(); i++)
+			{
+    		if (posXTourEnAttente == PeutOnPlacerTourIci[i].first && posYTourEnAttente == PeutOnPlacerTourIci[i].second )
+    		{
+        		TourPeutEtrePlaceeIci = true;
+        		for (int j{}; j < TableauNouvellesCasesInterdites.size(); j++)
+        		{
+           		 if (posXTourEnAttente == TableauNouvellesCasesInterdites[j].first && posYTourEnAttente == TableauNouvellesCasesInterdites[j].second )
+           		 {
+                TourPeutEtrePlaceeIci = false;
+                break;  // Arrête la vérification une fois que vous avez trouvé une correspondance
+            		}
+        			}
+        		if (!TourPeutEtrePlaceeIci) {
+            		break;  // Si TourPeutEtrePlaceeIci est false, arrêtez également la boucle externe
+        		}
+    			}
+			}
+			
+			std::cout << "La tour est bien placé : " << TourPeutEtrePlaceeIci << std::endl;
 
+			
+			rayon = 4;
+			glLineWidth(3.0f);
 
 			// Dessiner l'ennemi à l'origine (puisque nous avons déplacé l'origine)
 			glBegin(GL_QUADS);
+			if (TourPeutEtrePlaceeIci == true)
+			{
+				glColor3f(0.0,1.0,0.0);
+				
+			}
+			else if (TourPeutEtrePlaceeIci == false)
+			{
+				glColor3f(1.0,0.0,0.0);
+				
+			}
+			
 			glTexCoord2f(0, 0);
-			glVertex3f(-0.5f, -0.5f, 0.5);  // Ajoutez un décalage à la coordonnée z en fonction de l'index de l'ennemi
+			glTexCoord2f(0, 0);
+			glVertex3f(0.f, 0.f, 0.0005 );  // Ajustez le décalage z si nécessaire
 			glTexCoord2f(1, 0);
-			glVertex3f(0.5f, -0.5f, 0.5);
+			glVertex3f(1.f, 0.f, 0.0005);
 			glTexCoord2f(1, 1);
-			glVertex3f(0.5f, 0.5f, 0.5);
+			glVertex3f(1.f, 1.2f, 0.0005);
 			glTexCoord2f(0, 1);
-			glVertex3f(-0.5f, 0.5f, 0.5);
+			glVertex3f(0.f, 1.2f,0.0005);
 			glEnd();
+			glPopMatrix();
 
-			glPopMatrix();  // Restaurer la matrice de transformation originale
 			glBindTexture(GL_TEXTURE_2D, 0);
+			}
+
+			if (typeTourSelectionnee == 2){
+
+			glBindTexture(GL_TEXTURE_2D, tab2[3]); 
+			
+			glPushMatrix();  // Sauvegarder la matrice de transformation actuelle
+
+			// Déplacer l'origine au centre de l'ennemi
+			glTranslatef(posXTourEnAttente - 0.5f, posYTourEnAttente, 0);
+			glScalef(2.f, 2.f, 1.0f);
+			std::cout << "la tour en attente se trouve en " << "( " << posXTourEnAttente << " ; " << posYTourEnAttente << " )" << std::endl;
+			for (int i {}; i < PeutOnPlacerTourIci.size(); i++)
+			{
+    		if (posXTourEnAttente == PeutOnPlacerTourIci[i].first && posYTourEnAttente == PeutOnPlacerTourIci[i].second )
+    		{
+        		TourPeutEtrePlaceeIci = true;
+        		for (int j{}; j < TableauNouvellesCasesInterdites.size(); j++)
+        		{
+           		 if (posXTourEnAttente == TableauNouvellesCasesInterdites[j].first && posYTourEnAttente == TableauNouvellesCasesInterdites[j].second )
+           		 {
+                TourPeutEtrePlaceeIci = false;
+                break;  // Arrête la vérification une fois que vous avez trouvé une correspondance
+            		}
+        			}
+        		if (!TourPeutEtrePlaceeIci) {
+            		break;  // Si TourPeutEtrePlaceeIci est false, arrêtez également la boucle externe
+        		}
+    			}
+			}
+
+			
+			std::cout << "La tour est bien placé : " << TourPeutEtrePlaceeIci << std::endl;
+
+			
+			rayon = 6;
+			glLineWidth(3.0f);
+
+			// Dessiner l'ennemi à l'origine (puisque nous avons déplacé l'origine)
+			glBegin(GL_QUADS);
+			if (TourPeutEtrePlaceeIci == true)
+			{
+				glColor3f(0.0,1.0,0.0);
+				
+			}
+			else if (TourPeutEtrePlaceeIci == false)
+			{
+				glColor3f(1.0,0.0,0.0);
+				
+			}
+			
+			glTexCoord2f(0, 0);
+			glTexCoord2f(0, 0);
+			glVertex3f(0.f, 0.f, 0.0005 );  // Ajustez le décalage z si nécessaire
+			glTexCoord2f(1, 0);
+			glVertex3f(1.f, 0.f, 0.0005);
+			glTexCoord2f(1, 1);
+			glVertex3f(1.f, 1.5f, 0.0005);
+			glTexCoord2f(0, 1);
+			glVertex3f(0.f, 1.5f, 0.0005);
+			glEnd();
+			glPopMatrix();
+
+			glBindTexture(GL_TEXTURE_2D, 0);
+			}
+
+
+
+
+
+
+
 		}
 		glPopMatrix();
+		glColor3f(1.0,1.0,1.0);
 	
 
 		// Logique d'apparition des ennemis
@@ -370,6 +533,7 @@ int main(int /* argc */, char** /* argv */)
 		for (int i = 0; i < Jeu::prochainEnnemiAAfficher; ++i){
 
 		 	// Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].pts_de_vie += 100;
+			
 			
 			if (!Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].estMort()) {
         	Jeu::vaguesEnnemis[Jeu::vagueActuelle][i].avancer(dt);
@@ -422,6 +586,7 @@ int main(int /* argc */, char** /* argv */)
 		ennemiAtteintFin(Jeu::vaguesEnnemis[Jeu::vagueActuelle], Jeu::graph, Jeu::idDernierNoeud);
 		bool EnnemiArriveFin = UnennemiALaFin(Jeu::vaguesEnnemis[Jeu::vagueActuelle], Jeu::graph, Jeu::idDernierNoeud);
 		std::cout << "Un ennemi est arrive a la fin :" << EnnemiArriveFin << std::endl;
+		
 
 		
 
@@ -437,18 +602,18 @@ int main(int /* argc */, char** /* argv */)
 			if (tour.type== TypeA ) { 
 			glBindTexture(GL_TEXTURE_2D, tab2[1]);  // Utiliser la texture de la tour
 			glPushMatrix();
-			glTranslatef(tour.posX + 0.5f, tour.posY + 0.5f, 0.0f);
+			glTranslatef(tour.posX-0.5, tour.posY, 0.0f);
 			glScalef(2.f, 2.f, 1.0f);  // Ajustez la taille de la tour si nécessaire
 
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
-			glVertex3f(-0.5f, -0.8f, 0.015 );  // Ajustez le décalage z si nécessaire
+			glVertex3f(0.f, 0.f, 0.015 + indiceZ * 0.0001 );  // Ajustez le décalage z si nécessaire
 			glTexCoord2f(1, 0);
-			glVertex3f(0.5f, -0.8f, 0.015);
+			glVertex3f(1.f, 0.f, 0.015 + indiceZ * 0.0001);
 			glTexCoord2f(1, 1);
-			glVertex3f(0.5f, 0.5f, 0.015);
+			glVertex3f(1.f, 1.2f, 0.015 + indiceZ * 0.0001 );
 			glTexCoord2f(0, 1);
-			glVertex3f(-0.5f, 0.5f, 0.015);
+			glVertex3f(0.f, 1.2f, 0.015 + indiceZ * 0.0001);
 			glEnd();
 
 			glPopMatrix();
@@ -458,18 +623,18 @@ int main(int /* argc */, char** /* argv */)
 			if (tour.type == TypeB ) { 
 			glBindTexture(GL_TEXTURE_2D, tab2[3]);  // Utiliser la texture de la tour
 			glPushMatrix();
-			glTranslatef(tour.posX + 0.5f, tour.posY + 0.5f, 0.0f);
-			glScalef(2.1f, 2.1f, 1.0f);  // Ajustez la taille de la tour si nécessaire
+			glTranslatef(tour.posX-0.5, tour.posY, 0.0f);
+			glScalef(2.f, 2.f, 1.0f);  // Ajustez la taille de la tour si nécessaire
 
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
-			glVertex3f(-0.5f, -1, 0.015 );  // Ajustez le décalage z si nécessaire
+			glVertex3f(0.f, 0.f, 0.015 + indiceZ * 0.0001 );  // Ajustez le décalage z si nécessaire
 			glTexCoord2f(1, 0);
-			glVertex3f(0.5f, -1, 0.015);
+			glVertex3f(1.f, 0.f, 0.015 + indiceZ * 0.0001 );
 			glTexCoord2f(1, 1);
-			glVertex3f(0.5f, 0.5f, 0.015);
+			glVertex3f(1.f, 1.5f, 0.015 + indiceZ * 0.0001 );
 			glTexCoord2f(0, 1);
-			glVertex3f(-0.5f, 0.5f, 0.015);
+			glVertex3f(0.f, 1.5f, 0.015 + indiceZ * 0.0001);
 			glEnd();
 
 			glPopMatrix();
@@ -651,8 +816,9 @@ int main(int /* argc */, char** /* argv */)
 			glBindTexture(GL_TEXTURE_2D, 0);
 
 		}
+		
 
-		if (tousEnnemisMorts(Jeu::vaguesEnnemis[Jeu::vagueActuelle]) || (EnnemiArriveFin == true && Jeu::points_de_vieJoueur > 0) ) {
+		if (tousEnnemisMorts(Jeu::vaguesEnnemis[Jeu::vagueActuelle])) {
     	finVague(true);  // Le joueur a gagné la vague
 		Jeu::tempsDepuisFinVague += dt;
 		EnnemiArriveFin = false;
@@ -840,14 +1006,7 @@ int main(int /* argc */, char** /* argv */)
 		glDisable(GL_TEXTURE_2D);
 
 
-		
-
-
-
-
-
-
-
+	
 	}
 
 	glDeleteTextures(24, tab);

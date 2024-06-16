@@ -30,7 +30,7 @@ Tour creerTour(TypeTour type, int positionX, int positionY) {
         tour.portee = 4; // Portée en distance de Chebyshev
         tour.cadence = 1.f; // Cadence de tir en dixièmes de seconde
     } else if (type == TypeTour::TypeB) {
-        tour.puissance = 150;
+        tour.puissance = 200;
         tour.portee = 6; // Portée en distance de Chebyshev
         tour.cadence = 25.f; // Cadence de tir en dixièmes de seconde
     }
@@ -38,4 +38,4 @@ Tour creerTour(TypeTour type, int positionX, int positionY) {
     tour.posX = positionX; // Position X de la tour sur la carte
     tour.posY = positionY; // Position Y de la tour sur la carte
     return tour;
-}
+    }

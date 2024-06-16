@@ -21,16 +21,15 @@ namespace Jeu {
     float total_argentEnFloat {100};
     float tempsTotalFlèche = 0.005;
     std::vector<Projectile> projectiles;
-
-}
+	}
 
 
 void tourAttaqueEnnemi(Tour& tour, Ennemi& ennemi) {
-    if (tour.peutTirer() && tour.estDansPortee(ennemi.positionActuelle.x, ennemi.positionActuelle.y) && ennemi.aTouche) {
+    if (tour.peutTirer() && tour.estDansPortee(ennemi.positionActuelle.x, ennemi.positionActuelle.y) && ennemi.aTouche && !ennemi.aAtteintLaFin) {
        
         tour.miseAJourTempsTir();
 
-        Projectile projectile(tour.posX, tour.posY, ennemi.positionActuelle.x, ennemi.positionActuelle.y, Jeu::tempsTotalFlèche, tour.puissance, &ennemi);
+        Projectile projectile(tour.posX, tour.posY + 0.8, ennemi.positionActuelle.x, ennemi.positionActuelle.y, Jeu::tempsTotalFlèche, tour.puissance, &ennemi);
         Jeu::projectiles.push_back(projectile);
         std::cout << "Projectile ajouté à la liste" << std::endl;  // Ajoutez cette ligne
         std::cout << "Projectile ajouté. Nombre total de projectiles : " << Jeu::projectiles.size() << std::endl;
@@ -66,6 +65,7 @@ void mettreAJourTour(std::vector<Tour>& tours, std::vector<Ennemi>& ennemis, flo
             tourAttaqueEnnemi(tour, *ennemiPlusProche);
             tour.miseAJourTempsTir();
         }
+
     }
 }
 
@@ -99,6 +99,8 @@ bool ennemiAtteintFin(std::vector<Ennemi>& ennemis, Graph::WeightedGraph* graph,
         if (distance <= 0.1 && ennemi.aAtteintLaFin != true) {  // Vérifie si l'ennemi a atteint la fin et n'a pas encore été comptabilisé
             ennemi.aAtteintLaFin = true;  // Marque l'ennemi comme ayant atteint la fin
             Jeu::points_de_vieJoueur--;  // Le joueur perd un point de vie
+			ennemi.pts_de_vie -= 1000;
+			// Jeu::total_argentEnFloat -= ennemi.recompense;
             return true;
         }
     }
@@ -145,8 +147,9 @@ void finVague(bool victoire) {
 }
 
 
-void CreationVectorPeutOnPlacerTourIci(std::vector<std::pair<int,int>> PeutOnPlacerTourIci) {
-     PeutOnPlacerTourIci.push_back(std::make_pair(-4,7));
+	std::vector<std::pair<int,int>> CreationVectorPeutOnPlacerTourIci() {
+	std::vector<std::pair<int,int>> PeutOnPlacerTourIci;
+    PeutOnPlacerTourIci.push_back(std::make_pair(-4,7));
 	PeutOnPlacerTourIci.push_back(std::make_pair(-3,7));
 	PeutOnPlacerTourIci.push_back(std::make_pair(-2,7));
 	PeutOnPlacerTourIci.push_back(std::make_pair(-1,7));
@@ -238,4 +241,15 @@ void CreationVectorPeutOnPlacerTourIci(std::vector<std::pair<int,int>> PeutOnPla
 
 	PeutOnPlacerTourIci.push_back(std::make_pair(7,3));
 	PeutOnPlacerTourIci.push_back(std::make_pair(7,4));
+
+
+	PeutOnPlacerTourIci.push_back(std::make_pair(-3,6));
+	PeutOnPlacerTourIci.push_back(std::make_pair(-1,6));
+	PeutOnPlacerTourIci.push_back(std::make_pair(-6,-8));
+	PeutOnPlacerTourIci.push_back(std::make_pair(-4,-4));
+	PeutOnPlacerTourIci.push_back(std::make_pair(-1,-2));
+	PeutOnPlacerTourIci.push_back(std::make_pair(-1,3));
+	PeutOnPlacerTourIci.push_back(std::make_pair(-2,2));
+
+	return PeutOnPlacerTourIci;
 }
