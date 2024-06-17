@@ -147,6 +147,7 @@ void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* m
 			if (is_pressed && placementTour && posXTourEnAttente < 7 ) {
 			posXTourEnAttente ++;
 			}
+			break;
 		default: std::cout<<"Touche non gérée"<<std::endl;
 	}
 }
@@ -534,11 +535,11 @@ int main(int /* argc */, char** /* argv */) {
 			if (it->cibleAtteinte()) {
 				it->cible->degatsEnnemi(it->puissance);
 				it->cible->aTouche = true;
-				std::cout << "Projectile a atteint la cible !" << std::endl;
+				// std::cout << "Projectile a atteint la cible !" << std::endl;
 
 				if (it->cible->estMort() && Jeu::total_argentEnFloat <= 999) {
 					Jeu::total_argentEnFloat += it->cible->recompense;
-					std::cout << "Le joueur a gagné " << it->cible->recompense << " ecus" << std::endl;
+					// std::cout << "Le joueur a gagné " << it->cible->recompense << " ecus" << std::endl;
     			}
 				it = Jeu::projectiles.erase(it);
 			} 
