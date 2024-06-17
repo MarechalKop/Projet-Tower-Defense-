@@ -87,13 +87,13 @@ void Ennemi::initialiserEnnemi(Graph::WeightedGraph* graphe, const std::vector<i
         case Type1:
             this->pts_de_vie = 100; // Par exemple
             this->vitesse = 100; // Par exemple
-            this->recompense = 50; // Par exemple
+            this->recompense = 20; // Par exemple
             this->couleur = "rouge"; // Par exemple
             break;
         case Type2:
-            this->pts_de_vie = 500; // Par exemple
+            this->pts_de_vie = 800; // Par exemple
             this->vitesse = 50; // Par exemple
-            this->recompense = 200; // Par exemple
+            this->recompense = 50; // Par exemple
             this->couleur = "bleu"; // Par exemple
             break;
         // Ajoutez d'autres types d'ennemis ici si nécessaire

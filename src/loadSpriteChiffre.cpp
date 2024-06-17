@@ -12,7 +12,7 @@
 GLuint* chargerTousLesSpritesChiffre()
 {
     //int x, y, n;
-    const int nombreTexture = 10; // Nombre de textures, ajusté pour inclure la nouvelle texture
+    const int nombreTexture = 12; // Nombre de textures, ajusté pour inclure la nouvelle texture
     std::vector<unsigned char*> Result2(nombreTexture);
     std::vector<int> widths(nombreTexture), heights(nombreTexture), channels(nombreTexture);
     
@@ -28,6 +28,8 @@ GLuint* chargerTousLesSpritesChiffre()
     Result2[7] = stbi_load("../../images/7.png", &widths[7], &heights[7], &channels[7], 0);
     Result2[8] = stbi_load("../../images/8.png", &widths[8], &heights[8], &channels[8], 0);
     Result2[9] = stbi_load("../../images/9.png", &widths[9], &heights[9], &channels[9], 0);
+    Result2[10] = stbi_load("../../images/A.png", &widths[10], &heights[10], &channels[10], 0);
+    Result2[11] = stbi_load("../../images/Z.png", &widths[11], &heights[11], &channels[11], 0);
    
     for (int i = 0; i < nombreTexture; i++) {
         if (Result2[i] == nullptr) {
