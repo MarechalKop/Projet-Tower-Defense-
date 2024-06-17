@@ -31,20 +31,9 @@ void tourAttaqueEnnemi(Tour& tour, Ennemi& ennemi) {
 
         Projectile projectile(tour.posX, tour.posY + 0.8, ennemi.positionActuelle.x, ennemi.positionActuelle.y, Jeu::tempsTotalFlèche, tour.puissance, &ennemi);
         Jeu::projectiles.push_back(projectile);
-<<<<<<< HEAD
-        std::cout << "Projectile ajouté à la liste" << std::endl;
-        std::cout << "Projectile ajouté. Nombre total de projectiles : " << Jeu::projectiles.size() << std::endl;
-        std::cout << "Projectile lancé de (" << tour.posX << ", " << tour.posY << ") vers (" << ennemi.positionActuelle.x << ", " << ennemi.positionActuelle.y << ")" << std::endl;
-=======
-        // std::cout << "Projectile ajouté à la liste" << std::endl;  // Ajoutez cette ligne
+        // std::cout << "Projectile ajouté à la liste" << std::endl;
         // std::cout << "Projectile ajouté. Nombre total de projectiles : " << Jeu::projectiles.size() << std::endl;
-
-        
-
-
         // std::cout << "Projectile lancé de (" << tour.posX << ", " << tour.posY << ") vers (" << ennemi.positionActuelle.x << ", " << ennemi.positionActuelle.y << ")" << std::endl;
-
->>>>>>> 022ce88a9ab090f72d6e4d359f3315aeac324b79
     }
 }
 
@@ -130,34 +119,22 @@ void finPartie() {
     else if (Jeu::vagueActuelle == Jeu::vaguesEnnemis.size() - 1 && tousEnnemisMorts(Jeu::vaguesEnnemis[Jeu::vagueActuelle])) {
 		Jeu::finDuJeuVictorieuse = 1;
         Jeu::partieEnCours = false;
-<<<<<<< HEAD
-        std::cout << "Felicitations, vous avez gagne la partie !" << std::endl;
+        //std::cout << "Felicitations, vous avez gagne la partie !" << std::endl;
     }      
-=======
-        // std::cout << "Felicitations, vous avez gagne la partie !" << std::endl;
-    }
-        
->>>>>>> 022ce88a9ab090f72d6e4d359f3315aeac324b79
 }
 
 void finVague(bool victoire) {
     Jeu::vagueEnCours = false;
     if (victoire) {
-<<<<<<< HEAD
-        std::cout << "Felicitations, vous avez termine la vague !" << std::endl;
-=======
-		
         // std::cout << "Felicitations, vous avez termine la vague !" << std::endl;
->>>>>>> 022ce88a9ab090f72d6e4d359f3315aeac324b79
     } else {
-		
         // std::cout << "Vous avez perdu la vague." << std::endl;
     }
 }
 
 std::vector<std::pair<int,int>> CreationVectorPeutOnPlacerTourIci() {
 	std::vector<std::pair<int,int>> PeutOnPlacerTourIci;
-	
+
     PeutOnPlacerTourIci.push_back(std::make_pair(-4,7));
 	PeutOnPlacerTourIci.push_back(std::make_pair(-3,7));
 	PeutOnPlacerTourIci.push_back(std::make_pair(-2,7));

@@ -53,27 +53,17 @@ struct Projectile {
         PositionX = (1 - t) * PositionX + t * Cyblex;
         PositionY = (1 - t) * PositionY + t * Cybley;
 
-    //     std::cout << "Coordonnee X de la cible "  << Cyblex << std::endl;
-    //     std::cout << "Coordonnee Y de la cible "  << Cybley << std::endl;
-
-<<<<<<< HEAD
-        std::cout << "Mise a jour de la position du projectile : (" << PositionX << ", " << PositionY << ")" << std::endl;
-        std::cout << "La valeur de tempsTotal est " << tempsTotal << std::endl;
-=======
-    // std::cout << "Mise a jour de la position du projectile : (" << PositionX << ", " << PositionY << ")" << std::endl;
-    // std::cout << "La valeur de tempsTotal est " << tempsTotal << std::endl;
->>>>>>> 022ce88a9ab090f72d6e4d359f3315aeac324b79
+        // std::cout << "Coordonnee X de la cible "  << Cyblex << std::endl;
+        // std::cout << "Coordonnee Y de la cible "  << Cybley << std::endl;
+        // std::cout << "Mise a jour de la position du projectile : (" << PositionX << ", " << PositionY << ")" << std::endl;
+        // std::cout << "La valeur de tempsTotal est " << tempsTotal << std::endl;
     }
 
     bool cibleAtteinte() {
         // Calculer la distance entre la position actuelle et la cible
         float distance = std::sqrt(std::pow(PositionX - Cyblex, 2) + std::pow(PositionY - Cybley, 2));
 
-<<<<<<< HEAD
-        std::cout << "Distance du projectile a la cible : " << distance << std::endl;
-=======
-    // std::cout << "Distance du projectile a la cible : " << distance << std::endl;
->>>>>>> 022ce88a9ab090f72d6e4d359f3315aeac324b79
+        // std::cout << "Distance du projectile a la cible : " << distance << std::endl;
 
         if (distance <0.5f) {
             return true;
