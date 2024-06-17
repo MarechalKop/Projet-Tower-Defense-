@@ -460,39 +460,54 @@ int main(int /* argc */, char** /* argv */) {
 		// std::cout << "Un ennemi est arrive a la fin :" << EnnemiArriveFin << std::endl;
 
 		// Affichage de la tour fixe
-		for (const auto& tour : tours) {
-			indiceZ += 1;
-			mettreAJourTour(tours, Jeu::vaguesEnnemis[Jeu::vagueActuelle], dt);
+		for (int i = 0; i < tours.size(); i++) {
+
+				
+
+				mettreAJourTour( tours, Jeu::vaguesEnnemis[Jeu::vagueActuelle],  dt);
 			
-			if (tour.type== TypeA) { 
-				glBindTexture(GL_TEXTURE_2D, tab2[1]);
-				glPushMatrix();
-				glTranslatef(tour.posX-0.5, tour.posY, 0.0f);
-				glScalef(2.f, 2.f, 1.0f);
-				glBegin(GL_QUADS);
-				glTexCoord2f(0, 0); glVertex3f(0.f, 0.f, 0.015 + indiceZ * 0.0001);
-				glTexCoord2f(1, 0); glVertex3f(1.f, 0.f, 0.015 + indiceZ * 0.0001);
-				glTexCoord2f(1, 1); glVertex3f(1.f, 1.2f, 0.015 + indiceZ * 0.0001);
-				glTexCoord2f(0, 1); glVertex3f(0.f, 1.2f, 0.015 + indiceZ * 0.0001);
-				glEnd();
-				glPopMatrix();
-				glBindTexture(GL_TEXTURE_2D, 0);
+			if (tours[i].type== TypeA ) { 
+			glBindTexture(GL_TEXTURE_2D, tab2[1]);  // Utiliser la texture de la tour
+			glPushMatrix();
+			glTranslatef(tours[i].posX-0.5, tours[i].posY, 0.0f);
+			glScalef(2.f, 2.f, 1.0f);  // Ajustez la taille de la tour si nécessaire
+
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(0.f, 0.f, 0.015 + i * 0.0001 );  // Ajustez le décalage z si nécessaire
+			glTexCoord2f(1, 0);
+			glVertex3f(1.f, 0.f, 0.015 + i * 0.0001);
+			glTexCoord2f(1, 1);
+			glVertex3f(1.f, 1.2f, 0.015 + i * 0.0001 );
+			glTexCoord2f(0, 1);
+			glVertex3f(0.f, 1.2f, 0.015 + i * 0.0001);
+			glEnd();
+
+			glPopMatrix();
+			glBindTexture(GL_TEXTURE_2D, 0);
 			}
 
-			if (tour.type == TypeB ) { 
-				glBindTexture(GL_TEXTURE_2D, tab2[3]);
-				glPushMatrix();
-				glTranslatef(tour.posX-0.5, tour.posY, 0.0f);
-				glScalef(2.f, 2.f, 1.0f);
-				glBegin(GL_QUADS);
-				glTexCoord2f(0, 0); glVertex3f(0.f, 0.f, 0.015 + indiceZ * 0.0001);
-				glTexCoord2f(1, 0); glVertex3f(1.f, 0.f, 0.015 + indiceZ * 0.0001);
-				glTexCoord2f(1, 1); glVertex3f(1.f, 1.5f, 0.015 + indiceZ * 0.0001);
-				glTexCoord2f(0, 1); glVertex3f(0.f, 1.5f, 0.015 + indiceZ * 0.0001);
-				glEnd();
-				glPopMatrix();
-				glBindTexture(GL_TEXTURE_2D, 0);
-			}	
+			if (tours[i].type == TypeB ) { 
+			glBindTexture(GL_TEXTURE_2D, tab2[3]);  // Utiliser la texture de la tour
+			glPushMatrix();
+			glTranslatef(tours[i].posX-0.5, tours[i].posY, 0.0f);
+			glScalef(2.f, 2.f, 1.0f);  // Ajustez la taille de la tour si nécessaire
+
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(0.f, 0.f, 0.015 + i * 0.0001 );  // Ajustez le décalage z si nécessaire
+			glTexCoord2f(1, 0);
+			glVertex3f(1.f, 0.f, 0.015 + i * 0.0001 );
+			glTexCoord2f(1, 1);
+			glVertex3f(1.f, 1.5f, 0.015 + i * 0.0001 );
+			glTexCoord2f(0, 1);
+			glVertex3f(0.f, 1.5f, 0.015 + i * 0.0001);
+			glEnd();
+
+			glPopMatrix();
+			glBindTexture(GL_TEXTURE_2D, 0);
+			}
+			
 		}
 
 		// std::cout << "Nombre de projectiles avant la boucle : " << Jeu::projectiles.size() << std::endl;
