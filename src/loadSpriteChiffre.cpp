@@ -35,8 +35,6 @@ GLuint* chargerTousLesSpritesChiffre()
         if (Result2[i] == nullptr) {
             std::cerr << "Erreur de chargement de la texture de jeu " << i << std::endl;
             return nullptr;
-        } else {
-            std::cout << "Texture " << i << " chargée avec succès : Dimensions (" << widths[i] << ", " << heights[i] << "), Canaux : " << channels[i] << std::endl;
         }
     }
 

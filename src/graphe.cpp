@@ -126,9 +126,9 @@ float Graph::WeightedGraph::calculerPoids(int from, int to) {
 void Graph::WeightedGraph::printGraph() {
     for (const auto& pair : adjacency_list) {
         const Node& node = pair.second;
-        std::cout << "Noeud d'indice : " << node.id << ", Position: (" << node.x << ", " << node.y << ")";
+        // std::cout << "Noeud d'indice : " << node.id << ", Position: (" << node.x << ", " << node.y << ")";
         for (const auto& edge : node.edges) {
-            std::cout << " arrete vers le sommet " << edge.to << ", de poids : " << edge.weight << "\n";
+            // std::cout << " arrete vers le sommet " << edge.to << ", de poids : " << edge.weight << "\n";
         }
     }
 }

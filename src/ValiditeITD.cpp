@@ -172,7 +172,7 @@ bool testValiditeITD (std::ifstream& fichier) {
         }
 
         // utile pour moi, pour vérifier si la lecture se passe bien
-        std::cout << contenuLigne << '\n';
+        // std::cout << contenuLigne << '\n';
 
         // on regarde le premier mot de la ligne
         std::string PremierMotaComparer = premierMotDeLaligne(contenuLigne);
