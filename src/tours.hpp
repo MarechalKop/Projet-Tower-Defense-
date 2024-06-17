@@ -12,6 +12,7 @@ struct Tour {
     int portee {};
     float cadence {};
     TypeTour type;
+
     // Position de la tour
     int posX;
     int posY;
@@ -26,12 +27,10 @@ struct Tour {
     bool peutTirer() const;
 
     // Méthode pour mettre à jour le temps du dernier tir
-    void miseAJourTempsTir();
-
-   
+    void miseAJourTempsTir();  
 };
 
- Tour creerTour(TypeTour type, int positionX, int positionY);
+Tour creerTour(TypeTour type, int positionX, int positionY);
 
 struct Projectile {
     float PositionX;
@@ -41,8 +40,7 @@ struct Projectile {
     float tempsEcoule;
     float tempsTotal;
     int puissance;
-    Ennemi* cible; 
-    
+    Ennemi* cible;    
 
     // Constructeur
     Projectile(float PositionInitialeX, float PositionInitialeY, float Cyblex, float Cybley, float tempsTotal, int puissance, Ennemi* cible)
@@ -58,24 +56,20 @@ struct Projectile {
         std::cout << "Coordonnee X de la cible "  << Cyblex << std::endl;
         std::cout << "Coordonnee Y de la cible "  << Cybley << std::endl;
 
-    std::cout << "Mise a jour de la position du projectile : (" << PositionX << ", " << PositionY << ")" << std::endl;
-    std::cout << "La valeur de tempsTotal est " << tempsTotal << std::endl;
+        std::cout << "Mise a jour de la position du projectile : (" << PositionX << ", " << PositionY << ")" << std::endl;
+        std::cout << "La valeur de tempsTotal est " << tempsTotal << std::endl;
     }
 
     bool cibleAtteinte() {
-    // Calculer la distance entre la position actuelle et la cible
-    float distance = std::sqrt(std::pow(PositionX - Cyblex, 2) + std::pow(PositionY - Cybley, 2));
+        // Calculer la distance entre la position actuelle et la cible
+        float distance = std::sqrt(std::pow(PositionX - Cyblex, 2) + std::pow(PositionY - Cybley, 2));
 
-    std::cout << "Distance du projectile a la cible : " << distance << std::endl;
+        std::cout << "Distance du projectile a la cible : " << distance << std::endl;
 
-    if (distance <0.5f)
-    {
-        return true;
+        if (distance <0.5f) {
+            return true;
+        }
+        return false;
     }
-    return false;
-    }
-
-
-    // ... (autres méthodes si nécessaire)
 };
 

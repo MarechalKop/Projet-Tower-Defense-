@@ -12,7 +12,6 @@ struct Ennemi {
     int pts_de_vie {};
     float vitesse {};
     int recompense {};
-    std::string couleur {};
     TypeEnnemi type;
     Graph::Node positionActuelle {}; // Utilisez Node pour la position actuelle
     Graph::Node positionProchaine {}; // Utilisez Node pour la position suivante

@@ -38,4 +38,4 @@ Tour creerTour(TypeTour type, int positionX, int positionY) {
     tour.posX = positionX; // Position X de la tour sur la carte
     tour.posY = positionY; // Position Y de la tour sur la carte
     return tour;
-    }
+}
