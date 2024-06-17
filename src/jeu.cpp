@@ -21,6 +21,7 @@ namespace Jeu {
     float total_argentEnFloat {100};
     float tempsTotalFlèche = 0.005;
     std::vector<Projectile> projectiles;
+	int finDuJeuVictorieuse = -1;
 	}
 
 
@@ -127,10 +128,12 @@ void finPartie() {
     // Si un ennemi atteint le dernier nœud, la partie se termine et le joueur perd
     if (Jeu::points_de_vieJoueur <= 0) {
         Jeu::partieEnCours = false;
+		Jeu::finDuJeuVictorieuse = 2;
         std::cout << "Vous avez perdu la partie." << std::endl;
     } 
     // Si tous les ennemis de la dernière vague sont morts, la partie se termine et le joueur gagne
     else if (Jeu::vagueActuelle == Jeu::vaguesEnnemis.size() - 1 && tousEnnemisMorts(Jeu::vaguesEnnemis[Jeu::vagueActuelle])) {
+		Jeu::finDuJeuVictorieuse = 1;
         Jeu::partieEnCours = false;
         std::cout << "Felicitations, vous avez gagne la partie !" << std::endl;
     }
@@ -140,8 +143,10 @@ void finPartie() {
 void finVague(bool victoire) {
     Jeu::vagueEnCours = false;
     if (victoire) {
+		
         std::cout << "Felicitations, vous avez termine la vague !" << std::endl;
     } else {
+		
         std::cout << "Vous avez perdu la vague." << std::endl;
     }
 }
@@ -158,11 +163,7 @@ void finVague(bool victoire) {
 	PeutOnPlacerTourIci.push_back(std::make_pair(-4,6));
 	PeutOnPlacerTourIci.push_back(std::make_pair(7,6));
 	PeutOnPlacerTourIci.push_back(std::make_pair(7,5));
-	PeutOnPlacerTourIci.push_back(std::make_pair(-7,7));
-	PeutOnPlacerTourIci.push_back(std::make_pair(-7,6));
-	PeutOnPlacerTourIci.push_back(std::make_pair(-7,5));
-	PeutOnPlacerTourIci.push_back(std::make_pair(-7,4));
-	PeutOnPlacerTourIci.push_back(std::make_pair(-7,3));
+
 	PeutOnPlacerTourIci.push_back(std::make_pair(-7,2));
 	PeutOnPlacerTourIci.push_back(std::make_pair(-7,1));
 	PeutOnPlacerTourIci.push_back(std::make_pair(-7,0));

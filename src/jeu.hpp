@@ -28,5 +28,6 @@ namespace Jeu {
     extern int totalArgentInt;
     extern std::vector<Projectile> projectiles;
     extern float tempsTotalFlèche;
+    extern int finDuJeuVictorieuse;
     
 }

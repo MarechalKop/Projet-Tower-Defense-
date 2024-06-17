@@ -81,6 +81,8 @@ int typeTourSelectionnee = -1; // -1 indique qu'aucune tour n'est sélectionnée
 	std::vector<Tour> tours;
 	std::vector<std::pair<int,int>> TableauNouvellesCasesInterdites;
 
+	bool isPaused = false; 
+
     
 
 void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* mods */)
@@ -135,6 +137,18 @@ void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* m
 				typeTourSelectionnee = -1;
 			}
             break;
+
+			  case GLFW_KEY_P : 
+            if (is_pressed) {
+                isPaused = true;  // Basculez la valeur de isPaused lorsque 'p' est pressé
+            }
+			else if (is_pressed && isPaused == true) {
+                isPaused = false;  // Basculez la valeur de isPaused lorsque 'p' est pressé
+            }
+            break; 
+
+
+
 		case GLFW_KEY_A :
 		case GLFW_KEY_ESCAPE :
 			if (is_pressed) glfwSetWindowShouldClose(window, GLFW_TRUE);
@@ -296,9 +310,9 @@ int main(int /* argc */, char** /* argv */)
 
 
 	
-	tours.push_back(tourA);
+	
 
-	std::vector<Ennemi> vague1 = creerEnnemis(20, Type1, &graph, cheminLePlusCourt);
+	std::vector<Ennemi> vague1 = creerEnnemis(10, Type1, &graph, cheminLePlusCourt);
 	std::vector<Ennemi> vague2 = creerEnnemis(10, Type2, &graph, cheminLePlusCourt);
 	std::vector<Ennemi> vague3 = creerEnnemis(15, Type2, &graph, cheminLePlusCourt);
 	
@@ -322,6 +336,17 @@ int main(int /* argc */, char** /* argv */)
 
 	while (!glfwWindowShouldClose(window))
 	{
+
+		 if (!isPaused) {  // Vérifiez si le jeu est en pause avant de mettre à jour le jeu
+        // Mettez à jour la logique du jeu ici
+    
+		if (Jeu::total_argentEnFloat >= 999)
+		{
+		
+			Jeu::total_argentEnFloat = 999;
+
+			
+		}
 
 		std::cout << "Contenu du tableau des cases interdites : " << std::endl;
 		for (int i{}; i < TableauNouvellesCasesInterdites.size(); i++)
@@ -371,7 +396,7 @@ int main(int /* argc */, char** /* argv */)
 			
 			glPushMatrix();  // Sauvegarder la matrice de transformation actuelle
 
-			// Déplacer l'origine au centre de l'ennemi
+			
 			glTranslatef(posXTourEnAttente - 0.5f, posYTourEnAttente, 0);
 			glScalef(2.f, 2.f, 1.0f);
 			std::cout << "la tour en attente se trouve en " << "( " << posXTourEnAttente << " ; " << posYTourEnAttente << " )" << std::endl;
@@ -423,9 +448,11 @@ int main(int /* argc */, char** /* argv */)
 			glTexCoord2f(0, 1);
 			glVertex3f(0.f, 1.2f,0.0005);
 			glEnd();
+			glBindTexture(GL_TEXTURE_2D, 0);
 			glPopMatrix();
 
-			glBindTexture(GL_TEXTURE_2D, 0);
+			
+
 			}
 
 			if (typeTourSelectionnee == 2){
@@ -689,16 +716,12 @@ int main(int /* argc */, char** /* argv */)
 		// Ajout d'une instruction d'impression
 		std::cout << "Projectile a atteint la cible !" << std::endl;
 
-		if (it->cible->estMort()) {
+		if (it->cible->estMort() && Jeu::total_argentEnFloat <= 999) {
+		
         Jeu::total_argentEnFloat += it->cible->recompense;
 		
-        Jeu::totalArgentInt = static_cast<int>(Jeu::total_argentEnFloat);
-		if (Jeu::totalArgentInt >= 999)
-		{
-			Jeu::totalArgentInt = 999;
-		}
         std::cout << "Le joueur a gagné " << it->cible->recompense << " ecus" << std::endl;
-    }
+    	}
 		
 
 		it = Jeu::projectiles.erase(it);
@@ -706,6 +729,18 @@ int main(int /* argc */, char** /* argv */)
 	else {
 		++it;
 		}
+
+		if (Jeu::total_argentEnFloat >= 999)
+		{
+		
+			Jeu::total_argentEnFloat = 999;
+			
+			
+		}
+		
+        Jeu::totalArgentInt = static_cast<int>(Jeu::total_argentEnFloat);
+		
+
 	}
 
 	glPopMatrix();
@@ -999,13 +1034,64 @@ int main(int /* argc */, char** /* argv */)
 			glPopMatrix();
 			glBindTexture(GL_TEXTURE_2D, 0);
 
+			if (Jeu::finDuJeuVictorieuse == 1)
+			{
+				glBindTexture(GL_TEXTURE_2D, tab2[9]);
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			glPushMatrix();
+			glTranslatef(-2.4f, 0.0f, 8.0f);
+			glScalef(1.0f, 1.0f, 1.0f);
 
-	    finPartie();
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(-2.0f, -0.5f, 0.2 );  // Ajustez le décalage z si nécessaire
+			glTexCoord2f(1, 0);
+			glVertex3f(2.0f, -0.5f, 0.2);
+			glTexCoord2f(1, 1);
+			glVertex3f(2.0f, 1.f, 0.2);
+			glTexCoord2f(0, 1);
+			glVertex3f(-2.0f, 1.f, 0.2);
+			glEnd();
+
+			glPopMatrix();
+			glBindTexture(GL_TEXTURE_2D, 0);
+			}
+
+
+				if (Jeu::finDuJeuVictorieuse == 2)
+			{
+				glBindTexture(GL_TEXTURE_2D, tab2[8]);
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			glPushMatrix();
+			glTranslatef(-2.4f, 0.0f, 8.0f);
+			glScalef(1.0f, 1.0f, 1.0f);
+
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex3f(-2.0f, -0.5f, 0.2 );  // Ajustez le décalage z si nécessaire
+			glTexCoord2f(1, 0);
+			glVertex3f(2.0f, -0.5f, 0.2);
+			glTexCoord2f(1, 1);
+			glVertex3f(2.0f, 1.f, 0.2);
+			glTexCoord2f(0, 1);
+			glVertex3f(-2.0f, 1.f, 0.2);
+			glEnd();
+
+			glPopMatrix();
+			glBindTexture(GL_TEXTURE_2D, 0);
+			}
+			
+			
+			
+
+	    finPartie();	
+
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		glDisable(GL_TEXTURE_2D);
 
-
+	}
 	
 	}
 
