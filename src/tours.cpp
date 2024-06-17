@@ -26,11 +26,11 @@ void Tour::miseAJourTempsTir() {
 Tour creerTour(TypeTour type, int positionX, int positionY) {
     Tour tour;
     if (type == TypeTour::TypeA) {
-        tour.puissance = 30;
+        tour.puissance = 50;
         tour.portee = 4; // Portée en distance de Chebyshev
         tour.cadence = 1.f; // Cadence de tir en dixièmes de seconde
     } else if (type == TypeTour::TypeB) {
-        tour.puissance = 100;
+        tour.puissance = 80;
         tour.portee = 7; // Portée en distance de Chebyshev
         tour.cadence = 40.f; // Cadence de tir en dixièmes de seconde
     }

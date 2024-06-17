@@ -62,19 +62,18 @@ void onWindowResized(GLFWwindow* /* window */, int width, int height) {
 }
 
 int typeTourSelectionnee = -1; // -1 indique qu'aucune tour n'est sélectionnée
-	bool placementTour = false;
+bool placementTour = false;
 
-	static int posXTourEnAttente; // Ajout d'une tour en attente
-	static int posYTourEnAttente;
+static int posXTourEnAttente; // Ajout d'une tour en attente
+static int posYTourEnAttente;
 	
-	static bool TourPeutEtrePlaceeIci = false;
-	std::vector<Tour> tours;
-	std::vector<std::pair<int,int>> TableauNouvellesCasesInterdites;
+static bool TourPeutEtrePlaceeIci = false;
+std::vector<Tour> tours;
+std::vector<std::pair<int,int>> TableauNouvellesCasesInterdites;
 
-	bool JeuACommence = false; 
+bool JeuACommence = false; 
 
-void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* mods */)
-{
+void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* mods */) {
 	int is_pressed = (action == GLFW_PRESS); 
 	switch(key) {
 		case GLFW_KEY_Q : 

@@ -85,12 +85,12 @@ void Ennemi::initialiserEnnemi(Graph::WeightedGraph* graphe, const std::vector<i
     // Initialiser les attributs en fonction du type
     switch (type) {
         case Type1:
-            this->pts_de_vie = 100;
-            this->vitesse = 100;
+            this->pts_de_vie = 50;
+            this->vitesse = 80;
             this->recompense = 20;
             break;
         case Type2:
-            this->pts_de_vie = 800;
+            this->pts_de_vie = 550;
             this->vitesse = 50;
             this->recompense = 50;
             break;
