@@ -45,9 +45,7 @@ GLuint* chargerTousLesSpritesCartes()
         if (Result[i] == nullptr) {
             std::cerr << "Erreur de chargement de la texture " << i << std::endl;
             return nullptr;
-        } else {
-            std::cout << "Texture " << i << " chargée avec succès : Dimensions (" << x << ", " << y << "), Canaux : " << n << std::endl;
-        }
+        } 
     }
 
     GLuint* tab = new GLuint[nombreTexture];

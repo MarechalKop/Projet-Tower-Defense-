@@ -93,7 +93,7 @@ void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* m
 			if (is_pressed && Jeu::totalArgentInt >= 100 && placementTour == false && JeuACommence == true)
 			{
 				typeTourSelectionnee = 1; // Tour de type A
-            	std::cout << "Tour A sélectionnée" << std::endl;
+            	// std::cout << "Tour A sélectionnée" << std::endl;
 				posXTourEnAttente = 0;
 				posYTourEnAttente = 0;
 				Jeu::total_argentEnFloat -= 100;
@@ -118,8 +118,8 @@ void onKey(GLFWwindow* window, int key, int /* scancode */, int action, int /* m
 			if (is_pressed && Jeu::totalArgentInt >= 200 && placementTour == false  && JeuACommence == true)
 			{
 			typeTourSelectionnee = 2; // Tour de type B
-            std::cout << "Tour B sélectionnée" << std::endl;
-			std::cout << "Tour A sélectionnée" << std::endl;
+            // std::cout << "Tour B sélectionnée" << std::endl;
+			// std::cout << "Tour A sélectionnée" << std::endl;
 			posXTourEnAttente = 0;
 			posYTourEnAttente = 0;
 			Jeu::total_argentEnFloat -= 200;
@@ -200,10 +200,10 @@ int main(int /* argc */, char** /* argv */)
 	// Ajouter des éléments au vecteur
 	std::vector<std::pair<int,int>> PeutOnPlacerTourIci = CreationVectorPeutOnPlacerTourIci();
 
-	for (int i{}; i < PeutOnPlacerTourIci.size(); i++)
-	{
-		std::cout << "Coordonee autorisee (" << PeutOnPlacerTourIci[i].first << " ; " << PeutOnPlacerTourIci[i].second << ")" << std::endl;
-	}
+	// for (int i{}; i < PeutOnPlacerTourIci.size(); i++)
+	// {
+	// 	// std::cout << "Coordonee autorisee (" << PeutOnPlacerTourIci[i].first << " ; " << PeutOnPlacerTourIci[i].second << ")" << std::endl;
+	// }
 
 
 	/* GLFW initialisation */
@@ -297,9 +297,9 @@ int main(int /* argc */, char** /* argv */)
 
 	std::vector<int> cheminLePlusCourt = graph.dijkstra(idPremierNoeud, idDernierNoeud);
 
-	for (int node_id : cheminLePlusCourt) {
-        // std::cout << node_id << " ";
-    }
+	// for (int node_id : cheminLePlusCourt) {
+    //     // std::cout << node_id << " ";
+    // }
 
 
 	Tour tourA = creerTour(TypeTour::TypeA, -1, 3);
@@ -346,11 +346,11 @@ int main(int /* argc */, char** /* argv */)
 			
 		}
 
-		std::cout << "Contenu du tableau des cases interdites : " << std::endl;
-		for (int i{}; i < TableauNouvellesCasesInterdites.size(); i++)
-		{
-			std::cout << "( " << TableauNouvellesCasesInterdites[i].first << " " << TableauNouvellesCasesInterdites[i].second << " )" << std::endl;
-		}
+		// std::cout << "Contenu du tableau des cases interdites : " << std::endl;
+		// for (int i{}; i < TableauNouvellesCasesInterdites.size(); i++)
+		// {
+		// 	std::cout << "( " << TableauNouvellesCasesInterdites[i].first << " " << TableauNouvellesCasesInterdites[i].second << " )" << std::endl;
+		// }
 		
 		// std::cout << Jeu::tempsDepuisFinVague << std::endl;
 
@@ -369,7 +369,7 @@ int main(int /* argc */, char** /* argv */)
 		setCamera();
 		glEnable(GL_TEXTURE_2D);
 
-		drawFrame();
+		
 		glPushMatrix();
 		glTranslatef(-6,0, 0);
 		DessinCarte(tab, image3, indicesTextures);
@@ -378,7 +378,7 @@ int main(int /* argc */, char** /* argv */)
 		double currentTime = glfwGetTime();
 		float dt = static_cast<float>(currentTime - startTime);
 
-		std::cout << "placement tour est " << placementTour << std::endl;
+		// std::cout << "placement tour est " << placementTour << std::endl;
 
 		glPushMatrix();
 		glTranslatef(-6,0, 0);
@@ -397,7 +397,7 @@ int main(int /* argc */, char** /* argv */)
 			
 			glTranslatef(posXTourEnAttente - 0.5f, posYTourEnAttente, 0);
 			glScalef(2.f, 2.f, 1.0f);
-			std::cout << "la tour en attente se trouve en " << "( " << posXTourEnAttente << " ; " << posYTourEnAttente << " )" << std::endl;
+			// std::cout << "la tour en attente se trouve en " << "( " << posXTourEnAttente << " ; " << posYTourEnAttente << " )" << std::endl;
 			for (int i {}; i < PeutOnPlacerTourIci.size(); i++)
 			{
     		if (posXTourEnAttente == PeutOnPlacerTourIci[i].first && posYTourEnAttente == PeutOnPlacerTourIci[i].second )
@@ -417,7 +417,7 @@ int main(int /* argc */, char** /* argv */)
     			}
 			}
 			
-			std::cout << "La tour est bien placé : " << TourPeutEtrePlaceeIci << std::endl;
+			// std::cout << "La tour est bien placé : " << TourPeutEtrePlaceeIci << std::endl;
 
 			
 			rayon = 4;
@@ -462,7 +462,7 @@ int main(int /* argc */, char** /* argv */)
 			// Déplacer l'origine au centre de l'ennemi
 			glTranslatef(posXTourEnAttente - 0.5f, posYTourEnAttente, 0);
 			glScalef(2.f, 2.f, 1.0f);
-			std::cout << "la tour en attente se trouve en " << "( " << posXTourEnAttente << " ; " << posYTourEnAttente << " )" << std::endl;
+			// std::cout << "la tour en attente se trouve en " << "( " << posXTourEnAttente << " ; " << posYTourEnAttente << " )" << std::endl;
 			for (int i {}; i < PeutOnPlacerTourIci.size(); i++)
 			{
     		if (posXTourEnAttente == PeutOnPlacerTourIci[i].first && posYTourEnAttente == PeutOnPlacerTourIci[i].second )
@@ -483,7 +483,7 @@ int main(int /* argc */, char** /* argv */)
 			}
 
 			
-			std::cout << "La tour est bien placé : " << TourPeutEtrePlaceeIci << std::endl;
+			// std::cout << "La tour est bien placé : " << TourPeutEtrePlaceeIci << std::endl;
 
 			
 			rayon = 6;
@@ -536,7 +536,7 @@ int main(int /* argc */, char** /* argv */)
 		if (Jeu::prochainEnnemiAAfficher < Jeu::vaguesEnnemis[Jeu::vagueActuelle].size() && tempsEcouleDepuisDerniereApparition >= intervalleApparitionType1) {
         tempsEcouleDepuisDerniereApparition = 0.0f;
         Jeu::prochainEnnemiAAfficher++;
-        std::cout << "prochain ennemi a afficher" << Jeu::prochainEnnemiAAfficher << std::endl;
+        // std::cout << "prochain ennemi a afficher" << Jeu::prochainEnnemiAAfficher << std::endl;
     	}
 		}
 
@@ -545,7 +545,7 @@ int main(int /* argc */, char** /* argv */)
 		if (Jeu::prochainEnnemiAAfficher < Jeu::vaguesEnnemis[Jeu::vagueActuelle].size() && tempsEcouleDepuisDerniereApparition >= intervalleApparitionType2) {
         tempsEcouleDepuisDerniereApparition = 0.0f;
         Jeu::prochainEnnemiAAfficher++;
-        std::cout << "prochain ennemi à afficher" << Jeu::prochainEnnemiAAfficher << std::endl;
+        // std::cout << "prochain ennemi à afficher" << Jeu::prochainEnnemiAAfficher << std::endl;
     	}
 		}
 
@@ -610,7 +610,7 @@ int main(int /* argc */, char** /* argv */)
 
 		ennemiAtteintFin(Jeu::vaguesEnnemis[Jeu::vagueActuelle], Jeu::graph, Jeu::idDernierNoeud);
 		bool EnnemiArriveFin = UnennemiALaFin(Jeu::vaguesEnnemis[Jeu::vagueActuelle], Jeu::graph, Jeu::idDernierNoeud);
-		std::cout << "Un ennemi est arrive a la fin :" << EnnemiArriveFin << std::endl;
+		// std::cout << "Un ennemi est arrive a la fin :" << EnnemiArriveFin << std::endl;
 		
 
 		
@@ -670,10 +670,10 @@ int main(int /* argc */, char** /* argv */)
 
 		
 
-		std::cout << "Nombre de projectiles avant la boucle : " << Jeu::projectiles.size() << std::endl;
+		// std::cout << "Nombre de projectiles avant la boucle : " << Jeu::projectiles.size() << std::endl;
 
 		for (auto it = Jeu::projectiles.begin(); it != Jeu::projectiles.end(); /* pas d'incrémentation ici */) {
-		std::cout << "Mise a jour du projectile" << std::endl;
+		// std::cout << "Mise a jour du projectile" << std::endl;
     	it->updatePosition(dt);
 
 
@@ -712,13 +712,13 @@ int main(int /* argc */, char** /* argv */)
 		it->cible->aTouche = true;
 
 		// Ajout d'une instruction d'impression
-		std::cout << "Projectile a atteint la cible !" << std::endl;
+		// std::cout << "Projectile a atteint la cible !" << std::endl;
 
 		if (it->cible->estMort() && Jeu::total_argentEnFloat <= 999) {
 		
         Jeu::total_argentEnFloat += it->cible->recompense;
 		
-        std::cout << "Le joueur a gagné " << it->cible->recompense << " ecus" << std::endl;
+        // std::cout << "Le joueur a gagné " << it->cible->recompense << " ecus" << std::endl;
     	}
 		
 
@@ -790,22 +790,22 @@ int main(int /* argc */, char** /* argv */)
 		}
 		
 		tempsEcouleDepuisDerniereApparition += dt;
-		std::cout << dt << std::endl;
+		// std::cout << dt << std::endl;
 		if (Jeu::partieEnCours && JeuACommence == true){ 
 		Jeu::total_argentEnFloat += 0.05;
 		}
 		Jeu::totalArgentInt = static_cast<int>(Jeu::total_argentEnFloat);
-		std::cout << "Le joueur ce gros rat a " << Jeu::totalArgentInt << " ecus" << std::endl;
-		std::cout << "Pts de vie Joueur " << Jeu::points_de_vieJoueur << std::endl;
-		std::cout << "Nous sommes a la vague " << Jeu::vagueActuelle + 1 << std::endl;
-		std::cout << "Il y a " << Jeu::vaguesEnnemis.size()  << " vagues" << std::endl;
+		// std::cout << "Le joueur ce gros rat a " << Jeu::totalArgentInt << " ecus" << std::endl;
+		// std::cout << "Pts de vie Joueur " << Jeu::points_de_vieJoueur << std::endl;
+		// std::cout << "Nous sommes a la vague " << Jeu::vagueActuelle + 1 << std::endl;
+		// std::cout << "Il y a " << Jeu::vaguesEnnemis.size()  << " vagues" << std::endl;
 		
 
 		std::string argentStr = std::to_string(Jeu::totalArgentInt);  // Convertir l'argent en chaîne de caractères
 		for (int i = 0; i < argentStr.size(); i++)
 		{
 		int chiffre = argentStr[i] - '0';  // Convertir le caractère en chiffre
-		std::cout << chiffre << std::endl;
+		// std::cout << chiffre << std::endl;
 
 		glBindTexture(GL_TEXTURE_2D, tab3[chiffre]);  // Utiliser la texture du chiffre
 			
